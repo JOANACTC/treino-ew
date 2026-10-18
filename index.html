@@ -146,6 +146,116 @@ section.view{padding-top:8px}
 #rank-table tr.me td{background:var(--accent-soft)}
 .rankwrap{overflow-x:auto}
 .note{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;color:var(--muted);font-size:15px}
+
+/* resumo */
+.rs{--acc-soft:var(--accent-soft);--rw:var(--bad);--rw-soft:var(--bad-soft);--mn:#7a3e00;--mn-soft:#fff3df;--mn-line:#e9b96e;--rcode:#eef1f4;--rpre:#f4f6f8;--msg1:#e6eefb;--msgbd:#fff3df;font-size:16px;line-height:1.55}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .rs{--mn:#f3c27a;--mn-soft:#2e2312;--mn-line:#6b4f22;--rcode:#1c2733;--rpre:#121b24;--msg1:#16243a;--msgbd:#2e2312}}
+:root[data-theme="dark"] .rs{--mn:#f3c27a;--mn-soft:#2e2312;--mn-line:#6b4f22;--rcode:#1c2733;--rpre:#121b24;--msg1:#16243a;--msgbd:#2e2312}
+.rs-head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between;margin:8px 0 12px}
+.rs-head h2{font-family:var(--f-display);font-size:24px;margin:0}
+.rs-pdf{font:600 14px var(--f-body);color:var(--accent)}
+.rs-toc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:0 0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:4px 20px}
+.rs-toc a{color:var(--ink);text-decoration:none;font-size:15px;padding:3px 0;display:block}
+.rs-toc a:hover{color:var(--accent);text-decoration:underline}
+.rs-toc b{font-family:var(--f-mono);color:var(--accent);margin-right:8px;font-size:13px}
+.rs .chap{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px 22px;margin:0 0 18px}
+.rs h2,.rs h3{scroll-margin-top:12px}
+.rs .chap>h2{font-family:var(--f-display);font-size:26px;line-height:1.15;margin:0 0 4px}
+.rs h3{font-family:var(--f-body);font-size:18px;font-weight:700;margin:20px 0 6px;color:var(--accent)}
+.rs p{margin:0 0 10px}
+.rs ul,.rs ol{margin:0 0 10px;padding-left:22px}.rs li{margin-bottom:3px}
+.rs code,.rs .m{font-family:var(--f-mono);font-size:.88em;background:var(--rcode);padding:0 4px;border-radius:3px}
+.rs pre{font-family:var(--f-mono);font-size:14px;background:var(--rpre);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin:6px 0 12px;white-space:pre-wrap;overflow-x:auto}
+.rs .kicker{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.rs .intro{color:var(--muted);font-size:17px;margin:4px 0 14px;border-bottom:2px solid var(--ink);padding-bottom:10px}
+.rs .mn{background:var(--mn-soft);border:1.5px solid var(--mn-line);border-radius:8px;padding:10px 14px;margin:10px 0}
+.rs .mn .t{font-family:var(--f-mono);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mn);display:block;margin-bottom:4px}
+.rs .mn .big{font-family:var(--f-display);font-size:20px;font-weight:700;color:var(--mn)}
+.rs .trap{background:var(--rw-soft);border-left:4px solid var(--rw);padding:10px 14px;margin:12px 0;border-radius:0 6px 6px 0}
+.rs .trap .t{font-weight:700;color:var(--rw)}
+.rs .key{background:var(--ok-soft);border-left:4px solid var(--ok);padding:10px 14px;margin:12px 0;border-radius:0 6px 6px 0}
+.rs .key .t{font-weight:700;color:var(--ok)}
+.rs table{width:100%;border-collapse:collapse;font-size:15px;margin:6px 0 12px}
+.rs th,.rs td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.rs th{font-family:var(--f-mono);font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);border-bottom:1.5px solid var(--ink)}
+.rs td.c{font-family:var(--f-mono);font-size:14px;white-space:nowrap;font-weight:700}
+.rs .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.rs .flow{display:flex;align-items:stretch;gap:8px;margin:10px 0;flex-wrap:wrap}
+.rs .flow .b{flex:1 1 140px;border:1.5px solid var(--accent);background:var(--acc-soft);border-radius:6px;padding:8px 10px;font-size:15px;text-align:center}
+.rs .flow .b b{display:block}
+.rs .flow .ar{align-self:center;font-weight:700;color:var(--accent)}
+.rs .msg{border:1.5px solid var(--ink);border-radius:6px;overflow:hidden;font-family:var(--f-mono);font-size:14px;margin:6px 0 12px}
+.rs .msg div{padding:6px 10px;border-bottom:1px dashed var(--line);overflow-wrap:anywhere}
+.rs .msg .lab{font-family:var(--f-body);font-size:12px;color:var(--muted);float:right;margin-left:8px}
+.rs .msg .l1{background:var(--msg1)}.rs .msg .h{background:var(--rpre)}.rs .msg .e{background:var(--surface);color:var(--muted)}.rs .msg .bd{background:var(--msgbd);border-bottom:0}
+.rs .statusline{font-family:var(--f-mono);font-size:24px;font-weight:700}
+.rs .cheat{font-size:14px;line-height:1.35}
+.rs .cheat .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.rs .cheat .c{border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+.rs .cheat .c b.h{font-family:var(--f-mono);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);display:block;margin-bottom:4px}
+.rs .small{font-size:14px;color:var(--muted)}
+.rs-flash{animation:rsflash 1.6s ease-out}
+@keyframes rsflash{0%,40%{background:var(--warn-soft);box-shadow:0 0 0 6px var(--warn-soft)}100%{background:transparent;box-shadow:0 0 0 6px transparent}}
+@media (prefers-reduced-motion: reduce){.rs-flash{animation:none;outline:2px solid var(--accent)}}
+.rs-float{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:10}
+.rs-float button{font:600 14px var(--f-body);padding:9px 14px;border-radius:999px;border:1px solid var(--accent);background:var(--surface);color:var(--accent);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.rs-float #rs-back{background:var(--accent);color:#fff}
+@media (max-width:640px){.rs .chap{padding:14px}.rs .two{grid-template-columns:1fr}.rs table{display:block;overflow-x:auto}.rs .chap>h2{font-size:22px}}
+
+/* resumo */
+.rs{--acc-soft:var(--accent-soft);--rw:var(--bad);--rw-soft:var(--bad-soft);--mn:#7a3e00;--mn-soft:#fff3df;--mn-line:#e9b96e;--rcode:#eef1f4;--rpre:#f4f6f8;--msg1:#e6eefb;--msgbd:#fff3df;font-size:16px;line-height:1.55}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .rs{--mn:#f3c27a;--mn-soft:#2e2312;--mn-line:#6b4f22;--rcode:#1c2733;--rpre:#121b24;--msg1:#16243a;--msgbd:#2e2312}}
+:root[data-theme="dark"] .rs{--mn:#f3c27a;--mn-soft:#2e2312;--mn-line:#6b4f22;--rcode:#1c2733;--rpre:#121b24;--msg1:#16243a;--msgbd:#2e2312}
+.rs-head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between;margin:8px 0 12px}
+.rs-head h2{font-family:var(--f-display);font-size:24px;margin:0}
+.rs-pdf{font:600 14px var(--f-body);color:var(--accent)}
+.rs-toc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:0 0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:4px 20px}
+.rs-toc a{color:var(--ink);text-decoration:none;font-size:15px;padding:3px 0;display:block}
+.rs-toc a:hover{color:var(--accent);text-decoration:underline}
+.rs-toc b{font-family:var(--f-mono);color:var(--accent);margin-right:8px;font-size:13px}
+.rs .chap{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px 22px;margin:0 0 18px}
+.rs h2{scroll-margin-top:40px}.rs h3{scroll-margin-top:16px}
+.rs .chap>h2{font-family:var(--f-display);font-size:26px;line-height:1.15;margin:0 0 4px}
+.rs h3{font-family:var(--f-body);font-size:18px;font-weight:700;margin:20px 0 6px;color:var(--accent)}
+.rs p{margin:0 0 10px}
+.rs ul,.rs ol{margin:0 0 10px;padding-left:22px}.rs li{margin-bottom:3px}
+.rs code,.rs .m{font-family:var(--f-mono);font-size:.88em;background:var(--rcode);padding:0 4px;border-radius:3px}
+.rs pre{font-family:var(--f-mono);font-size:14px;background:var(--rpre);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin:6px 0 12px;white-space:pre-wrap;overflow-x:auto}
+.rs .kicker{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.rs .intro{color:var(--muted);font-size:17px;margin:4px 0 14px;border-bottom:2px solid var(--ink);padding-bottom:10px}
+.rs .mn{background:var(--mn-soft);border:1.5px solid var(--mn-line);border-radius:8px;padding:10px 14px;margin:10px 0}
+.rs .mn .t{font-family:var(--f-mono);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mn);display:block;margin-bottom:4px}
+.rs .mn .big{font-family:var(--f-display);font-size:20px;font-weight:700;color:var(--mn)}
+.rs .trap{background:var(--rw-soft);border-left:4px solid var(--rw);padding:10px 14px;margin:12px 0;border-radius:0 6px 6px 0}
+.rs .trap .t{font-weight:700;color:var(--rw)}
+.rs .key{background:var(--ok-soft);border-left:4px solid var(--ok);padding:10px 14px;margin:12px 0;border-radius:0 6px 6px 0}
+.rs .key .t{font-weight:700;color:var(--ok)}
+.rs table{width:100%;border-collapse:collapse;font-size:15px;margin:6px 0 12px}
+.rs th,.rs td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.rs th{font-family:var(--f-mono);font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);border-bottom:1.5px solid var(--ink)}
+.rs td.c{font-family:var(--f-mono);font-size:14px;white-space:nowrap;font-weight:700}
+.rs .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.rs .flow{display:flex;align-items:stretch;gap:8px;margin:10px 0;flex-wrap:wrap}
+.rs .flow .b{flex:1 1 140px;border:1.5px solid var(--accent);background:var(--acc-soft);border-radius:6px;padding:8px 10px;font-size:15px;text-align:center}
+.rs .flow .b b{display:block}
+.rs .flow .ar{align-self:center;font-weight:700;color:var(--accent)}
+.rs .msg{border:1.5px solid var(--ink);border-radius:6px;overflow:hidden;font-family:var(--f-mono);font-size:14px;margin:6px 0 12px}
+.rs .msg div{padding:6px 10px;border-bottom:1px dashed var(--line);overflow-wrap:anywhere}
+.rs .msg .lab{font-family:var(--f-body);font-size:12px;color:var(--muted);float:right;margin-left:8px}
+.rs .msg .l1{background:var(--msg1)}.rs .msg .h{background:var(--rpre)}.rs .msg .e{background:var(--surface);color:var(--muted)}.rs .msg .bd{background:var(--msgbd);border-bottom:0}
+.rs .statusline{font-family:var(--f-mono);font-size:24px;font-weight:700}
+.rs .cheat{font-size:14px;line-height:1.35}
+.rs .cheat .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.rs .cheat .c{border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+.rs .cheat .c b.h{font-family:var(--f-mono);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);display:block;margin-bottom:4px}
+.rs .small{font-size:14px;color:var(--muted)}
+.rs-flash{animation:rsflash 1.6s ease-out}
+@keyframes rsflash{0%,40%{background:var(--warn-soft);box-shadow:0 0 0 6px var(--warn-soft)}100%{background:transparent;box-shadow:0 0 0 6px transparent}}
+@media (prefers-reduced-motion: reduce){.rs-flash{animation:none;outline:2px solid var(--accent)}}
+.rs-float{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:10}
+.rs-float button{font:600 14px var(--f-body);padding:9px 14px;border-radius:999px;border:1px solid var(--accent);background:var(--surface);color:var(--accent);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.rs-float #rs-back{background:var(--accent);color:#fff}
+@media (max-width:640px){.rs .chap{padding:14px}.rs .two{grid-template-columns:1fr}.rs table{display:block;overflow-x:auto}.rs .chap>h2{font-size:22px}}
 </style>
 
 </head>
@@ -158,6 +268,7 @@ section.view{padding-top:8px}
     <nav class="nav" role="tablist">
       <button class="navbtn" role="tab" data-v="teorico" aria-selected="true">Teórico<small>Teste 22 out · 15 escolha múltipla + 2 escrita</small></button>
       <button class="navbtn" role="tab" data-v="pratico" aria-selected="false">Prático<small>Completar código · tutoriais 2 a 6</small></button>
+      <button class="navbtn" role="tab" data-v="resumo" aria-selected="false">Resumo<small>A matéria toda, com mnemónicas</small></button>
     </nav>
   </header>
 
@@ -178,18 +289,658 @@ section.view{padding-top:8px}
     <main id="pmain"></main>
     <footer>As opções erradas das listas são parecidas com a certa (por exemplo TempData, ViewData e ViewBag), para treinar a distinção. No modo «Escrever», a correção ignora maiúsculas, minúsculas e espaços a mais, mas no Visual Studio o C# distingue-as. O separador «Exames anteriores» cobre a matéria que costuma aparecer nos enunciados práticos (sessões, cookies, cache, AJAX, autenticação).</footer>
   </section>
+
+  <section class="view" id="v-resumo" hidden>
+    <div class="rs-head"><h2>Resumo da matéria · Teste Teórico 1</h2><a class="rs-pdf" href="resumo.pdf" target="_blank" rel="noopener">Abrir a versão PDF para imprimir</a></div>
+    <p class="vintro">Aulas 01 a 06 explicadas com mnemónicas, esquemas e as armadilhas do gabarito. Nas perguntas do separador Teórico, o link «Ver no resumo» traz-te diretamente para a secção certa.</p>
+    <nav class="rs-toc" aria-label="Capítulos do resumo"><a class="rs-toc-a" href="#r-aplicacoes-cliente-servidor"><b>1</b>Aplicações cliente-servidor</a><a class="rs-toc-a" href="#r-url-e-navegacao-numa-pagina-web"><b>2</b>URL e navegação numa página web</a><a class="rs-toc-a" href="#r-http-terminologia-e-mensagens"><b>3</b>HTTP: terminologia e mensagens</a><a class="rs-toc-a" href="#r-metodos-http-e-get-vs-post"><b>4</b>Métodos HTTP e GET vs POST</a><a class="rs-toc-a" href="#r-cabecalhos-http"><b>5</b>Cabeçalhos HTTP</a><a class="rs-toc-a" href="#r-tipos-mime"><b>6</b>Tipos MIME</a><a class="rs-toc-a" href="#r-codigos-de-estado"><b>7</b>Códigos de estado</a><a class="rs-toc-a" href="#r-servidor-web-resolucao-de-enderecos"><b>8</b>Servidor web: resolução de endereços</a><a class="rs-toc-a" href="#r-entrega-de-conteudo-estatico-e-dinamico"><b>9</b>Entrega de conteúdo estático e dinâmico</a><a class="rs-toc-a" href="#r-html-visto-pelo-cliente"><b>10</b>HTML visto pelo cliente</a><a class="rs-toc-a" href="#r-proxies-e-tipos-de-cache"><b>11</b>Proxies e tipos de cache</a><a class="rs-toc-a" href="#r-autenticacao-e-cookies"><b>12</b>Autenticação e cookies</a><a class="rs-toc-a" href="#r-armadilhas-do-gabarito-do-professor"><b>13</b>Armadilhas do gabarito do professor</a><a class="rs-toc-a" href="#r-cabula-de-uma-pagina"><b>14</b>Cábula de uma página</a></nav>
+    <div class="rs">
+<section class="chap">
+<div class="kicker">Capítulo 1</div>
+<h2 id="r-aplicacoes-cliente-servidor">Aplicações cliente-servidor</h2>
+<p class="intro">A ideia base de tudo o resto: alguém pede, alguém responde.</p>
+
+<h3 id="r-o-que-e">O que é</h3>
+<p>Numa aplicação <b>cliente-servidor</b> há dois papéis. O <b>cliente</b> inicia sempre a comunicação com um <b>pedido</b>. O <b>servidor</b> fica à espera, processa o pedido e devolve uma <b>resposta</b>. Os dois têm de falar o mesmo <b>protocolo</b> (as regras da conversa) e normalmente estão em máquinas diferentes, ligados pela rede.</p>
+
+<div class="mn"><span class="t">Mnemónica · quem fala primeiro</span><span class="big">O cliente é o freguês, o servidor é o empregado de mesa.</span><br>O empregado nunca vai à mesa pedir-te nada: só responde ao que pedes. Por isso, <b>o servidor não faz pedidos ao cliente</b> (pergunta real do Moodle).</div>
+
+<h3 id="r-portas-mais-comuns">Portas mais comuns</h3>
+<table>
+<tr><th>Porta</th><th>Protocolo</th><th>Porta</th><th>Protocolo</th></tr>
+<tr><td class="c">20 / 21</td><td>FTP (dados / controlo)</td><td class="c">80</td><td><b>HTTP</b></td></tr>
+<tr><td class="c">22</td><td>SSH (acesso seguro)</td><td class="c">110</td><td>POP3 (receber e-mail)</td></tr>
+<tr><td class="c">23</td><td>Telnet (texto sem cifra)</td><td class="c">143</td><td>IMAP4 (receber e-mail)</td></tr>
+<tr><td class="c">25</td><td>SMTP (enviar e-mail entre servidores)</td><td class="c">443</td><td><b>HTTPS</b> (HTTP sobre TLS/SSL)</td></tr>
+<tr><td class="c">53</td><td>DNS (nomes para IPs)</td><td class="c">993 / 995</td><td>IMAP4 / POP3 sobre SSL</td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · portas</span><b>«Oitenta é a porta da rua, 443 é a porta blindada.»</b> HTTP 80, HTTPS 443.<br><b>FTP 20-21:</b> «vinte e um anos, já pode transferir». <b>SSH 22</b> vem logo a seguir, <b>Telnet 23</b> é o irmão inseguro do SSH. <b>SMTP 25:</b> «o correio sai ao dia 25». <b>DNS 53.</b> Receber correio: <b>POP 110</b> (é o mais velho, número redondo) e <b>IMAP 143</b>.</div>
+
+<h3 id="r-aplicacao-web-vs-aplicacao-desktop">Aplicação web vs aplicação desktop</h3>
+<p>Uma <b>aplicação Web</b> é um programa <b>guardado num servidor remoto</b> e <b>entregue pela Internet através da interface de um navegador</b>. Uma aplicação desktop (standalone) está instalada na máquina: código, dados locais e base de dados (integrada ou num servidor) correm sobre o sistema operativo local.</p>
+<p>Na versão web de um CRM, o código fica dividido: uma parte corre no <b>browser</b> (cliente) e outra no <b>servidor web</b>, junto à base de dados. O que circula entre os dois são <b>pedidos e respostas HTTP</b>.</p>
+<div class="two">
+<table><tr><th>Prós da Web</th><th>Contras da Web</th></tr>
+<tr><td>Multiplataforma<br>Atualizações automáticas<br>Instalação dispensada<br>Poupa recursos da máquina</td><td>Segurança<br>Precisa de Internet</td></tr></table>
+<table><tr><th>Prós do Desktop</th><th>Contras do Desktop</th></tr>
+<tr><td>Desempenho<br>Offline (sem Internet)<br>Segurança (mais controlo)</td><td>Preso ao dispositivo<br>Gasta disco<br>Instalação e atualizações manuais</td></tr></table>
+</div>
+<div class="mn"><span class="t">Mnemónica · vantagens</span><span class="big">A Web dá-te MAIS, o Desktop corre em DOS.</span><br><b>MAIS</b> (Web): <b>M</b>ultiplataforma · <b>A</b>tualizações automáticas · <b>I</b>nstalação dispensada · <b>S</b>em gastar recursos.<br><b>DOS</b> (Desktop): <b>D</b>esempenho · <b>O</b>ffline · <b>S</b>egurança controlada.</div>
+<div class="key"><span class="t">Pergunta real.</span> «Uma aplicação Web para ser usada necessita de:» → <b>um servidor e um cliente</b>. «Apenas um servidor» está errado.</div>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 2</div>
+<h2 id="r-url-e-navegacao-numa-pagina-web">URL e navegação numa página web</h2>
+<p class="intro">O que acontece entre escreveres um endereço e veres a página.</p>
+
+<h3 id="r-anatomia-de-um-url">Anatomia de um URL</h3>
+<pre>scheme:[//[user:password@]host[:port]][path][?query][#anchor]
+
+https://www.continente.pt/pt-pt/public/Pages/searchresults.aspx?k=arroz
+└─┬─┘   └──────┬───────┘└──────────────┬──────────────────┘ └─┬─┘
+esquema       host                    path                 query string</pre>
+<ul>
+<li><b>Esquemas</b>: http, https, ftp, mailto, file, data, irc.</li>
+<li>A <b>query string</b> (depois do <code>?</code>) leva pares <code>nome=valor</code> separados por <code>&amp;</code>.</li>
+<li>A <b>âncora</b> (<code>#...</code>) aponta para uma parte da página.</li>
+<li>Os URLs só podem usar caracteres <b>ASCII</b>. O <b>URL encoding</b> troca cada carácter inseguro por <code>%</code> seguido de 2 dígitos hexadecimais, e o <b>espaço</b> passa a <code>%20</code> ou <code>+</code>. Exemplo: <code>Malásia</code> → <code>Mal%C3%A1sia</code> (UTF-8).</li>
+</ul>
+<div class="mn"><span class="t">Mnemónica · ordem do URL</span><span class="big">«Eu Uso Senha Num Porto, Passo Pela Query, Até à Âncora»</span><br><b>E</b>squema · <b>U</b>tilizador:<b>S</b>enha@ · <b>N</b>ome do host · <b>P</b>orta · <b>P</b>ath · ?<b>Q</b>uery · #<b>Â</b>ncora.</div>
+
+<h3 id="r-sequencia-pedido-resposta-de-uma-pagina">Sequência pedido-resposta de uma página</h3>
+<div class="flow">
+<div class="b"><b>1. Utilizador</b>escreve o URL, clica num link ou num favorito</div><div class="ar">→</div>
+<div class="b"><b>2. Pedido HTTP</b>o browser pede a página ao servidor</div><div class="ar">→</div>
+<div class="b"><b>3. Servidor</b>abre o ficheiro (estático) ou executa código (dinâmico)</div><div class="ar">→</div>
+<div class="b"><b>4. Browser</b>mostra o HTML recebido</div>
+</div>
+<div class="flow">
+<div class="b"><b>5. Pedidos extra</b>um por cada imagem, CSS e script (no exemplo dos slides foram 35), possivelmente a outros servidores</div><div class="ar">→</div>
+<div class="b"><b>6. Mostra</b>vai mostrando cada elemento à medida que as respostas chegam</div><div class="ar">→</div>
+<div class="b"><b>7. JavaScript</b>executa o código do cliente, que pode gerar ainda mais pedidos</div>
+</div>
+<p><b>Porque é que o browser faz pedidos extra?</b> Porque o HTML só tem <i>referências</i> às imagens, CSS e scripts, não os próprios ficheiros. Cada referência obriga a um novo pedido. Conta assim: 1 HTML + 10 imagens + 2 CSS + 3 JS = <b>16 pedidos</b>.</p>
+
+<h3 id="r-estatico-vs-dinamico-visto-pelo-browser">Estático vs dinâmico, visto pelo browser</h3>
+<p><b>Conteúdo estático</b>: o servidor abre o ficheiro (por exemplo <code>a-diocese.html</code>) e devolve-o. <b>Conteúdo dinâmico</b>: o servidor <b>executa o código</b> associado ao recurso e o resultado é a resposta, que pode ser HTML, outro código ou até binário.</p>
+<div class="mn"><span class="t">Mnemónica · o browser é «cego» à cozinha</span><span class="big">Ao cliente chega o prato, não a receita.</span><br>Seja comida de lata (estático) ou feita na hora (dinâmico), o browser recebe sempre uma resposta HTTP. Pergunta real: receber conteúdo dinâmico <b>«é o mesmo que receber um conteúdo estático»</b>.</div>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 3</div>
+<h2 id="r-http-terminologia-e-mensagens">HTTP: terminologia e mensagens</h2>
+<p class="intro">HyperText Transfer Protocol: as palavras que o professor usa e a forma exata das mensagens.</p>
+
+<h3 id="r-definicoes-a-saber-de-cor">Definições a saber de cor</h3>
+<ul>
+<li><b>HTTP</b> é um protocolo da <b>camada de aplicação</b> que usa <b>TCP</b> (porta 80) como transporte. Segue o paradigma <b>pedido-resposta</b>.</li>
+<li>Resposta do gabarito à pergunta «HTTP é:» → <b>«um protocolo de comunicação usado por todos os agentes web num canal de comunicação»</b>. A opção «um protocolo de comunicação», sozinha, só dá meia cotação.</li>
+<li><b>Agentes</b>: cliente HTTP (por exemplo o browser), servidor HTTP (Apache, IIS, Kestrel) e, pelo meio, <b>proxies</b>.</li>
+<li><b>Proxy</b>: intermediário que é <b>servidor para o cliente e cliente para o servidor</b>. Serve para <b>cache</b>, <b>balanceamento de carga</b>, <b>filtragem de conteúdos</b> e segurança, e permite atravessar firewalls. Pode haver vários proxies em cadeia.</li>
+<li><b>Gateway</b>: intermediário que passa a mensagem a outro sistema (é daí que vem o «502 Bad Gateway»).</li>
+<li><b>Ligação</b>: o «circuito virtual» entre browser, proxies e servidor.</li>
+</ul>
+
+<h3 id="r-stateless-sem-estado">Stateless: sem estado</h3>
+<p>Cada troca HTTP é <b>um pedido e uma resposta</b>, e o servidor <b>não se lembra</b> de nada entre pedidos. Protocolos como FTP, SMTP e POP são <i>stateful</i>, porque mantêm uma sessão. No HTTP/1.1 a ligação pode manter-se aberta (<b>persistent connection</b>), mas isso serve só para eficiência e <b>não guarda estado</b>. Para haver estado é preciso construí-lo por cima, com cookies e sessões.</p>
+<div class="mn"><span class="t">Mnemónica · stateless</span><span class="big">O HTTP tem memória de peixinho dourado.</span><br>Cada pedido é um desconhecido novo. Os cookies são o post-it que o cliente cola na testa para o servidor o reconhecer.</div>
+
+<h3 id="r-a-estrutura-das-mensagens">A estrutura das mensagens</h3>
+<div class="two">
+<div class="msg">
+<div class="l1">GET /a-diocese.html HTTP/1.1 <span class="lab">linha de pedido</span></div>
+<div class="h">Host: www.diocese-vilareal.pt<br>User-Agent: Mozilla/5.0 ...<br>Referer: http://home.utad.pt/... <span class="lab">cabeçalhos</span></div>
+<div class="e">(linha vazia: CRLF) <span class="lab">separador</span></div>
+<div class="bd">(corpo: vazio num GET) <span class="lab">corpo</span></div>
+</div>
+<div class="msg">
+<div class="l1">HTTP/1.1 200 OK <span class="lab">linha de estado</span></div>
+<div class="h">Content-Type: text/html<br>Content-Length: 9934<br>Server: Microsoft-IIS/4.0 <span class="lab">cabeçalhos</span></div>
+<div class="e">(linha vazia: CRLF) <span class="lab">separador</span></div>
+<div class="bd">&lt;HTML&gt; ... <span class="lab">corpo</span></div>
+</div>
+</div>
+<table>
+<tr><th>Linha</th><th>Sintaxe</th><th>Exemplo</th></tr>
+<tr><td>Linha de pedido</td><td><code>método URI-do-pedido versão-HTTP</code></td><td><code>GET /tc/home.html HTTP/1.1</code></td></tr>
+<tr><td>Linha de estado</td><td><code>versão-HTTP código frase-explicativa</code></td><td><code>HTTP/1.1 404 Not Found</code></td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · as primeiras linhas</span><b>Pedido = «MUV»</b>: <b>M</b>étodo · <b>U</b>RI · <b>V</b>ersão. «O cliente <b>MUV</b>e-se para pedir.»<br><b>Resposta = «VCF»</b>: <b>V</b>ersão · <b>C</b>ódigo · <b>F</b>rase. «<b>V</b>ê <b>C</b>omo <b>F</b>icou.»<br><b>Mensagem = carta</b>: linha de topo (a quem e o quê) · carimbos (cabeçalhos) · linha em branco · conteúdo (corpo).</div>
+<div class="trap"><span class="t">Armadilha (pergunta real):</span> ao escrever <code>https://www.ads.pt/</code> na barra, a linha gerada é <b><code>GET / HTTP/1.1</code></b>. Não é <code>HTTPS/1.1</code>, porque a versão é sempre «HTTP». Também não leva o domínio, que vai no cabeçalho <code>Host</code>, nem o URL completo.</div>
+<p>A <b>frase explicativa</b> (OK, Not Found...) é para humanos: mudá-la não altera o comportamento de um cliente bem feito, que só olha para o código.</p>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 4</div>
+<h2 id="r-metodos-http-e-get-vs-post">Métodos HTTP e GET vs POST</h2>
+<p class="intro">Os verbos do protocolo e a diferença que sai sempre em teste.</p>
+<table>
+<tr><th>Versão</th><th>Métodos introduzidos</th><th>Para quê</th></tr>
+<tr><td>HTTP 0.9</td><td><b>GET</b></td><td>Pedir um recurso (página, imagem...)</td></tr>
+<tr><td>HTTP 1.0</td><td><b>HEAD</b>, <b>POST</b></td><td>HEAD: só os cabeçalhos, sem corpo (para comparar versões). POST: enviar dados no corpo (formulários).</td></tr>
+<tr><td>HTTP 1.1</td><td>PUT, DELETE, OPTIONS, TRACE, CONNECT, PATCH</td><td>PUT: guardar um recurso no servidor (upload). DELETE: apagar...</td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · versões</span><b>0.9 → G</b>. <b>1.0 → G + H + P</b> («<b>GHP</b>, Grande Hotel do Porto»). <b>1.1 → o resto</b>.</div>
+<p>Os sites e aplicações web normais usam <b>só GET e POST</b>. As <b>APIs REST</b> usam os métodos como operações CRUD:</p>
+<table>
+<tr><th>Método</th><th>CRUD</th><th>Mnemónica</th></tr>
+<tr><td class="c">POST</td><td>Create</td><td>«<b>P</b>ostar é <b>p</b>ublicar algo novo»</td></tr>
+<tr><td class="c">GET</td><td>Read</td><td>«<b>G</b>et = <b>G</b>anhar, trazer cá»</td></tr>
+<tr><td class="c">PUT</td><td>Update / Replace</td><td>«<b>Put</b>: pôr no lugar, substituir tudo»</td></tr>
+<tr><td class="c">PATCH</td><td>Partial update</td><td>«<b>Patch</b> = remendo: só um bocado»</td></tr>
+<tr><td class="c">DELETE</td><td>Delete</td><td>«apagar»</td></tr>
+</table>
+
+<h3 id="r-get-vs-post">GET vs POST</h3>
+<pre>&lt;form action="/pesquisa" method="get"&gt;  →  GET /pesquisa?q=UTAD HTTP/1.1      (dados no URL)
+&lt;form action="/pesquisa" method="post"&gt; →  POST /pesquisa HTTP/1.1  ...  q=UTAD  (dados no corpo)</pre>
+<table>
+<tr><th></th><th>GET</th><th>POST</th></tr>
+<tr><td>Onde vão os dados</td><td>No URL (query string), à vista de todos</td><td>No corpo da mensagem</td></tr>
+<tr><td>Voltar atrás / recarregar</td><td>Inofensivo</td><td>Reenvia os dados (o browser avisa)</td></tr>
+<tr><td>Favoritos / cache / histórico</td><td>Sim / sim / ficam no histórico</td><td>Não / não / não ficam</td></tr>
+<tr><td>Tamanho / tipo de dados</td><td>Limitado (URL até cerca de 2048 caracteres), só ASCII</td><td>Sem limites, aceita binário</td></tr>
+<tr><td>Segurança</td><td>Menos segura: <b>nunca para passwords</b></td><td>Um pouco mais segura (não fica em logs nem no histórico)</td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · GET vs POST</span><span class="big">GET é um postal, POST é uma carta fechada.</span><br>O postal toda a gente lê (URL visível), cabe pouco (tamanho limitado), podes fotocopiar e guardar (favoritos, cache, histórico) e só leva texto (ASCII). A carta fechada leva o que quiseres lá dentro (corpo, binário, ficheiros), mas não a podes guardar nos favoritos.</div>
+<div class="key"><span class="t">Exame de 2021.</span> Para uma pesquisa tipo Google, o melhor é <b>GET</b>: a pesquisa não altera dados e o URL com o resultado pode ser guardado e partilhado.</div>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 5</div>
+<h2 id="r-cabecalhos-http">Cabeçalhos HTTP</h2>
+<p class="intro">Metadados em pares <code>nome: valor</code>, nos pedidos e nas respostas.</p>
+<p>Os cabeçalhos deixam cliente e servidor passar <b>informação adicional</b>. Ficam depois da primeira linha e antes da linha vazia, e <b>usam-se nos pedidos e nas respostas</b> (pergunta real).</p>
+<h3 id="r-os-4-grupos">Os 4 grupos</h3>
+<table>
+<tr><th>Grupo</th><th>O que faz</th><th>Exemplos</th></tr>
+<tr><td><b>General</b></td><td>Aplica-se a pedidos e respostas, sem descrever o corpo</td><td><code>Date</code>, <code>Connection</code>, <code>Cache-Control</code>, <code>Warning</code></td></tr>
+<tr><td><b>Request</b></td><td>Informação sobre o pedido ou sobre o cliente</td><td><code>Host</code>, <code>User-Agent</code>, <code>Referer</code>, <code>Authorization</code>, <code>Accept-Encoding</code>, <code>If-Modified-Since</code></td></tr>
+<tr><td><b>Response</b></td><td>Informação sobre a resposta ou sobre o servidor</td><td><code>Location</code>, <code>Server</code>, <code>WWW-Authenticate</code></td></tr>
+<tr><td><b>Entity</b></td><td>Descreve o corpo (o conteúdo)</td><td><code>Content-Type</code>, <code>Content-Length</code>, <code>Last-Modified</code>, <code>Content-Encoding</code></td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · grupos</span><span class="big">«Gatos Raramente Respondem Educadamente»</span><br><b>G</b>eneral · <b>R</b>equest · <b>R</b>esponse · <b>E</b>ntity. E a regra de ouro: se começa por <b>Content-</b>, fala do <b>corpo</b>, logo é <b>Entity</b>.</div>
+
+<h3 id="r-os-cabecalhos-que-mais-saem">Os cabeçalhos que mais saem</h3>
+<table class="long">
+<tr><th>Header</th><th>Tipo</th><th>Para que serve</th></tr>
+<tr><td class="c">Host</td><td>Pedido</td><td>Nome do servidor de destino. Permite o <b>virtual hosting</b> (vários sites num servidor). Obrigatório no HTTP/1.1.</td></tr>
+<tr><td class="c">User-Agent</td><td>Pedido</td><td>Identifica o software cliente (browser). O servidor pode diferenciar a resposta por cliente.</td></tr>
+<tr><td class="c">Referer</td><td>Pedido</td><td>URL da página onde estava o link que originou o pedido. Não é enviado se o URL foi escrito à mão.</td></tr>
+<tr><td class="c">Authorization</td><td>Pedido</td><td>Credenciais, enviadas depois de um 401.</td></tr>
+<tr><td class="c">Accept-Encoding</td><td>Pedido</td><td>O cliente diz que <b>aceita conteúdo comprimido</b> e com que método (<code>gzip</code>, <code>x-zip</code>...).</td></tr>
+<tr><td class="c">If-Modified-Since</td><td>Pedido</td><td>Pedido condicional: «manda só se mudou desde esta data», senão o servidor responde <b>304</b>.</td></tr>
+<tr><td class="c">Location</td><td>Resposta</td><td>Novo URL nos redirecionamentos <b>301/302</b>.</td></tr>
+<tr><td class="c">WWW-Authenticate</td><td>Resposta</td><td>Acompanha o <b>401</b> e diz o «realm» protegido.</td></tr>
+<tr><td class="c">Server</td><td>Resposta</td><td>Software do servidor (por exemplo Microsoft-IIS ou Kestrel).</td></tr>
+<tr><td class="c">Content-Type</td><td>Entidade</td><td>Tipo <b>MIME</b> do corpo. Aparece em respostas e também em pedidos com corpo (POST).</td></tr>
+<tr><td class="c">Content-Length</td><td>Entidade</td><td>Tamanho do corpo em <b>bytes</b>. Obrigatório em pedidos com corpo (sem ele: 411).</td></tr>
+<tr><td class="c">Last-Modified</td><td>Entidade</td><td>Data da última alteração do conteúdo. Essencial para a cache.</td></tr>
+<tr><td class="c">Date</td><td>Geral</td><td>Quando a mensagem foi criada.</td></tr>
+</table>
+<div class="trap"><span class="t">Referer (gabarito com 4 certas):</span> indica o URL da página que estava a ser mostrada · o cliente indica o local que deu origem ao pedido · permite referenciar um recurso que não está no servidor de destino · permite distinguir um clique num link de um URL escrito na barra. <b>Errada:</b> «o servidor indica a referência base da resposta» (o Referer é um header de pedido, não de resposta). Nota: <i>Referer</i> está mal escrito de propósito na norma, só com um «r» antes do «er».</div>
+<div class="trap"><span class="t">Accept-Encoding (gabarito com 2 certas):</span> «indica que o cliente aceita conteúdos comprimidos» <b>e</b> «indica qual o método de compressão que pode ser usado na resposta». Não tem nada a ver com cifra nem com segurança.</div>
+
+<h3 id="r-quem-insere-os-cabecalhos">Quem insere os cabeçalhos?</h3>
+<ul>
+<li><b>Pedidos</b>: o browser e também o código da aplicação (por exemplo, JavaScript com <code>request.setRequestHeader("Content-Type", ...)</code>).</li>
+<li><b>Respostas a conteúdo estático</b>: o servidor web.</li>
+<li><b>Respostas a conteúdo dinâmico</b>: o servidor web e também o código da aplicação (<code>Response.AddHeader("CustomHeader","CustomValue")</code>).</li>
+</ul>
+<p><b>Response buffering:</b> o servidor retém a resposta até o script acabar (ou até <code>Flush</code>/<code>End</code>). É por isso que um <code>AddHeader</code> escrito a meio do HTML ainda funciona, já que os cabeçalhos ainda não saíram.</p>
+<h3 id="r-forbidden-header-names">Forbidden header names</h3>
+<p>São cabeçalhos que o código <b>não pode alterar</b>, porque o browser controla-os: os que começam por <code>Proxy-</code> ou <code>Sec-</code>, e <code>Accept-Charset</code>, <code>Accept-Encoding</code>, <code>Connection</code>, <code>Content-Length</code>, <code>Cookie</code>, <code>Date</code>, <code>Host</code>, <code>Origin</code>, <code>Keep-Alive</code>, <code>Referer</code>...</p>
+<div class="mn"><span class="t">Mnemónica · proibidos</span><span class="big">O browser não deixa mexer em «quem sou, por onde vou e o que aceito».</span><br><b>Quem sou</b>: Host, Origin, Referer, Cookie. <b>Por onde vou</b>: Connection, Keep-Alive, Content-Length, Date. <b>O que aceito</b>: Accept-Charset, Accept-Encoding. Mais tudo o que começa por <b>Proxy-</b> e <b>Sec-</b>.</div>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 6</div>
+<h2 id="r-tipos-mime">Tipos MIME</h2>
+<p class="intro">Multipurpose Internet Mail Extensions: a etiqueta que diz o que vem no corpo.</p>
+<p>O MIME nasceu no <b>e-mail</b> e foi adotado pelo HTTP. O browser não confia na extensão do ficheiro: decide o que fazer com o corpo (mostrar HTML, desenhar uma imagem, chamar um helper...) pelo <b>Content-Type</b>.</p>
+<pre>Content-Type: tipo/subtipo [; parâmetros]
+
+text/html        text/plain       text/css
+image/gif        image/jpeg       audio/x-wav     video/mpeg-2
+text/html; charset=utf-8          (o charset por omissão é ISO-8859-1)</pre>
+<div class="mn"><span class="t">Mnemónica · formato MIME</span><span class="big">«Família / Pessoa ; Detalhe»</span><br><code>image/gif</code> = família <i>image</i>, membro <i>gif</i>. Depois do <b>;</b> vêm os detalhes, como o charset. E o charset por omissão é <b>ISO-8859-1</b>: «o <b>I</b>SO é o <b>I</b>nicial».</div>
+<div class="trap"><span class="t">image/gif (gabarito com 2 certas):</span> «a mensagem tem no corpo os bytes de uma imagem» <b>e</b> «o cliente recebeu uma imagem».</div>
+<h3 id="r-casos-especiais">Casos especiais</h3>
+<ul>
+<li><b>multipart</b>: várias partes num corpo, separadas por uma fronteira (<code>boundary</code>):
+<pre>Content-Type: multipart/x-mixed-replace; boundary=XPTOText
+--XPTOText
+Content-Type: image/gif
+...
+--XPTOText--          ← dois hífenes no fim = acabou</pre></li>
+<li><b>Base64 / data URI</b>: incorpora o conteúdo no próprio HTML, <b>sem pedido HTTP extra</b>:<br><code>&lt;img src="data:image/gif;base64,R0lGODlh..."&gt;</code>, com o formato <code>data:[&lt;mediatype&gt;][;base64],&lt;dados&gt;</code>.</li>
+<li>A <b>compressão</b> negoceia-se à parte: o cliente envia <code>Accept-Encoding</code> e o servidor indica no <code>Content-Encoding</code> o que usou.</li>
+<li><b>Pode ser alterado por código?</b> Sim: numa resposta dinâmica a aplicação define o Content-Type (é assim que um controller devolve JSON ou um ficheiro PDF).</li>
+</ul>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 7</div>
+<h2 id="r-codigos-de-estado">Códigos de estado</h2>
+<p class="intro">Três dígitos na linha de estado que classificam a resposta.</p>
+<p>Porque existem? (Gabarito com 2 certas:) <b>para classificar a resposta com um tipo e contexto</b> e <b>para os clientes interpretarem de forma fácil e rápida o tipo de resposta que recebem</b>. Não são um checksum.</p>
+<table>
+<tr><th>Classe</th><th>Significado</th><th>Mnemónica</th></tr>
+<tr><td class="c">1xx</td><td>Informação: pedido recebido, a continuar</td><td>«<b>Aguenta aí</b>»</td></tr>
+<tr><td class="c">2xx</td><td>Sucesso: recebido, entendido e aceite</td><td>«<b>Aqui tens</b>»</td></tr>
+<tr><td class="c">3xx</td><td>Redireção: é preciso mais uma ação</td><td>«<b>Vai ali</b>»</td></tr>
+<tr><td class="c">4xx</td><td>Erro do cliente: pedido mal feito ou impossível</td><td>«<b>A culpa é tua</b>»</td></tr>
+<tr><td class="c">5xx</td><td>Erro do servidor: falhou um pedido aparentemente válido</td><td>«<b>A culpa é minha</b>»</td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · classes</span><span class="big">«Aguenta · Toma · Vai · Tu · Eu»</span><br>1 aguenta, 2 toma, 3 vai, 4 a culpa é <b>tua</b>, 5 a culpa é <b>minha (servidor)</b>.</div>
+<h3 id="r-os-codigos-a-saber">Os códigos a saber</h3>
+<table class="long">
+<tr><th>Código</th><th>Nome</th><th>Quando e como lembrar</th></tr>
+<tr><td class="c">100</td><td>Continue</td><td>«Podes mandar o resto do corpo» (o cliente envia <code>Expect: 100-continue</code>).</td></tr>
+<tr><td class="c">200</td><td>OK</td><td>Tudo certo, o recurso vem no corpo.</td></tr>
+<tr><td class="c">201</td><td>Created</td><td>Foi criado um recurso novo.</td></tr>
+<tr><td class="c">206</td><td>Partial Content</td><td>Vem só um pedaço (downloads em partes).</td></tr>
+<tr><td class="c">301</td><td>Moved Permanently</td><td>Mudou-se <b>para sempre</b>, com <code>Location</code>. Proxies e browsers podem guardar em cache.</td></tr>
+<tr><td class="c">302</td><td>Found</td><td>Mudou-se <b>temporariamente</b>, com <code>Location</code>. É o que o <code>RedirectToAction</code> devolve.</td></tr>
+<tr><td class="c">303</td><td>See Other</td><td>«Vê noutro sítio, com GET» (depois de um POST).</td></tr>
+<tr><td class="c">304</td><td>Not Modified</td><td>«Usa a tua cópia em cache», em resposta a um <code>If-Modified-Since</code>. Vai sem corpo.</td></tr>
+<tr><td class="c">307 / 308</td><td>Temporary / Permanent Redirect</td><td>Como o 302 / 301, mas <b>mantêm o método</b> (um POST continua POST).</td></tr>
+<tr><td class="c">400</td><td>Bad Request</td><td>Pedido mal formulado (sintaxe errada).</td></tr>
+<tr><td class="c">401</td><td>Unauthorized</td><td>«<b>Quem és tu?</b>»: falta autenticação. Vai com <code>WWW-Authenticate</code>.</td></tr>
+<tr><td class="c">403</td><td>Forbidden</td><td>«<b>Sei quem és, mas não entras.</b>»</td></tr>
+<tr><td class="c">404</td><td>Not Found</td><td>«<b>Não existe.</b>»</td></tr>
+<tr><td class="c">411</td><td>Length Required</td><td>Falta o <code>Content-Length</code>.</td></tr>
+<tr><td class="c">500</td><td>Internal Server Error</td><td>O código do servidor rebentou.</td></tr>
+<tr><td class="c">502</td><td>Bad Gateway</td><td>O <b>intermediário</b> (proxy ou gateway) recebeu uma resposta inválida do servidor de cima (upstream).</td></tr>
+<tr><td class="c">503</td><td>Service Unavailable</td><td>Servidor em baixo ou sobrecarregado.</td></tr>
+<tr><td class="c">505</td><td>HTTP Version Not Supported</td><td>Versão do HTTP não suportada.</td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónicas · os pares que confundem</span><b>301 vs 302:</b> «<b>1</b> = <b>1</b>ª e única morada nova (permanente); <b>2</b> = <b>2</b>ª casa, de férias (temporário).»<br><b>401 vs 403:</b> «401: o porteiro pede-te o cartão. 403: viu o cartão e mesmo assim não entras.»<br><b>502:</b> «<b>Bad Gateway</b> = o estafeta (proxy) foi buscar a encomenda e trouxe lixo.»</div>
+<div class="trap"><span class="t">502 (gabarito com 2 certas):</span> «o servidor proxy que representa o servidor de gateway não consegue obter um bom resultado do servidor de upstream» <b>e</b> «problemas de acesso provocados por uma falha na comunicação entre dois ou mais servidores que retransmitem dados entre si».</div>
+<div class="trap"><span class="t">404, a maior armadilha:</span> o gabarito do professor deu como certas «<b>erro de processamento do pedido</b>» e «<b>erro por pedido mal formulado</b>». Na norma, o 404 é <i>Not Found</i> e «mal formulado» é o 400. Se te aparecer esta pergunta com estas opções, responde como o gabarito.</div>
+<h3 id="r-exemplos-dos-slides">Exemplos dos slides</h3>
+<pre>http://www.utad.pt   →  307 → http://www.utad.pt/  → 200
+http://www.utad.pt/pt/index.asp  →  302 Object Moved, Location: .../pt/index.html
+ASP.NET:  HTTP/1.1 302 Found · Content-Length: 0 · Location: /MyController/MyRoute</pre>
+<p><b>Diretoria sem a barra final</b> (livro): <code>/~shklar</code> é redirecionado (301) para <code>/~shklar/</code>. Sem a barra, os URLs relativos da página seriam resolvidos de forma errada.</p>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 8</div>
+<h2 id="r-servidor-web-resolucao-de-enderecos">Servidor web: resolução de endereços</h2>
+<p class="intro">Como o servidor descobre que ficheiro corresponde a <code>/tc/index.html</code> e se o podes ver.</p>
+<h3 id="r-o-caminho-de-um-pedido-no-servidor">O caminho de um pedido no servidor</h3>
+<div class="flow">
+<div class="b"><b>Suporte de comunicações de rede</b>recebe o pedido e envia a resposta</div><div class="ar">→</div>
+<div class="b"><b>1. Resolução de endereços</b>Virtual hosting · Address mapping · Pseudónimos · Autenticação</div><div class="ar">→</div>
+<div class="b"><b>2. Processamento do pedido</b>estático (static, as-is) ou dinâmico (CGI, SSI, APIs, Servlets...)</div><div class="ar">→</div>
+<div class="b"><b>3. Geração da resposta</b></div>
+</div>
+<div class="mn"><span class="t">Mnemónica · as 3 etapas</span><span class="big">O servidor joga RPG: Resolve → Processa → Gera.</span></div>
+<p><b>Definição do gabarito:</b> a secção «Address Resolution» é <b>«um conjunto de etapas que visam identificar os ficheiros responsáveis pela produção da resposta e verificar a permissão de acesso a estes»</b>.</p>
+<div class="mn"><span class="t">Mnemónica · os 4 passos da resolução</span><span class="big">«Vê A Pasta Autorizada»</span><br><b>V</b>irtual hosting (que site?) → <b>A</b>ddress mapping (que pasta e ficheiro?) → <b>P</b>seudónimos (há atalhos?) → <b>A</b>utenticação (tens autorização?). A frase resume o que a resolução faz: encontrar a pasta e verificar se estás autorizado.</div>
+
+<h3 id="r-1-virtual-hosting">1. Virtual hosting</h3>
+<p>Um servidor (e até um único IP) aloja <b>vários sites</b>. Como sabe qual queres? Pelo cabeçalho <b><code>Host</code></b>. Sem o Host, <code>GET /tc/index.html</code> enviado para <code>188.114.97.5</code> seria ambíguo.</p>
+<pre>&lt;VirtualHost *:80&gt;
+    ServerName   www.tribunalconstitucional.pt
+    DocumentRoot /var/www
+    &lt;Directory /var/www&gt;  DirectoryIndex index.php ... &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</pre>
+<div class="key"><span class="t">Exame de 2021.</span> Um servidor com várias aplicações, todas com <code>wwwroot\images\logo.png</code>, recebe <code>GET /images/logo.png</code>. Como decide qual usar? Pelo <b>Host</b>, que identifica o virtual host, e pela raiz (DocumentRoot) desse host.</div>
+
+<h3 id="r-2-address-mapping">2. Address mapping</h3>
+<p>Traduz o caminho do URL para um ficheiro no disco, a partir da <b>raiz web</b> (DocumentRoot). Não faz sentido a raiz do URL ser a raiz do disco, porque exporia o sistema todo.</p>
+<table>
+<tr><th>Servidor</th><th>Raiz web por omissão</th></tr>
+<tr><td>Apache (Linux)</td><td><code>/var/www</code></td></tr>
+<tr><td>Apache (Windows)</td><td><code>C:/Program Files/Apache Software Foundation/Apache2.2/htdocs/</code></td></tr>
+<tr><td>IIS (Windows)</td><td><code>c:\Inetpub\wwwroot</code></td></tr>
+<tr><td>ASP.NET Core</td><td>a pasta <code>wwwroot</code> do projeto</td></tr>
+</table>
+<p>Exemplo: com <code>DocumentRoot /var/www</code>, <code>/tc/index.html</code> → <code>/var/www/tc/index.html</code>. O servidor verifica se a pasta <code>tc</code> existe e se tem lá o ficheiro <code>index.html</code>.</p>
+
+<h3 id="r-3-pseudonimos-aliases">3. Pseudónimos (aliases)</h3>
+<pre>Alias "/image" "/ftp/pub/image"          → /image/x.png vem de /ftp/pub/image/x.png
+Alias /tc/ /var/tc/
+Alias /tc/index.html /site/index.asp?id=tribunal</pre>
+<p>Ligam um caminho do URL a uma pasta <b>fora</b> da árvore do DocumentRoot. Assim, <b>dão acesso a conteúdo que o virtual host normalmente não alcançaria</b> e permitem <b>partilhar ficheiros entre virtual hosts</b>.</p>
+<div class="trap"><span class="t">Pseudónimos (gabarito com 3 certas):</span> <b>mascarar caminhos para ficheiros</b> · <b>mudar os nomes aos ficheiros</b> · <b>associar recursos externos à estrutura de ficheiros da aplicação web</b>. Erradas: criar endereços do servidor, esconder ficheiros, proteger de ataques.</div>
+<div class="mn"><span class="t">Mnemónica · pseudónimo</span><span class="big">Um pseudónimo é um nome artístico.</span><br>O ficheiro tem o nome verdadeiro e a morada verdadeira no disco, mas o público conhece-o pelo nome artístico (o caminho no URL). <b>Mascara</b> o caminho, <b>muda o nome</b> e <b>traz de fora</b> conteúdo para a aplicação.</div>
+
+<h3 id="r-4-autenticacao">4. Autenticação</h3>
+<pre>Servidor:  HTTP/1.1 401 Unauthorized
+           WWW-Authenticate: Basic realm="User Visible Realm"
+Cliente:   GET /tc/index.html HTTP/1.1
+           Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l    (user:pass em Base64)</pre>
+<div class="trap"><span class="t">Módulo de Autenticação (gabarito com 2 certas):</span> <b>«a componente que verifica se o pedido tem as permissões de acesso ao recurso solicitado»</b> e <b>«a secção responsável por gerar mensagens de resposta com o código 401»</b>. Erradas: «verifica username e password», «gera um formulário», «onde os utilizadores se autenticam».</div>
+<p>No fim da resolução de endereços já se sabe o <b>recurso (ficheiro)</b> e a <b>autenticação está verificada</b>. Falta saber se o ficheiro é estático ou dinâmico, e isso é o capítulo seguinte.</p>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 9</div>
+<h2 id="r-entrega-de-conteudo-estatico-e-dinamico">Entrega de conteúdo estático e dinâmico</h2>
+<p class="intro">Depois de encontrar o ficheiro: devolvê-lo tal como está ou executá-lo?</p>
+<h3 id="r-conteudo-estatico">Conteúdo estático</h3>
+<table>
+<tr><th>Tipo</th><th>Como funciona</th></tr>
+<tr><td><b>Static content pages</b></td><td>O servidor <b>gera os cabeçalhos</b> e junta o ficheiro como <b>corpo</b>.</td></tr>
+<tr><td><b>Páginas «as-is»</b></td><td>O ficheiro <b>já é a mensagem HTTP completa</b>, com os cabeçalhos incluídos, e é enviado tal e qual.</td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · static vs as-is</span><span class="big">«Static: o servidor põe o envelope. As-is: a carta já vem no envelope.»</span></div>
+<div class="trap"><span class="t">Conteúdos estáticos (gabarito com 3 certas):</span> são assim chamados <b>por terem um conteúdo estático</b> · <b>porque o seu conteúdo corresponde integralmente ao conteúdo da mensagem de resposta</b> · <b>porque obtê-los não implica processar código de qualquer espécie</b>. Errada: «por estarem sempre na mesma pasta».</div>
+
+<h3 id="r-conteudo-dinamico-as-tecnologias">Conteúdo dinâmico: as tecnologias</h3>
+<table>
+<tr><th>Tecnologia</th><th>Ideia-chave</th></tr>
+<tr><td><b>CGI</b>, Common Gateway Interface</td><td>O servidor percebe que o pedido é para um programa (por exemplo Perl) e não para um HTML, e <b>cria um processo filho por pedido</b>. O programa lê as variáveis CGI e devolve um documento. Problema: <b>um processo novo por pedido não escala</b>.</td></tr>
+<tr><td><b>SSI</b>, Server Side Includes</td><td>Fragmentos dinâmicos (outros ficheiros, datas, resultados de comandos) inseridos <b>dentro do HTML</b> através de <b>macros</b>, sem o peso de um CGI completo.</td></tr>
+<tr><td><b>APIs nativas</b></td><td>Código <b>compilado</b> para um servidor específico: <b>Apache Server API</b>, <b>ISAPI</b> (IIS).</td></tr>
+<tr><td><b>FastCGI</b></td><td>Resolve o problema do CGI: <b>processos persistentes</b> que ficam vivos entre pedidos.</td></tr>
+<tr><td><b>Template processing</b></td><td>HTML com código lá dentro: <b>PHP</b>, <b>Cold Fusion</b>, <b>Active Server Pages</b>.</td></tr>
+<tr><td><b>Servlets</b> / <b>JSP</b></td><td>As soluções Java: Servlets e Java Server Pages.</td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · tecnologias dinâmicas</span><span class="big">«Cada Servidor Ainda Faz Truques Super Java»</span><br><b>C</b>GI · <b>S</b>SI · <b>A</b>PIs nativas · <b>F</b>astCGI · <b>T</b>emplates · <b>S</b>ervlets · <b>J</b>SP.<br><b>CGI vs FastCGI</b>: «O CGI chama um <b>táxi novo para cada passageiro</b>. O FastCGI tem um <b>autocarro sempre a circular</b>.»</div>
+<h3 id="r-passos-do-servidor-com-um-cgi">Passos do servidor com um CGI</h3>
+<ol>
+<li>Determina se é um programa CGI.</li>
+<li>Traduz para o ficheiro correspondente.</li>
+<li>Verifica se é um ficheiro válido.</li>
+<li>Verifica as permissões.</li>
+<li>Define as variáveis de ambiente.</li>
+<li>Cria um processo filho para correr o programa.</li>
+<li>Processa a resposta do programa CGI.</li>
+</ol>
+<div class="key"><span class="t">Perguntas reais.</span> CGI → <b>«serve para produzir dinamicamente conteúdos de respostas»</b> (não é «mais rápido» nem «reencaminhar para outro servidor»). «As linguagens como PHP, Java, Perl...» → <b>«nenhuma das opções apresentadas»</b>, porque as opções eram todas erradas: não são usadas pelo cliente, não servem «unicamente» para extensões, não produzem conteúdo estático e não armazenam conteúdo.</div>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 10</div>
+<h2 id="r-html-visto-pelo-cliente">HTML visto pelo cliente</h2>
+<p class="intro">O que o browser faz com o HTML que recebe: os pedidos que gera, os URLs relativos e os formulários.</p>
+<h3 id="r-elementos-que-geram-pedidos-automaticamente">Elementos que geram pedidos automaticamente</h3>
+<p>Ao ler o HTML, o browser pede sozinho: <code>&lt;link&gt;</code> (CSS), <code>&lt;script src&gt;</code> (JS) e <code>&lt;img&gt;</code> (imagens). O <code>&lt;a&gt;</code> <b>não conta</b>, porque só gera um pedido quando clicas.</p>
+<div class="mn"><span class="t">Mnemónica · pedidos automáticos</span><span class="big">«O browser é LIS: Link, Img, Script.»</span><br>Estes três pedem sem ninguém mandar. O <b>&lt;a&gt;</b> é educado: <b>espera o clique</b>.</div>
+<h3 id="r-urls-absolutos-e-relativos">URLs absolutos e relativos</h3>
+<pre>Página: http://www.terrypratchettbooks.com/terry/index.html
+&lt;img src="/img/common/terry-big.jpg"&gt;  →  GET /img/common/terry-big.jpg        (começa por / = desde a raiz)
+&lt;img src="img/common/terry-big.jpg"&gt;   →  GET /terry/img/common/terry-big.jpg  (relativo à pasta da página)
+&lt;a href="talk.html"&gt;                     →  GET /terry/talk.html  (só ao clicar)</pre>
+<p>O elemento <code>&lt;base href="..."&gt;</code> muda a base usada para resolver os URLs relativos.</p>
+<div class="mn"><span class="t">Mnemónica · barra inicial</span><b>«Com barra, vai à raiz. Sem barra, fica em casa (na pasta da página).»</b></div>
+<h3 id="r-formularios">Formulários</h3>
+<ul>
+<li><code>action</code> = para onde vai o pedido. <code>method</code> = GET (por omissão) ou POST.</li>
+<li><code>enctype</code> = <b>como os dados do formulário são codificados</b> (gabarito). Valores: <code>application/x-www-form-urlencoded</code> (por omissão) ou <code>multipart/form-data</code> (obrigatório para enviar ficheiros).</li>
+</ul>
+<div class="trap"><span class="t">enctype:</span> a resposta certa é «definir como os dados do formulário são codificados». «Enviar dados de tipos diferentes» só deu cotação parcial, e «cifrar» está errado (en<b>c</b>type vem de en<b>coding</b>, não de en<b>cryption</b>).</div>
+<h3 id="r-helpers-e-plugins-ja-sairam-no-moodle">Helpers e plugins (já saíram no Moodle)</h3>
+<p>Quando o browser recebe um tipo MIME que não sabe mostrar:</p>
+<table>
+<tr><th></th><th>Onde corre</th><th>Definição do gabarito</th></tr>
+<tr><td><b>Helper</b></td><td><b>Fora</b> do browser</td><td>«aplicação <b>externa</b> que permite ao cliente web renderizar um conteúdo que ele desconhece»</td></tr>
+<tr><td><b>Plugin</b></td><td><b>Dentro</b> do browser</td><td>«aplicativo <b>executado dentro do cliente web</b> usado para renderizar conteúdos não conhecidos pelo próprio»</td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · helper vs plugin</span><span class="big">«O Plugin está PLUGado lá dentro. O Helper é um ajudante que vem de fora.»</span></div>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 11 · Aulas 02 e 06</div>
+<h2 id="r-proxies-e-tipos-de-cache">Proxies e tipos de cache</h2>
+<p class="intro">Os intermediários entre o browser e o servidor, e os três sítios onde se guardam cópias das respostas.</p>
+
+<h3 id="r-o-que-e-um-proxy">O que é um proxy</h3>
+<p>Na prática, o browser e o servidor quase nunca falam diretamente: pelo meio há <b>um ou mais proxies</b>. O cliente faz o pedido ao proxy, o proxy faz o pedido ao servidor (ou ao proxy seguinte), recebe a resposta e devolve-a ao cliente.</p>
+<div class="flow">
+<div class="b"><b>Cliente HTTP</b>(browser)</div><div class="ar">⇄</div>
+<div class="b"><b>Proxy</b>servidor para o cliente,<br>cliente para o servidor</div><div class="ar">⇄</div>
+<div class="b"><b>Mais proxies…</b></div><div class="ar">⇄</div>
+<div class="b"><b>Servidor HTTP</b>(IIS, Apache…)</div>
+</div>
+<p><b>Definição dos slides:</b> os proxies atuam como <b>intermediários entre clientes e servidores</b> e podem ter vários propósitos. O seu uso pode <b>melhorar a segurança, o desempenho e a escalabilidade</b>, e oferece serviços como <b>cache</b>, <b>balanceamento de carga</b> (load balancing) e <b>filtragem de conteúdos</b>. O livro acrescenta que permitem passar mensagens HTTP <b>através de firewalls</b> e suportar <b>server farms</b> (várias máquinas que parecem um só servidor por fora).</p>
+<div class="mn"><span class="t">Mnemónica · o que faz um proxy</span><span class="big">O proxy é o porteiro do prédio: Segura, Copia, Balança e Filtra.</span><br><b>Segura</b> a porta (segurança, atravessar firewalls) · guarda <b>Cópias</b> das encomendas (cache) · <b>Balança</b> as visitas pelos elevadores (balanceamento de carga, server farms) · <b>Filtra</b> quem entra (filtragem de conteúdos).<br>E tem <b>duas caras</b>: para o cliente parece um servidor, para o servidor parece um cliente.</div>
+<div class="trap"><span class="t">Ligações com outras matérias:</span> o <b>502 Bad Gateway</b> é o proxy ou gateway a receber uma resposta inválida do servidor de cima (upstream). O <b>407 Proxy Authentication Required</b> é o «401 dos proxies». Um proxy que guardou um <b>301</b> em cache pode continuar a redirecionar mesmo depois de o servidor mudar (o problema do login).</div>
+
+<h3 id="r-cache-web-definicao">Cache web: definição</h3>
+<p><b>Cache web</b> é o <b>armazenamento temporário</b> de páginas, imagens e outros ficheiros, para <b>reduzir o uso da largura de banda</b> e <b>aumentar a velocidade de acesso</b>. Em vez de repetir o pedido à fonte original, usa-se a cópia guardada.</p>
+
+<h3 id="r-os-tres-tipos-de-cache">Os três tipos de cache</h3>
+<table>
+<tr><th>Tipo</th><th>Onde fica</th><th>O que evita</th><th>Notas</th></tr>
+<tr><td><b>Server-side</b> (lado do servidor)</td><td>No servidor</td><td>Evita que o servidor <b>gere a resposta outra vez do zero</b> (HTML, imagens geradas dinamicamente…)</td><td>Específica de cada aplicação, fora da norma HTTP. Exemplo: Output Caching no ASP.NET.</td></tr>
+<tr><td><b>Client-side</b> (lado do cliente, browser)</td><td>No browser (memória ou disco)</td><td>Evita que o cliente <b>faça o pedido</b>, ou que o servidor <b>reenvie</b> um recurso que não mudou</td><td>Controlada pelos cabeçalhos HTTP. Só serve um utilizador.</td></tr>
+<tr><td><b>Proxy-side</b> (nos proxies)</td><td>No proxy, entre cliente e servidor</td><td>Evita ir ao servidor de origem quando outro utilizador já pediu o mesmo</td><td>É uma <b>cache partilhada</b> por muitos utilizadores. Não pode guardar respostas <code>private</code>.</td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · os três tipos de cache</span><span class="big">Três frigoríficos: o do restaurante, o de casa e o do supermercado do bairro.</span><br><b>Servidor</b> = frigorífico do restaurante: guarda pratos já feitos para o cozinheiro não cozinhar outra vez.<br><b>Cliente</b> = frigorífico de casa: se já lá tens, nem sais de casa (nem fazes o pedido).<br><b>Proxy</b> = supermercado do bairro: é <b>partilhado</b> pelos vizinhos, por isso não guarda coisas <b>privadas</b> de ninguém.</div>
+
+<h3 id="r-como-funciona-a-cache-no-cliente-browser">Como funciona a cache no cliente (browser)</h3>
+<p>Segundo Shklar &amp; Rosen, a cache do browser precisa de três componentes:</p>
+<ul>
+<li><b>Módulo de geração de pedidos</b>: antes de pedir, pergunta à cache se já existe uma cópia válida. Se a cópia expirou, acrescenta cabeçalhos de validação (<code>If-Modified-Since</code>).</li>
+<li><b>Módulo de geração de respostas</b>: lê os cabeçalhos da resposta para saber se pode guardar e por quanto tempo.</li>
+<li><b>Módulo de cache</b>: guarda os recursos e as datas de modificação (em memória ou no disco).</li>
+</ul>
+<table>
+<tr><th>Exemplo dos slides</th><th>O que acontece</th></tr>
+<tr><td>1. Client caches a response</td><td>Primeiro pedido: <code>200 OK</code>, e o browser guarda a resposta.</td></tr>
+<tr><td>2. Client cache hit</td><td>A cópia ainda é válida, por isso <b>nem há pedido</b> ao servidor.</td></tr>
+<tr><td>3. Cached entry expires</td><td>A cópia passou o prazo (Expires ou max-age).</td></tr>
+<tr><td>4. Revalidate hit</td><td>Pedido com <code>If-Modified-Since</code>. Não mudou, logo <b><code>304 Not Modified</code></b> sem corpo, e usa-se a cópia.</td></tr>
+<tr><td>5. Revalidate miss</td><td>Mudou, logo <code>200 OK</code> com o conteúdo novo, que substitui a cópia.</td></tr>
+<tr><td>6. Proxy cache miss</td><td>O proxy não tem a cópia: vai ao servidor, guarda a resposta e entrega-a.</td></tr>
+<tr><td>7. Proxy cache hit</td><td>O proxy já tem a cópia (pedida antes, talvez por outro utilizador) e responde sem ir ao servidor.</td></tr>
+</table>
+
+<h3 id="r-cabecalhos-que-controlam-a-cache">Cabeçalhos que controlam a cache</h3>
+<p>Quem decide se uma resposta pode ir para a cache é o <b>servidor</b> ou a <b>aplicação</b>, porque são quem sabe se o conteúdo muda.</p>
+<table>
+<tr><th>Cabeçalho</th><th>Para que serve</th></tr>
+<tr><td class="c">Cache-Control: public</td><td>Qualquer cache pode guardar, partilhada (proxy) ou local (browser).</td></tr>
+<tr><td class="c">Cache-Control: private</td><td>Só para um utilizador: o browser pode guardar, uma cache <b>partilhada</b> não.</td></tr>
+<tr><td class="c">Cache-Control: no-cache</td><td>Segundo o livro, <b>nem browsers nem proxies podem guardar</b> a resposta em cache. Na norma atual quer dizer «guardar, mas revalidar sempre antes de usar». No teste, segue o livro.</td></tr>
+<tr><td class="c">Cache-Control: max-age=N</td><td>Validade em segundos.</td></tr>
+<tr><td class="c">Expires</td><td>Data a partir da qual a cópia expira.</td></tr>
+<tr><td class="c">Pragma: no-cache</td><td>A versão <b>HTTP/1.0</b> (obsoleta). Envia-se junto com o Cache-Control para os agentes antigos.</td></tr>
+<tr><td class="c">Last-Modified / If-Modified-Since</td><td>Data da última alteração, e o pedido condicional que leva ao <b>304</b>.</td></tr>
+<tr><td class="c">Date</td><td>Quando a resposta foi gerada, usado para calcular a idade da cópia.</td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · Cache-Control</span><span class="big">Público, Privado, Proibido.</span><br><b>public</b> = todos podem guardar · <b>private</b> = só o teu browser (nunca o proxy partilhado) · <b>no-cache</b> = ninguém guarda (versão do livro). O <b>Pragma</b> é o avô (HTTP/1.0): ainda se manda para os clientes antigos.</div>
+<p><b>O que pode ir para cache:</b> os métodos cacheáveis são sobretudo <b>GET</b> e <b>HEAD</b> (o POST normalmente não; lembra-te do «GET vs POST: GET pode ser guardado em cache»). Os códigos cacheáveis por omissão incluem <code>200</code>, <code>203</code>, <code>204</code>, <code>206</code>, <code>300</code>, <code>301</code>, <code>404</code>, <code>405</code>, <code>410</code>, <code>414</code> e <code>501</code>.</p>
+<p><b>Configuração no servidor:</b> no Apache faz-se com <code>mod_expires</code> e <code>mod_headers</code>, por extensão (<code>&lt;FilesMatch "\.(gif|jpg|png|js|css)$"&gt; Expires A2592000</code>) ou por tipo MIME (<code>ExpiresByType image/gif "access plus 1 month"</code>). No ASP.NET Core usa-se <code>[ResponseCache]</code> e <b>cache profiles</b> para não repetir as definições em cada action.</p>
+<h3 id="r-o-que-acrescenta-o-livro-shklar-e-rosen-pp-172182">O que acrescenta o livro (Shklar &amp; Rosen, pp. 172–182)</h3>
+<ul>
+<li><b>Cache expirada não é apagada.</b> Quando a entrada expira, fica guardada como «velha». No próximo pedido o browser revalida-a com <code>If-Modified-Since</code>. Se o servidor responde <b>304</b>, reutiliza a cópia e renova-lhe a validade. Se responde <b>200</b>, substitui-a pelo conteúdo novo. O livro diz que deitar fora a cópia expirada «may not be necessary».</li>
+<li><b>HTTP/1.0 vs HTTP/1.1.</b> No HTTP/1.0 o browser fazia um <code>HEAD</code>, comparava o <code>Last-Modified</code> e, se tivesse mudado, fazia um <code>GET</code>: podia precisar de <b>duas trocas</b>. No HTTP/1.1 basta <b>uma</b>, com <code>If-Modified-Since</code>.</li>
+<li><b>Cache cheia.</b> O browser remove as entradas expiradas e depois as <b>menos usadas recentemente (LRU)</b>. Há cache em <b>RAM</b> e em <b>disco</b>, e as entradas podem passar da memória para o disco antes de serem apagadas. O tamanho máximo é configurável.</li>
+<li><b>Chave da cache</b> = o <b>URL</b> pedido, incluindo query string e conteúdo POST. Um <code>Expires</code> com uma data que já passou faz com que a entrada só dure a sessão.</li>
+<li><b>Anomalia do histórico.</b> O botão <b>Voltar</b> mostra muitas vezes a página guardada mesmo com <code>Cache-Control: no-cache</code>. O browser devia tratar o «Voltar» como um novo pedido.</li>
+</ul>
+<div class="mn"><span class="t">Mnemónica · cache expirada</span><span class="big">Iogurte fora de prazo não desaparece do frigorífico.</span><br>Antes de o comeres, confirmas se ainda está bom (<code>If-Modified-Since</code>): se está, comes (<b>304</b>); se não, trocas por um novo (<b>200</b>). Só sai do frigorífico quando o trocas, quando o frigorífico fica cheio (LRU) ou quando o limpas. Atenção: um <b>cookie</b> expirado, pelo contrário, <b>é destruído</b>.</div>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 12 · Aula 06</div>
+<h2 id="r-autenticacao-e-cookies">Autenticação e cookies</h2>
+<p class="intro">As outras duas «interações HTTP complexas»: provar quem és e lembrar-se de ti.</p>
+<h3 id="r-autenticacao-http">Autenticação HTTP</h3>
+<p>A <b>autenticação</b> verifica a <b>identidade</b> do utilizador. A <b>autorização</b> verifica se ele <b>tem acesso</b> a um recurso. A autenticação HTTP é feita com cabeçalhos: o servidor pede as credenciais e o cliente envia-as.</p>
+<pre>1. Cliente:  GET /privado HTTP/1.1
+2. Servidor: HTTP/1.1 401 Unauthorized
+             WWW-Authenticate: Basic realm="User Visible Realm"     ← &lt;type&gt; realm=&lt;área protegida&gt;
+3. Cliente:  GET /privado HTTP/1.1
+             Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l           ← utilizador:password em Base64
+4. Servidor: HTTP/1.1 200 OK   (e o browser repete o Authorization nos pedidos seguintes do mesmo realm)</pre>
+<ul>
+<li><b>Esquemas</b>: Basic, Bearer, Digest, HOBA, Mutual, Negotiate, OAuth, SCRAM e vapid.</li>
+<li>O Basic só <b>codifica</b> em Base64, <b>não cifra</b>, por isso deve ir sobre HTTPS.</li>
+<li>Quando é um <b>proxy</b> a pedir autenticação, a resposta é <b>407 Proxy Authentication Required</b>.</li>
+</ul>
+<div class="mn"><span class="t">Mnemónica · autenticação</span><span class="big">«Autenticação = quem és. Autorização = o que podes.»</span><br>O servidor responde <b>401 + WWW-Authenticate</b> («identifica-te!»). O cliente responde com <b>Authorization</b> («aqui está o meu cartão»). O 407 é o mesmo, mas quem pede o cartão é o porteiro do meio (o proxy).</div>
+
+<h3 id="r-cookies">Cookies</h3>
+<p>São pares <b>nome=valor</b> que o servidor pede ao browser para guardar e devolver. São a forma de manter estado sobre um HTTP <b>stateless</b> (login, carrinho, preferências).</p>
+<pre>Resposta do servidor:  Set-Cookie: Name=Leon; Domain=.rutgers.edu; Path=/test/
+Pedidos seguintes:     Cookie: Name=Leon      (só para *.rutgers.edu com caminho a começar por /test/)</pre>
+<table>
+<tr><th>Tipo</th><th>Característica</th></tr>
+<tr><td><b>De sessão</b></td><td>Só em memória, <b>sem data de expiração</b>, apagado ao <b>fechar o browser</b>.</td></tr>
+<tr><td><b>Persistente</b></td><td>Guardado no dispositivo, <b>com data de expiração</b> definida pelo servidor. Sobrevive ao fecho do browser.</td></tr>
+<tr><td><b>First-party</b></td><td>Criado pelo <b>domínio que estás a visitar</b> (língua, analytics, preferências).</td></tr>
+<tr><td><b>Third-party</b></td><td>Criado por <b>outros domínios</b>: rastreio entre sites, retargeting, publicidade (tracking cookies).</td></tr>
+</table>
+<p><b>Estrutura:</b> nome · valor · data de expiração (Expires ou Max-Age) · path · domain · Secure (só por ligação segura) · HttpOnly (só por HTTP, sem acesso por scripts).</p>
+<div class="mn"><span class="t">Mnemónicas · cookies</span><b>Set-Cookie vs Cookie:</b> «O servidor dá-te a <b>senha do talho</b> (Set-Cookie). Tu mostras a senha em cada visita (Cookie).»<br><b>Sessão vs persistente:</b> «A senha do talho deita-se fora ao sair (sessão). O cartão de cliente tem validade e fica na carteira (persistente).»<br><b>First vs third-party:</b> «O cartão da loja onde estás vs o espião da publicidade colado ao teu casaco.»<br><b>Estrutura:</b> «<b>N</b>unca <b>V</b>i <b>E</b>lefantes <b>P</b>assar <b>D</b>epressa <b>S</b>em <b>H</b>esitar»: Nome, Valor, Expiração, Path, Domain, Secure, HttpOnly.</div>
+<p><b>Variáveis de sessão</b> (exame de 2021): os dados ficam <b>no servidor</b> e o cookie leva só o <b>identificador da sessão</b>. Sem cookies (cookieless), o identificador vai na <b>query string</b> ou como <b>parte do URL</b>.</p>
+<h3 id="r-quem-usa-cada-cabecalho">Quem usa cada cabeçalho</h3>
+<table>
+<tr><th>Cabeçalho</th><th>Agente que o envia</th><th>Mensagem</th></tr>
+<tr><td class="c">Set-Cookie</td><td><b>Servidor</b> (servidor web ou aplicação)</td><td>Resposta</td></tr>
+<tr><td class="c">Cookie</td><td><b>Browser</b></td><td>Pedido</td></tr>
+<tr><td class="c">WWW-Authenticate</td><td><b>Servidor</b></td><td>Resposta (com 401)</td></tr>
+<tr><td class="c">Authorization</td><td><b>Browser</b></td><td>Pedido</td></tr>
+</table>
+<h3 id="r-regras-de-domain-e-path-livro-7-6">Regras de domain e path (livro, 7.6)</h3>
+<ul>
+<li><code>domain=.mysite.com</code> aplica-se a <code>ecommerce.mysite.com</code> e <code>toys.ecommerce.mysite.com</code>, mas <b>não</b> a <code>mysite.com</code>.</li>
+<li>Um site <b>só pode definir cookies para o seu próprio domínio</b>: <code>ecommerce.mysite.com</code> pode usar <code>.mysite.com</code>, mas nunca <code>.yahoo.com</code>. Por isso os cookies de terceiros só entram através de <b>recursos de apoio</b> (imagens, CSS, JS, anúncios) servidos por outros domínios.</li>
+<li><code>path=/</code> faz o cookie seguir em todos os pedidos ao servidor. <code>path=/cgi-bin/</code> só nos URLs que começam por <code>/cgi-bin/</code>.</li>
+<li>Os cookies criam uma <b>sessão lógica</b>, não uma sessão de rede.</li>
+</ul>
+<h3 id="r-privacidade-e-p3p-livro-7-7">Privacidade e P3P (livro, 7.7)</h3>
+<p>Os <b>cookies de terceiros</b> são considerados «particularmente perigosos» porque permitem seguir o utilizador entre sites. O <b>P3P</b> (Platform for Privacy Preferences, do W3C) permite ao site declarar a sua <b>política de privacidade</b>, legível por humanos e por máquinas, num <code>&lt;LINK&gt;</code>, num cabeçalho de resposta <code>P3P</code> ou em <code>/w3c/p3p.xml</code>. O browser compara-a com as preferências do utilizador e pode <b>aceitar</b>, <b>bloquear</b>, <b>despromover</b> (tornar não persistente) ou fazer <b>leashing</b> dos cookies (só os envia a terceiros quando o pedido vem de uma página do site original). Funciona «por honra»: o browser não consegue verificar se a política é cumprida.</p>
+<div class="mn"><span class="t">Mnemónica · o que o P3P deixa o browser fazer</span><span class="big">«Aceita, Bloqueia, Despromove ou põe-lhe a Trela.»</span><br><i>Leash</i> quer dizer trela: o cookie de terceiros só sai à rua acompanhado pelo site original.</div>
+<h3 id="r-autorizacao-o-que-acrescenta-o-livro-7-8-2">Autorização: o que acrescenta o livro (7.8.2)</h3>
+<ul>
+<li>Os servidores protegem recursos por <b>gamas de IP</b> e por uma <b>ACL</b> (Access Control List, com utilizadores e passwords), organizada em <b>realms</b>.</li>
+<li>Credenciais erradas levam a <b>401 outra vez</b>. Ao fim de algumas tentativas, a maioria dos servidores passa a <b>403 Forbidden</b>.</li>
+<li>As credenciais aceites são reutilizadas para o mesmo realm.</li>
+</ul>
+<h3 id="r-persistencia-no-browser-cache-cookies-e-credenciai">Persistência no browser: cache, cookies e credenciais (tabela 7.2)</h3>
+<table>
+<tr><th></th><th>Cache</th><th>Cookies</th><th>Credenciais</th></tr>
+<tr><td><b>Guarda?</b></td><td>Conforme os cabeçalhos da resposta</td><td>Se o utilizador aceita cookies e a política (P3P) o permite</td><td>Sempre</td></tr>
+<tr><td><b>Chave</b></td><td>URL (com query e POST)</td><td>Domain + path</td><td>Servidor + realm</td></tr>
+<tr><td><b>Validade</b></td><td><code>Expires</code>. Data já passada: só a sessão. Cache cheia: LRU</td><td>Sem data: só a sessão. <b>Data já passada: apagado</b></td><td><b>Só a sessão, só em memória, nunca em disco</b></td></tr>
+</table>
+<div class="mn"><span class="t">Mnemónica · chaves de persistência</span><b>«A cache lembra-se do endereço (URL), o cookie da rua e da porta (domain e path), as credenciais do prédio e do andar (servidor e realm).»</b> E as credenciais são como uma pulseira de festival: valem só enquanto dura a festa (sessão) e nunca vão para casa (disco).</div>
+<h3 id="r-helpers-e-plugins-livro-7-8-5">Helpers e plugins (livro, 7.8.5)</h3>
+<p>Para formatos que não conhece, o browser tem 3 opções: <b>suporte nativo</b>, <b>helper</b> ou <b>plugin</b>. O <b>helper</b> apresenta o objeto <b>fora da janela</b> do browser (confuso para o utilizador) e só funciona com <b>links diretos</b> para o objeto. O <b>plugin</b> mostra-o <b>dentro da página</b>, através de <code>&lt;EMBED&gt;</code> ou <code>&lt;OBJECT&gt;</code> (o <code>&lt;EMBED&gt;</code> está obsoleto em favor de <code>&lt;OBJECT&gt;</code>). Se não houver associação para um tipo MIME, o browser usa um helper e deixa o sistema operativo escolher. É o <b>módulo de interpretação de conteúdo</b> que analisa o HTML e pede ao módulo de geração de pedidos os recursos de apoio.</p>
+</section>
+
+
+<section class="chap">
+<div class="kicker">Capítulo 13</div>
+<h2 id="r-armadilhas-do-gabarito-do-professor">Armadilhas do gabarito do professor</h2>
+<p class="intro">O que aprendemos com as perguntas reais do Moodle. Lê isto na véspera.</p>
+<ol>
+<li><b>Muitas perguntas têm várias respostas certas, mesmo com aspeto de escolha única.</b> No Moodle, cada opção errada desconta. Assinala todas as que são verdade, e só essas.</li>
+<li><b>Prefere a opção mais completa.</b> «HTTP é um protocolo de comunicação» deu meia cotação; a completa era «usado por todos os agentes web num canal de comunicação». O mesmo com o Plugin: «executado dentro do cliente web <i>usado para renderizar conteúdos não conhecidos</i>».</li>
+<li><b>«Nenhuma das opções» pode ser a certa</b> (PHP/Java/Perl). Se todas as opções têm um erro («unicamente», «estáticos», «armazenamento», «pelos clientes»), escolhe-a.</li>
+<li><b>Palavras absolutas</b> como «apenas», «unicamente» e «sempre» costumam tornar a opção falsa.</li>
+<li><b>O servidor nunca faz pedidos ao cliente.</b></li>
+<li><b>Para o cliente, dinâmico é igual a estático.</b></li>
+<li><b>404</b>: o gabarito aceitou «erro de processamento do pedido» e «pedido mal formulado».</li>
+<li><b>Códigos de estado servem para</b> classificar a resposta com tipo e contexto, e para o cliente a interpretar depressa (2 certas).</li>
+<li><b>Linha de pedido</b>: <code>GET / HTTP/1.1</code>, sem domínio e sem «HTTPS/1.1».</li>
+<li><b>Elementos que pedem sozinhos</b>: <code>&lt;link&gt;</code>, <code>&lt;script&gt;</code> e <code>&lt;img&gt;</code>, sem o <code>&lt;a&gt;</code>.</li>
+<li><b>Aplicação web</b> precisa de um servidor e um cliente.</li>
+<li><b>Header HTTP</b>: usa-se nos pedidos e nas respostas.</li>
+</ol>
+<h3 id="r-resumo-das-respostas-de-varias-opcoes-certas">Resumo das respostas de várias opções certas</h3>
+<table>
+<tr><th>Pergunta</th><th>Respostas certas (gabarito)</th></tr>
+<tr><td>Referer</td><td>URL da página mostrada · local de origem do pedido · referenciar recurso noutro servidor · distinguir clique de URL escrito</td></tr>
+<tr><td>Accept-Encoding</td><td>Cliente aceita conteúdos comprimidos · método de compressão a usar</td></tr>
+<tr><td>image/gif</td><td>Corpo tem os bytes de uma imagem · o cliente recebeu uma imagem</td></tr>
+<tr><td>502 Bad Gateway</td><td>Proxy/gateway não obtém bom resultado do upstream · falha entre servidores que retransmitem dados</td></tr>
+<tr><td>404</td><td>Erro de processamento do pedido · pedido mal formulado</td></tr>
+<tr><td>Códigos de estado</td><td>Classificar com tipo e contexto · interpretação fácil e rápida</td></tr>
+<tr><td>Pseudónimos</td><td>Mascarar caminhos · mudar nomes · associar recursos externos</td></tr>
+<tr><td>Conteúdos estáticos</td><td>Conteúdo estático · corresponde integralmente à resposta · sem processar código</td></tr>
+<tr><td>Autenticação</td><td>Verifica permissões de acesso · gera respostas 401</td></tr>
+</table>
+<h3 id="r-estrategia-para-o-dia-22">Estratégia para o dia 22</h3>
+<ul>
+<li>Lê todas as opções antes de marcar. As do professor são parecidas e diferem numa palavra.</li>
+<li>Em cada opção pergunta-te: «isto é <b>verdade</b> sobre o conceito?». Se for, marca.</li>
+<li>Se ficares entre duas opções, escolhe a que usa as palavras dos slides (por exemplo «agentes web», «upstream», «permissões de acesso»).</li>
+<li>Faz os testes-modelo na página de treino até teres 17 ou mais em todos.</li>
+</ul>
+</section>
+
+
+<section class="chap cheat">
+<div class="kicker">Capítulo 14</div>
+<h2 id="r-cabula-de-uma-pagina">Cábula de uma página</h2>
+<p class="small">Todas as mnemónicas juntas. Relê isto na manhã do teste.</p>
+<div class="grid">
+<div class="c"><b class="h">Cliente-servidor</b>Freguês e empregado: o servidor <b>nunca</b> pede ao cliente. Uma app web precisa de <b>um servidor e um cliente</b>.</div>
+<div class="c"><b class="h">Web vs desktop</b><b>MAIS</b>: Multiplataforma, Atualizações, Instalação dispensada, Sem gastar recursos. <b>DOS</b>: Desempenho, Offline, Segurança.</div>
+<div class="c"><b class="h">Portas</b>FTP 20/21 · SSH 22 · Telnet 23 · SMTP 25 · DNS 53 · <b>HTTP 80</b> · POP3 110 · IMAP 143 · <b>HTTPS 443</b></div>
+<div class="c"><b class="h">URL</b>«Eu Uso Senha Num Porto, Passo Pela Query, Até à Âncora». O espaço passa a <code>%20</code> ou <code>+</code>.</div>
+<div class="c"><b class="h">Pedidos de uma página</b>1 HTML + 1 por imagem, CSS e script, possivelmente a outros servidores. O JS pode gerar mais.</div>
+<div class="c"><b class="h">Estático vs dinâmico</b>Ao cliente chega o prato, não a receita: para o browser é igual.</div>
+<div class="c"><b class="h">HTTP</b>Aplicação, sobre TCP, pedido-resposta. <b>Stateless</b>: peixinho dourado. Proxy = servidor para o cliente e cliente para o servidor (cache, filtro, balanceamento).</div>
+<div class="c"><b class="h">Mensagens</b>Pedido <b>MUV</b>: Método URI Versão. Resposta <b>VCF</b>: Versão Código Frase. Depois: cabeçalhos, linha vazia (CRLF), corpo.</div>
+<div class="c"><b class="h">Métodos</b>0.9 GET · 1.0 GHP (+HEAD, POST) · 1.1 o resto. REST: POST cria, GET lê, PUT substitui, PATCH remenda, DELETE apaga.</div>
+<div class="c"><b class="h">GET vs POST</b>GET = postal: URL visível, limitado, ASCII, favoritos, cache, histórico. POST = carta fechada: corpo, sem limite, binário, multipart.</div>
+<div class="c"><b class="h">Grupos de cabeçalhos</b>«Gatos Raramente Respondem Educadamente»: General, Request, Response, Entity. <b>Content-*</b> = Entity.</div>
+<div class="c"><b class="h">Cabeçalhos-chave</b>Host (virtual hosting) · User-Agent · Referer · Authorization · Accept-Encoding (compressão) · If-Modified-Since → 304 · Location (301/302) · WWW-Authenticate (401) · Content-Type (MIME) · Content-Length (bytes)</div>
+<div class="c"><b class="h">Proibidos</b>Quem sou (Host, Origin, Referer, Cookie) · por onde vou (Connection, Keep-Alive, Content-Length, Date) · o que aceito (Accept-Charset, Accept-Encoding) · Proxy-*, Sec-*</div>
+<div class="c"><b class="h">MIME</b>Família/Pessoa; Detalhe: <code>text/html; charset=utf-8</code>. Charset por omissão ISO-8859-1. multipart + boundary. <code>data:image/gif;base64,...</code> evita um pedido.</div>
+<div class="c"><b class="h">Classes de estado</b>Aguenta (1) · Toma (2) · Vai (3) · Tu (4) · Eu (5)</div>
+<div class="c"><b class="h">Códigos</b>301 morada nova · 302 casa de férias (RedirectToAction) · 304 usa a cache · 400 mal formulado · 401 quem és tu? · 403 sei quem és mas não entras · 404 não existe · 500 rebentou · 502 o estafeta trouxe lixo · 503 em baixo</div>
+<div class="c"><b class="h">Servidor</b>RPG: Resolve, Processa, Gera. Resolução de endereços: «Vê A Pasta Autorizada» (Virtual host, Address mapping, Pseudónimos, Autenticação).</div>
+<div class="c"><b class="h">Raízes web</b>Apache em Linux <code>/var/www</code> · IIS <code>c:\Inetpub\wwwroot</code> · ASP.NET Core <code>wwwroot</code>. Pseudónimo = nome artístico: mascara, renomeia, traz de fora.</div>
+<div class="c"><b class="h">Autenticação</b>401 + WWW-Authenticate, depois Authorization: Basic (Base64). O módulo verifica permissões e gera os 401.</div>
+<div class="c"><b class="h">Estático</b>Static: o servidor põe o envelope. As-is: a carta já vem no envelope.</div>
+<div class="c"><b class="h">Dinâmico</b>«Cada Servidor Ainda Faz Truques Super Java»: CGI, SSI, APIs nativas (ISAPI, Apache API), FastCGI, Templates (PHP, ColdFusion, ASP), Servlets, JSP. CGI = um táxi por passageiro.</div>
+<div class="c"><b class="h">HTML no cliente</b>LIS pede sozinho (link, img, script), o &lt;a&gt; espera o clique. Com barra vai à raiz, sem barra fica na pasta. enctype = codificação.</div>
+<div class="c"><b class="h">Helper vs plugin</b>Helper = ajudante de fora (externo). Plugin = plugado dentro do browser.</div>
+<div class="c"><b class="h">Proxy</b>Porteiro com duas caras (servidor para o cliente, cliente para o servidor): Segura, Copia, Balança, Filtra. 502 e 407 envolvem proxies.</div>
+<div class="c"><b class="h">Tipos de cache</b>Três frigoríficos: servidor (não gerar outra vez), cliente/browser (não pedir), proxy (partilhado, nunca guarda private). Revalidação: If-Modified-Since, depois 304.</div>
+<div class="c"><b class="h">Cache-Control</b>Público, Privado, Proibido (public, private, no-cache) + max-age · Expires · Pragma: no-cache (HTTP/1.0) · cacheáveis: GET e HEAD</div>
+<div class="c"><b class="h">Livro pp. 172–182</b>Cache expirada não é apagada (iogurte). Set-Cookie = servidor, Cookie = browser. Domain: só o próprio domínio. P3P: aceita, bloqueia, despromove, trela. 401 repetido → 403. Chaves: URL / domain+path / servidor+realm. Credenciais só em memória.</div>
+<div class="c"><b class="h">Autenticação e cookies</b>Quem és (autenticação) vs o que podes (autorização). Set-Cookie (servidor) e Cookie (browser). Sessão = senha do talho, persistente = cartão com validade. NVEPDSH.</div>
+</div>
+</section>
+</div>
+    <div class="rs-float"><button id="rs-back" type="button" hidden>← Voltar à pergunta</button><button id="rs-top" type="button">↑ Topo</button></div>
+  </section>
 </div>
 
 <script>
 (function(){
-  const views=["teorico","pratico"];
-  function show(v){views.forEach(x=>{document.getElementById("v-"+x).hidden=x!==v});
+  const views=["teorico","pratico","resumo"];
+  let cur="teorico",back=null;
+  function show(v){cur=v;views.forEach(x=>{document.getElementById("v-"+x).hidden=x!==v});
     document.querySelectorAll(".navbtn").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.v===v)));
+    const bk=document.getElementById("rs-back");if(bk)bk.hidden=!(v==="resumo"&&back);
     try{localStorage.setItem("ew-site-view",v)}catch(e){}}
-  document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>{show(b.dataset.v);window.scrollTo({top:0})});
+  document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>{if(b.dataset.v!=="resumo")back=null;show(b.dataset.v);window.scrollTo({top:0})});
+  function goSec(id){const t=document.getElementById(id);if(!t)return;t.scrollIntoView({block:"start"});t.classList.remove("rs-flash");void t.offsetWidth;t.classList.add("rs-flash")}
+  document.addEventListener("click",e=>{const a=e.target.closest("a[data-resumo],a.rs-toc-a");if(!a)return;e.preventDefault();
+    const id=a.dataset.resumo||a.getAttribute("href").slice(1);
+    if(a.dataset.resumo&&cur!=="resumo")back={v:cur,y:window.scrollY};
+    show("resumo");goSec(id)});
+  document.addEventListener("click",e=>{if(!e.target.closest("#rs-back"))return;const b=back;back=null;if(!b)return;show(b.v);window.scrollTo({top:b.y})});
+  document.addEventListener("click",e=>{if(e.target.closest("#rs-top"))window.scrollTo({top:0,behavior:"smooth"})});
   let v="teorico";try{v=localStorage.getItem("ew-site-view")||"teorico"}catch(e){}
   if(location.hash&&views.includes(location.hash.slice(1)))v=location.hash.slice(1);
   show(views.includes(v)?v:"teorico");
+  if(location.hash.startsWith("#r-")){show("resumo");setTimeout(()=>goSec(location.hash.slice(1)),50)}
 })();
 
 
@@ -486,34 +1237,34 @@ let best = load("ew-t1-best",{});
 // Página do resumo (Guia de Estudo) onde a matéria de cada pergunta está explicada
 const RESUMO="resumo.pdf";
 const REFS=[
- [/P3P|leash|domain=|Domain=|path=\/|Path=\/|valor de domain/i,19,"Cookies: domain, path e P3P"],
- [/persistência|credenciais de autoriza|tabela 7\.2/i,19,"Persistência no browser"],
- [/cookie|Set-Cookie|variáveis de sessão|cookieless/i,18,"Cookies"],
- [/processamento de um pedido segue|módulo de .?Autentica|Address Resolution|resolução de endereços|address mapping|virtual host|DocumentRoot|wwwroot|logo\.png|raiz web|IIS/i,11,"Resolução de endereços"],
- [/pseudónim|Alias/i,12,"Pseudónimos"],
- [/autentica|autoriza|WWW-Authenticate|Authorization|\b407\b|ACL|realm|\bBasic\b|protegem/i,18,"Autenticação HTTP"],
- [/502|Bad Gateway/i,9,"Códigos de estado (502)"],
- [/Cache-Control|Pragma|agentes HTTP\/1\.0|ExpiresByType|max-age|revalid|LRU|anomalia|cópia em cache no HTTP|entrada da cache|cache do browser atinge/i,16,"Cabeçalhos que controlam a cache"],
- [/cache/i,15,"Proxies e tipos de cache"],
- [/proxy|proxies/i,15,"O que é um proxy"],
- [/helper|plugin|EMBED|OBJECT|guardar um ficheiro|tipo MIME que não sabe/i,14,"Helpers e plugins"],
- [/tipo MIME|MIME|Content-Type|image\/gif|charset|multipart|data:image/i,8,"Tipos MIME"],
- [/<link|<script|<img|automaticamente pedidos|recursos adicionais|clientes HTTP|faz um navegador|processar uma resposta|ao gerar um pedido|analisa o HTML|terrypratchett/i,14,"HTML visto pelo cliente"],
- [/enctype|<form/i,14,"Formulários"],
- [/linha de pedido|request line|ads\.pt|frase explicativa|ordem dos elementos|o texto `Not Found`/i,4,"Estrutura das mensagens HTTP"],
- [/stateless|camada|^HTTP é|servidor web faz um pedido|Sobre os proxies/i,4,"HTTP: terminologia"],
- [/cliente web recebe|conteúdo gerado dinamicamente|pedido de conteúdo dinâmico/i,3,"Estático vs dinâmico no browser"],
- [/CGI|\bSSI\b|Server Side Includes|FastCGI|as-is|template|Servlet|APIs nativas|ISAPI|PHP|estátic|dinâmic/i,13,"Conteúdo estático e dinâmico"],
- [/código.*estado|status code|[1-5]xx|\b(200|301|302|303|304|307|400|401|403|404|411|500|503|505)\b|RedirectToAction|barra no fim/i,9,"Códigos de estado"],
- [/scheme:|esquemas válidos/i,3,"URL e navegação"],
- [/forbidden|proibid|quem insere|AddHeader/i,7,"Quem insere os cabeçalhos / proibidos"],
- [/cabeçalho|header|Referer|User-Agent|Accept-Encoding|Host|Location|Content-Length/i,6,"Cabeçalhos HTTP"],
- [/\bGET\b|\bPOST\b|HEAD|PATCH|REST|método/i,5,"Métodos e GET vs POST"],
- [/URL|query string|esquema|encoding|espaço|pedidos HTTP|pedidos adicionais|navegador/i,3,"URL e navegação"],
- [/porta|\b443\b|desktop|cliente-servidor|aplicação Web|CRM|circula/i,2,"Aplicações cliente-servidor"]
+ [/P3P|leash|domain=|Domain=|path=\/|Path=\/|valor de domain/i,19,"Cookies: domain, path e P3P","r-regras-de-domain-e-path-livro-7-6"],
+ [/persistência|credenciais de autoriza|tabela 7\.2/i,19,"Persistência no browser","r-persistencia-no-browser-cache-cookies-e-credenciai"],
+ [/cookie|Set-Cookie|variáveis de sessão|cookieless/i,18,"Cookies","r-cookies"],
+ [/processamento de um pedido segue|módulo de .?Autentica|Address Resolution|resolução de endereços|address mapping|virtual host|DocumentRoot|wwwroot|logo\.png|raiz web|IIS/i,11,"Resolução de endereços","r-o-caminho-de-um-pedido-no-servidor"],
+ [/pseudónim|Alias/i,12,"Pseudónimos","r-3-pseudonimos-aliases"],
+ [/autentica|autoriza|WWW-Authenticate|Authorization|\b407\b|ACL|realm|\bBasic\b|protegem/i,18,"Autenticação HTTP","r-autenticacao-http"],
+ [/502|Bad Gateway/i,9,"Códigos de estado (502)","r-os-codigos-a-saber"],
+ [/Cache-Control|Pragma|agentes HTTP\/1\.0|ExpiresByType|max-age|revalid|LRU|anomalia|cópia em cache no HTTP|entrada da cache|cache do browser atinge/i,16,"Cabeçalhos que controlam a cache","r-cabecalhos-que-controlam-a-cache"],
+ [/cache/i,15,"Proxies e tipos de cache","r-os-tres-tipos-de-cache"],
+ [/proxy|proxies/i,15,"O que é um proxy","r-o-que-e-um-proxy"],
+ [/helper|plugin|EMBED|OBJECT|guardar um ficheiro|tipo MIME que não sabe/i,14,"Helpers e plugins","r-helpers-e-plugins-ja-sairam-no-moodle"],
+ [/tipo MIME|MIME|Content-Type|image\/gif|charset|multipart|data:image/i,8,"Tipos MIME","r-tipos-mime"],
+ [/<link|<script|<img|automaticamente pedidos|recursos adicionais|clientes HTTP|faz um navegador|processar uma resposta|ao gerar um pedido|analisa o HTML|terrypratchett/i,14,"HTML visto pelo cliente","r-elementos-que-geram-pedidos-automaticamente"],
+ [/enctype|<form/i,14,"Formulários","r-formularios"],
+ [/linha de pedido|request line|ads\.pt|frase explicativa|ordem dos elementos|o texto `Not Found`/i,4,"Estrutura das mensagens HTTP","r-a-estrutura-das-mensagens"],
+ [/stateless|camada|^HTTP é|servidor web faz um pedido|Sobre os proxies/i,4,"HTTP: terminologia","r-http-terminologia-e-mensagens"],
+ [/cliente web recebe|conteúdo gerado dinamicamente|pedido de conteúdo dinâmico/i,3,"Estático vs dinâmico no browser","r-estatico-vs-dinamico-visto-pelo-browser"],
+ [/CGI|\bSSI\b|Server Side Includes|FastCGI|as-is|template|Servlet|APIs nativas|ISAPI|PHP|estátic|dinâmic/i,13,"Conteúdo estático e dinâmico","r-entrega-de-conteudo-estatico-e-dinamico"],
+ [/código.*estado|status code|[1-5]xx|\b(200|301|302|303|304|307|400|401|403|404|411|500|503|505)\b|RedirectToAction|barra no fim/i,9,"Códigos de estado","r-os-codigos-a-saber"],
+ [/scheme:|esquemas válidos/i,3,"URL e navegação","r-anatomia-de-um-url"],
+ [/forbidden|proibid|quem insere|AddHeader/i,7,"Quem insere os cabeçalhos / proibidos","r-quem-insere-os-cabecalhos"],
+ [/cabeçalho|header|Referer|User-Agent|Accept-Encoding|Host|Location|Content-Length/i,6,"Cabeçalhos HTTP","r-cabecalhos-http"],
+ [/\bGET\b|\bPOST\b|HEAD|PATCH|REST|método/i,5,"Métodos e GET vs POST","r-metodos-http-e-get-vs-post"],
+ [/URL|query string|esquema|encoding|espaço|pedidos HTTP|pedidos adicionais|navegador/i,3,"URL e navegação","r-url-e-navegacao-numa-pagina-web"],
+ [/porta|\b443\b|desktop|cliente-servidor|aplicação Web|CRM|circula/i,2,"Aplicações cliente-servidor","r-aplicacoes-cliente-servidor"]
 ];
-function refFor(text){for(const [re,p,l] of REFS){if(re.test(text))return {p,l}}return null}
-function refLink(text,alt){const r=refFor(text)||(alt?refFor(alt):null);return r?`<a class="ref" href="${RESUMO}#page=${r.p}" target="_blank" rel="noopener">Ver no resumo, p. ${r.p} · ${esc(r.l)}</a>`:""}
+function refFor(text){for(const [re,p,l,a] of REFS){if(re.test(text))return {p,l,a}}return null}
+function refLink(text,alt){const r=refFor(text)||(alt?refFor(alt):null);if(!r)return "";if(document.getElementById("v-resumo"))return `<a class="ref" href="#${r.a}" data-resumo="${r.a}">Ver no resumo · ${esc(r.l)}</a>`;return `<a class="ref" href="${RESUMO}#page=${r.p}" target="_blank" rel="noopener">Ver no resumo, p. ${r.p} · ${esc(r.l)}</a>`}
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function buildMix(){
