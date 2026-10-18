@@ -1,0 +1,1300 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Treino Engenharia Web</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+
+/* Layout: one reading column of question cards, sticky selector bar on top; score shown as an HTTP status line */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --ink:#15212c; --muted:#596a79; --line:#d3dbe2;
+  --accent:#1f5fbf; --accent-soft:#e3ecfa;
+  --code:#f6f7f9; --ok:#1b7443; --ok-soft:#e1f2e8; --bad:#b3261e; --bad-soft:#fbe7e5; --warn:#8a5a00; --warn-soft:#fbf0d9;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1318; --surface:#161e26; --ink:#e2e9ef; --muted:#97a7b5; --line:#2a3642;
+  --accent:#78acff; --accent-soft:#1c2c45;
+  --code:#10171e; --ok:#5ccb8b; --ok-soft:#13301f; --bad:#ff8a7e; --bad-soft:#3a1a18; --warn:#f0bf5a; --warn-soft:#352a12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1318; --surface:#161e26; --ink:#e2e9ef; --muted:#97a7b5; --line:#2a3642;
+  --accent:#78acff; --accent-soft:#1c2c45;
+  --code:#10171e; --ok:#5ccb8b; --ok-soft:#13301f; --bad:#ff8a7e; --bad-soft:#3a1a18; --warn:#f0bf5a; --warn-soft:#352a12; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:780px;margin:0 auto}
+header.top{padding-block:28px 12px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-size:clamp(28px,6vw,40px);line-height:1.1;margin:6px 0 8px;text-wrap:balance}
+.lede{color:var(--muted);margin:0;max-width:62ch}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{font:500 14px var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.tab .best{font-family:var(--f-mono);font-size:12px;opacity:.8;margin-left:6px}
+.tab:focus-visible,.btn:focus-visible,.opt input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:10px;font-size:14px;color:var(--muted)}
+.tools label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.testhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:14px}
+.testhead h2{font-family:var(--f-display);font-size:24px;margin:0}
+.testhead .meta{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.topics{color:var(--muted);font-size:14px;margin:-6px 0 18px}
+.qs{display:flex;flex-direction:column;gap:14px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;min-width:0}
+.q.ok{border-left:4px solid var(--ok)} .q.part{border-left:4px solid var(--warn)} .q.bad{border-left:4px solid var(--bad)}
+.qhead{display:flex;flex-wrap:wrap;gap:8px 14px;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-bottom:8px}
+.qhead .n{color:var(--ink);font-weight:600}
+.tag{padding:1px 7px;border-radius:3px;background:var(--accent-soft);color:var(--accent)}
+.tag.real{background:var(--warn-soft);color:var(--warn)}
+.qtext{margin:0 0 4px;font-weight:500}
+.hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+code,.mono{font-family:var(--f-mono);font-size:.92em;background:var(--accent-soft);padding:0 4px;border-radius:3px;word-break:break-word}
+pre.snip{font-family:var(--f-mono);font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:10px 12px;overflow-x:auto;margin:6px 0 10px;white-space:pre}
+.opts{display:flex;flex-direction:column;gap:4px}
+.opt{display:grid;grid-template-columns:auto auto 1fr auto;gap:10px;align-items:start;padding:7px 8px;border-radius:4px;cursor:pointer}
+.opt:hover{background:var(--bg)}
+.opt input{margin-top:4px;accent-color:var(--accent)}
+.opt .l{font-family:var(--f-mono);color:var(--muted);font-size:14px;padding-top:1px}
+.opt .t{min-width:0}
+.opt .mk{font-weight:700;font-family:var(--f-mono)}
+.opt.right{background:var(--ok-soft)} .opt.right .mk{color:var(--ok)}
+.opt.wrong{background:var(--bad-soft)} .opt.wrong .mk{color:var(--bad)}
+.opt.missed{outline:1px dashed var(--ok)} .opt.missed .mk{color:var(--ok)}
+.fb{margin-top:10px;padding:10px 12px;border-radius:4px;background:var(--warn-soft);color:var(--ink);font-size:14px}
+.fb b{display:block;margin-bottom:2px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.btn{font:600 15px var(--f-body);padding:10px 18px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.result{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin-bottom:16px}
+.status{font-family:var(--f-mono);font-size:clamp(16px,4vw,20px);font-weight:600;word-break:break-word}
+.status .code{padding:1px 6px;border-radius:3px}
+.s2 .code{background:var(--ok-soft);color:var(--ok)} .s3 .code{background:var(--warn-soft);color:var(--warn)} .s4 .code{background:var(--bad-soft);color:var(--bad)}
+.result p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.score{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.wh{font-family:var(--f-display);font-size:22px;margin:28px 0 6px}
+textarea{width:100%;font:15px var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:10px;resize:vertical}
+details{margin-top:10px}summary{cursor:pointer;color:var(--accent);font-weight:600}
+.model{margin-top:8px;padding:10px 12px;background:var(--accent-soft);border-radius:4px;font-size:15px}.model p{margin:0 0 8px}.model ul{margin:0;padding-left:20px}
+footer{margin-top:32px;font-size:13px;color:var(--muted)}
+@media (max-width:480px){.q{padding:14px}.opt{gap:8px}}
+@media (prefers-reduced-motion:no-preference){.opt{transition:background .12s}}
+
+
+/* Layout: one column of exercise cards; code blocks with inline answer boxes like Moodle cloze */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{font:500 14px var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.modes{display:flex;gap:6px;margin-left:auto}.tab.mode[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+select.code-opt{font-family:var(--f-mono);font-weight:600}
+.tab .best{font-family:var(--f-mono);font-size:12px;opacity:.8;margin-left:6px}
+.tab:focus-visible,.btn:focus-visible,.blank:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.testhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:6px}
+.testhead h2{font-family:var(--f-display);font-size:24px;margin:0}
+.meta{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.topics{color:var(--muted);font-size:14px;margin:0 0 18px;max-width:70ch}
+.xs{display:flex;flex-direction:column;gap:14px}
+.x{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;min-width:0}
+.x.ok{border-left:4px solid var(--ok)}.x.part{border-left:4px solid var(--warn)}.x.bad{border-left:4px solid var(--bad)}
+.xhead{display:flex;flex-wrap:wrap;gap:8px 14px;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-bottom:6px}
+.xhead .n{color:var(--ink);font-weight:600}
+.tag{padding:1px 7px;border-radius:3px;background:var(--accent-soft);color:var(--accent)}
+.tag.ex{background:var(--warn-soft);color:var(--warn)}
+.xtitle{font-weight:600;margin:0 0 4px}
+.intro{margin:0 0 10px;font-size:15px}
+pre.code{font-family:var(--f-mono);font-size:13.5px;line-height:2;background:var(--code);border:1px solid var(--line);border-radius:4px;padding:10px 12px;overflow-x:auto;margin:0;white-space:pre}
+.ptext{font-size:15px;line-height:2.1;margin:0}
+.blank{font:600 13px var(--f-mono);color:var(--ink);background:var(--surface);border:1px solid var(--accent);border-radius:3px;padding:1px 4px;min-width:3ch}
+select.blank{font-family:var(--f-body);font-weight:500;max-width:100%}
+.blank.right{border-color:var(--ok);background:var(--ok-soft)}
+.blank.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.sol{font:600 12px var(--f-mono);color:var(--ok);margin-left:3px}
+.fb{margin-top:10px;padding:10px 12px;border-radius:4px;background:var(--warn-soft);font-size:14px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.btn{font:600 14px var(--f-body);padding:8px 14px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.result{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 18px;margin-bottom:16px}
+.status{font-family:var(--f-mono);font-size:clamp(15px,4vw,19px);font-weight:600}
+.status .code{padding:1px 6px;border-radius:3px}
+.s2 .code{background:var(--ok-soft);color:var(--ok)}.s3 .code{background:var(--warn-soft);color:var(--warn)}.s4 .code{background:var(--bad-soft);color:var(--bad)}
+.result p{margin:6px 0 0;color:var(--muted);font-size:14px}
+@media (max-width:480px){.x{padding:14px}pre.code{font-size:12.5px}}
+
+/* site shell */
+.site{max-width:860px;margin:0 auto}
+.hero{padding-block:28px 6px}
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+.navbtn{font:600 15px var(--f-body);padding:9px 16px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}
+.navbtn small{font:400 12px var(--f-body);color:var(--muted)}
+.navbtn[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent)}
+.navbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.view{padding-top:8px}
+.vintro{color:var(--muted);font-size:14px;margin:0 0 4px;max-width:70ch}
+#rank-table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden;font-size:15px}
+#rank-table th,#rank-table td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left}
+#rank-table th{font:600 12px var(--f-mono);text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+#rank-table td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+#rank-table tr.me td{background:var(--accent-soft)}
+.rankwrap{overflow-x:auto}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;color:var(--muted);font-size:15px}
+</style>
+
+</head>
+<body>
+<div class="site">
+  <header class="hero">
+    <div class="eyebrow">Engenharia Web · UTAD · 2026/2027</div>
+    <h1>Treino Engenharia Web</h1>
+    <p class="lede">Testes teóricos (escolha múltipla e desenvolvimento) e práticos (completar código ASP.NET Core) feitos a partir das aulas, dos tutoriais, do livro de Shklar &amp; Rosen e das perguntas reais do Moodle. Responde, verifica e vê logo a explicação de cada resposta. O teu progresso fica guardado no teu browser.</p>
+    <nav class="nav" role="tablist">
+      <button class="navbtn" role="tab" data-v="teorico" aria-selected="true">Teórico<small>Teste 22 out · 15 escolha múltipla + 2 escrita</small></button>
+      <button class="navbtn" role="tab" data-v="pratico" aria-selected="false">Prático<small>Completar código · tutoriais 2 a 6</small></button>
+    </nav>
+  </header>
+
+  <section class="view" id="v-teorico">
+    <div class="bar">
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="tools">
+      <label><input type="checkbox" id="shuf" checked> Baralhar opções</label>
+      <label><input type="checkbox" id="instant"> Corrigir logo cada pergunta</label>
+    </div>
+  </div>
+    <main id="main"></main>
+    <footer>Nas perguntas de várias respostas, cada opção certa vale uma fração da pergunta e cada opção errada desconta a mesma fração, como no Moodle. A nota nunca fica abaixo de zero. Atenção: nas perguntas reais, o Moodle aceita muitas vezes várias respostas mesmo quando parece escolha única.</footer>
+  </section>
+
+  <section class="view" id="v-pratico" hidden>
+    <div class="bar"><div class="tabs" role="tablist" id="ptabs"></div></div>
+    <main id="pmain"></main>
+    <footer>As opções erradas das listas são parecidas com a certa (por exemplo TempData, ViewData e ViewBag), para treinar a distinção. No modo «Escrever», a correção ignora maiúsculas, minúsculas e espaços a mais, mas no Visual Studio o C# distingue-as. O separador «Exames anteriores» cobre a matéria que costuma aparecer nos enunciados práticos (sessões, cookies, cache, AJAX, autenticação).</footer>
+  </section>
+</div>
+
+<script>
+(function(){
+  const views=["teorico","pratico"];
+  function show(v){views.forEach(x=>{document.getElementById("v-"+x).hidden=x!==v});
+    document.querySelectorAll(".navbtn").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.v===v)));
+    try{localStorage.setItem("ew-site-view",v)}catch(e){}}
+  document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>{show(b.dataset.v);window.scrollTo({top:0})});
+  let v="teorico";try{v=localStorage.getItem("ew-site-view")||"teorico"}catch(e){}
+  if(location.hash&&views.includes(location.hash.slice(1)))v=location.hash.slice(1);
+  show(views.includes(v)?v:"teorico");
+})();
+
+
+(function(){
+
+// t: "s" = uma resposta, "m" = uma ou mais. c = índices certos. real = pergunta real do Moodle.
+const TESTS = [
+{id:"t1",name:"Teste 1",topics:"Cliente-servidor, aplicações web, URL e navegação",qs:[
+{q:"Numa aplicação cliente-servidor:",t:"m",o:["O cliente inicia a comunicação enviando um pedido.","O servidor responde aos pedidos que recebe.","O servidor envia pedidos ao cliente para obter dados.","Cliente e servidor têm de correr na mesma máquina.","A comunicação segue um protocolo conhecido pelas duas partes."],c:[0,1,4],e:"O cliente faz o pedido, o servidor responde, e ambos falam o mesmo protocolo. Podem estar em máquinas diferentes (é o caso normal)."},
+{q:"Qual a porta TCP usada por omissão pelo protocolo HTTP?",t:"s",o:["21","25","80","443","8080"],c:[2],e:"HTTP usa a porta 80. A 443 é do HTTPS, a 21 do FTP (controlo) e a 25 do SMTP."},
+{q:"A porta TCP 443 está associada a:",t:"s",o:["HTTP sem cifra","HTTPS (HTTP sobre TLS/SSL)","IMAP4 sobre SSL","SSH","DNS"],c:[1],e:"443 é o HTTPS. IMAP4 sobre SSL usa a 993, SSH a 22 e DNS a 53."},
+{q:"Uma aplicação Web é:",t:"s",o:["Um programa instalado no computador do utilizador que guarda os dados em ficheiros locais.","Um programa armazenado num servidor remoto e disponibilizado pela Internet através da interface de um navegador.","Um conjunto de páginas HTML estáticas.","Qualquer programa que use a porta 80."],c:[1],e:"É a definição dos slides: a aplicação está num servidor remoto e é usada através do browser."},
+{q:"São vantagens das aplicações Web em relação às aplicações desktop:",t:"m",o:["São multiplataforma.","As atualizações são automáticas.","Não requerem instalação.","Funcionam sem ligação à Internet.","Dão maior controlo sobre a segurança."],c:[0,1,2],e:"Funcionar sem Internet e maior controlo de segurança são vantagens das aplicações desktop."},
+{q:"Numa aplicação Web (por exemplo, um CRM), o que circula entre o navegador e o servidor?",t:"s",o:["Os ficheiros da base de dados.","Instruções SQL enviadas pelo navegador.","Pedidos e respostas do protocolo HTTP.","O código da aplicação do servidor."],c:[2],e:"O navegador envia pedidos HTTP e recebe respostas HTTP. A base de dados e o código do servidor ficam no servidor."},
+{q:"No URL `https://www.continente.pt/pesquisa/resultados.aspx?k=arroz`, a parte `k=arroz` é:",t:"s",o:["O caminho (path).","A âncora (anchor).","A query string.","O nome do servidor (host).","O esquema."],c:[2],e:"Tudo o que vem depois do `?` é a query string: pares nome=valor."},
+{q:"Segundo o formato `scheme:[//[user:password@]host[:port]][path][?query][#anchor]`, quais são esquemas válidos de URL?",t:"m",o:["http","https","ftp","mailto","tcp"],c:[0,1,2,3],e:"Os slides referem http, https, ftp, mailto, file, data e irc. TCP é um protocolo de transporte, não um esquema de URL."},
+{q:"Na codificação de URLs (URL encoding), um espaço é normalmente substituído por:",t:"m",o:["`%20`","`+`","`_`","`&nbsp;`"],c:[0,1],e:"Um URL não pode ter espaços. O espaço passa a `%20` ou `+`. Os caracteres inseguros passam a `%` seguido de dois dígitos hexadecimais."},
+{q:"O navegador recebe uma página HTML que referencia 10 imagens, 2 folhas de estilo e 3 scripts. No mínimo, quantos pedidos HTTP são feitos para mostrar a página?",t:"s",o:["1","3","15","16","Depende só do servidor"],c:[3],e:"Um pedido para o HTML e mais um por cada recurso referenciado: 1 + 10 + 2 + 3 = 16 (sem contar pedidos feitos pelo JavaScript)."},
+{q:"Sobre os pedidos HTTP adicionais feitos pelo navegador ao mostrar uma página:",t:"m",o:["São gerados automaticamente pelo navegador ao interpretar o HTML.","Podem ser dirigidos a servidores diferentes.","O código JavaScript da página pode gerar ainda mais pedidos.","São enviados pelo servidor ao navegador sem pedido prévio.","Só acontecem quando o conteúdo é dinâmico."],c:[0,1,2],e:"O servidor nunca envia pedidos ao cliente. Os pedidos extra existem tanto para páginas estáticas como dinâmicas."},
+{q:"Quando o cliente web recebe o resultado de um conteúdo gerado dinamicamente:",t:"s",o:["É o mesmo que receber um conteúdo estático.","Não consegue interpretá-lo porque está sempre a mudar.","Está sempre a repetir o pedido para mostrar o conteúdo atualizado.","A afirmação é falsa porque o servidor não gera conteúdos dinamicamente."],c:[0],e:"Para o navegador é sempre uma resposta HTTP. A diferença entre estático e dinâmico está apenas no servidor (resposta do gabarito do Moodle)."},
+{q:"Num pedido de conteúdo dinâmico, o servidor Web:",t:"s",o:["Abre o ficheiro e devolve-o tal como está.","Executa o código associado ao recurso e produz a resposta HTTP, que pode conter HTML ou outro conteúdo, incluindo binário.","Envia o código-fonte para o navegador o executar.","Reencaminha sempre o pedido para outro servidor."],c:[1],e:"No conteúdo dinâmico o servidor executa código (PHP, C#, etc.) para gerar a resposta."}
+]},
+{id:"t2",name:"Teste 2",topics:"Terminologia HTTP, estrutura das mensagens, métodos",qs:[
+{q:"HTTP é:",t:"s",o:["Uma sigla que significa High Transfer Terminology Protocol.","Um protocolo de comunicação usado por todos os agentes web num canal de comunicação.","A linguagem usada entre proxies e servidores Web.","Uma linguagem de marcação."],c:[1],e:"Resposta do gabarito do Moodle. A opção «um protocolo de comunicação» sozinha só teve cotação parcial."},
+{q:"Dizer que o HTTP é um protocolo stateless significa que:",t:"s",o:["Não usa TCP.","Cada pedido é tratado de forma independente, sem o servidor guardar estado entre pedidos.","Não permite enviar cabeçalhos.","A ligação é sempre cifrada.","O servidor guarda uma sessão por cada cliente."],c:[1],e:"Cada troca é um pedido e uma resposta. O estado (sessões, cookies) tem de ser construído por cima do HTTP."},
+{q:"Em que camada funciona o HTTP e que protocolo de transporte usa?",t:"s",o:["Camada de aplicação, sobre TCP.","Camada de transporte, sobre UDP.","Camada de rede, sobre IP.","Camada de aplicação, sobre UDP."],c:[0],e:"O HTTP é um protocolo da camada de aplicação que usa TCP como transporte."},
+{q:"Quando um servidor Web faz um pedido ao cliente web:",t:"s",o:["O cliente usa um proxy para devolver uma resposta adequada.","O cliente só responde se o pedido vier de um proxy.","O cliente recebe uma resposta em HTML.","O servidor não faz pedidos ao cliente web."],c:[3],e:"No modelo pedido-resposta só o cliente faz pedidos."},
+{q:"Sobre os proxies HTTP:",t:"m",o:["São intermediários entre clientes e servidores.","Funcionam como servidor (para o cliente) e como cliente (para o servidor).","Podem fazer cache, balanceamento de carga e filtragem de conteúdos.","Substituem sempre o servidor de origem.","Entre o cliente e o servidor pode haver vários proxies."],c:[0,1,2,4],e:"Um proxy fica no meio e reencaminha pedidos. Não substitui o servidor de origem."},
+{q:"Qual é a ordem dos elementos de uma mensagem de pedido HTTP?",t:"s",o:["Cabeçalhos, linha de pedido, corpo.","Linha de pedido, cabeçalhos, linha vazia (CRLF), corpo.","Linha de pedido, corpo, cabeçalhos.","Linha de estado, cabeçalhos, linha vazia, corpo."],c:[1],e:"Request line, header lines, CRLF e body. A linha de estado é da resposta."},
+{q:"A linha de pedido (request line) tem a sintaxe:",t:"s",o:["`versão-HTTP código-estado frase`","`método URI-do-pedido versão-HTTP`","`Host: servidor`","`URI método versão-HTTP`"],c:[1],e:"Exemplo: `GET /a-diocese.html HTTP/1.1`."},
+{q:"Na linha `HTTP/1.1 404 Not Found`, o texto `Not Found` é:",t:"s",o:["O código de estado.","A frase explicativa (reason phrase), destinada a humanos.","Um cabeçalho de resposta.","O corpo da mensagem."],c:[1],e:"A linha de estado tem a versão, o código de 3 dígitos e uma frase explicativa. Mudar a frase não muda o comportamento de um cliente bem feito."},
+{q:"Quando o utilizador escreve na barra de navegação o URL `https://www.ads.pt/`, a primeira linha do pedido gerado é:",t:"s",o:["`POST https://www.ads.pt/ HTTP/1.1`","`GET / HTTPS/1.1`","`GET / HTTP/1.1`","`GET www.ads.pt HTTP/1.1`","`GET https://www.ads.pt/ HTTP/1.1`"],c:[2],e:"Pergunta real. A linha de pedido só leva o caminho e a versão HTTP. O servidor vai no cabeçalho `Host` e o https não aparece na linha."},
+{q:"O método HEAD serve para:",t:"s",o:["Pedir apenas os cabeçalhos de um recurso, sem o corpo.","Enviar dados no corpo do pedido.","Apagar um recurso no servidor.","Pedir o elemento `<head>` da página HTML."],c:[0],e:"HEAD pede só os cabeçalhos, por exemplo para comparar versões."},
+{q:"Comparando GET e POST num formulário:",t:"m",o:["Com GET os dados vão na query string do URL.","Com POST os dados vão no corpo da mensagem.","Um pedido GET pode ser guardado nos favoritos e na cache.","Com POST os parâmetros ficam no histórico do navegador.","GET é adequado para enviar palavras-passe."],c:[0,1,2],e:"Com POST os parâmetros não ficam no histórico. Nunca se deve usar GET para dados sensíveis."},
+{q:"Para submeter um formulário de pesquisa do tipo Google ou Bing, o método mais adequado é:",t:"s",o:["GET, porque a pesquisa não altera dados e o URL resultante pode ser guardado e partilhado.","POST, porque é mais seguro.","PUT, porque envia dados.","DELETE, porque limpa a pesquisa anterior."],c:[0],e:"Pergunta de exame de 2021. Uma pesquisa não tem efeitos secundários e fica com um URL partilhável, por isso usa GET."},
+{q:"Numa API REST, qual o método HTTP para atualizar parcialmente um recurso?",t:"s",o:["GET","POST","PUT","PATCH","DELETE"],c:[3],e:"POST cria (Create), GET lê (Read), PUT atualiza ou substitui (Update/Replace), PATCH atualiza parcialmente e DELETE apaga."},
+{q:"As aplicações e sites Web normais (sem ser APIs REST) baseiam os seus pedidos em:",t:"s",o:["GET e POST.","GET, PUT e DELETE.","Apenas POST.","Todos os métodos do HTTP/1.1."],c:[0],e:"Segundo os slides, a navegação e os formulários usam só GET e POST."}
+]},
+{id:"t3",name:"Teste 3",topics:"Cabeçalhos HTTP",qs:[
+{q:"Um header HTTP é usado:",t:"s",o:["Apenas quando a mensagem não tem corpo.","Apenas nas mensagens dos pedidos.","Na primeira linha da mensagem.","Nas mensagens dos pedidos e nas mensagens das respostas."],c:[3],e:"Pergunta real. Os cabeçalhos aparecem nos dois tipos de mensagem, depois da primeira linha."},
+{q:"Os cabeçalhos HTTP agrupam-se em:",t:"m",o:["Gerais (general)","De pedido (request)","De resposta (response)","De entidade (entity)","De sessão (session)"],c:[0,1,2,3],e:"Os quatro grupos são general, request, response e entity. Não existe um grupo «sessão»."},
+{q:"O cabeçalho `Content-Type` é um cabeçalho:",t:"s",o:["Geral","De pedido","De resposta","De entidade"],c:[3],e:"Os cabeçalhos de entidade descrevem o corpo: Content-Type, Content-Length, Last-Modified, entre outros."},
+{q:"O cabeçalho `Date`, que indica quando a mensagem foi criada, é um cabeçalho:",t:"s",o:["Geral","De pedido","De resposta","De entidade"],c:[0],e:"Date e Connection são cabeçalhos gerais: aplicam-se a pedidos e respostas e não descrevem o corpo."},
+{q:"O header Referer permite:",t:"m",o:["Indicar o URL da página que estava a ser mostrada no navegador.","Que o cliente indique o local que deu origem ao pedido.","Referenciar um outro recurso web que não está alojado no servidor para onde se dirige o pedido.","Diferenciar se o pedido foi gerado por um clique numa hiperligação ou por um URL escrito na barra de navegação.","Que o servidor indique a referência base da resposta."],c:[0,1,2,3],e:"Pergunta real com 4 respostas certas no gabarito. O Referer é um cabeçalho de pedido. Se o URL foi escrito na barra, o Referer não é enviado."},
+{q:"O header Accept-Encoding:",t:"m",o:["Indica qual o método de compressão que pode ser usado na produção da resposta.","Indica que o cliente aceita conteúdos comprimidos.","Indica que o cliente entende código-fonte.","Indica que o servidor aceita conteúdos cifrados.","Indica que a transmissão é segura."],c:[0,1],e:"Pergunta real. Exemplo: `Accept-Encoding: gzip, deflate`. Não tem nada a ver com cifra."},
+{q:"O cabeçalho `Host` foi introduzido para:",t:"s",o:["Identificar o software do cliente.","Permitir que um único servidor Web sirva vários domínios (virtual hosting).","Indicar o endereço IP do cliente.","Indicar a página de origem do pedido."],c:[1],e:"Como vários domínios podem partilhar o mesmo IP, o Host diz ao servidor qual deles se pretende. É obrigatório no HTTP/1.1."},
+{q:"O cabeçalho `User-Agent`:",t:"s",o:["Identifica o software (por exemplo, o navegador) que fez o pedido.","Identifica o utilizador autenticado.","Indica o servidor que produziu a resposta.","Contém as credenciais do utilizador."],c:[0],e:"Para identificar o servidor usa-se o cabeçalho de resposta `Server`. As credenciais vão em `Authorization`."},
+{q:"Que cabeçalho de resposta acompanha os códigos 301 e 302?",t:"s",o:["`Location`","`Referer`","`Host`","`WWW-Authenticate`"],c:[0],e:"O `Location` indica o URL para onde o cliente deve redirecionar o pedido."},
+{q:"Que cabeçalho de resposta acompanha o código 401 (desafio de autenticação)?",t:"s",o:["`Authorization`","`WWW-Authenticate`","`Location`","`Set-Cookie`"],c:[1],e:"O servidor responde 401 com `WWW-Authenticate`. O cliente repete o pedido com o cabeçalho `Authorization`."},
+{q:"Quem insere os cabeçalhos nas mensagens HTTP?",t:"m",o:["Nos pedidos: o navegador e também o código da aplicação (por exemplo, JavaScript).","Nas respostas a conteúdos estáticos: o servidor Web.","Nas respostas a conteúdos dinâmicos: o servidor Web e também o código da aplicação.","Os proxies são os únicos que podem inserir cabeçalhos.","O utilizador escreve-os na barra de endereço."],c:[0,1,2],e:"Resumo dos slides da aula sobre cabeçalhos."},
+{q:"Quais destes são nomes de cabeçalhos proibidos (forbidden header names), que o código da aplicação no navegador não pode alterar?",t:"m",o:["`Host`","`Cookie`","`Referer`","`Content-Length`","`Content-Type`","`X-Meu-Header`"],c:[0,1,2,3],e:"Também são proibidos Accept-Charset, Accept-Encoding, Connection, Date, Origin, Keep-Alive e os que começam por Proxy- ou Sec-. O Content-Type pode ser definido com `setRequestHeader`."},
+{q:"Numa página Razor, uma instrução `Response.AddHeader(...)` escrita a meio do HTML consegue mesmo acrescentar o cabeçalho porque:",t:"s",o:["Os cabeçalhos podem ir no fim da mensagem.","O servidor usa response buffering: retém a resposta até o script terminar ou chamar Flush/End.","O navegador reordena a mensagem.","Os cabeçalhos são enviados numa segunda resposta."],c:[1],e:"Com a saída em buffer, os cabeçalhos ainda não foram enviados quando a instrução corre."},
+{q:"O cabeçalho `If-Modified-Since` num pedido:",t:"s",o:["Torna o pedido condicional: se o recurso não mudou desde essa data, o servidor responde 304 Not Modified sem corpo.","Obriga o servidor a reenviar sempre o recurso.","Indica a data de criação do pedido.","Indica até quando a resposta pode ficar em cache."],c:[0],e:"É a base da validação de cache. Na resposta, a data equivalente vem no `Last-Modified`."},
+{q:"O cabeçalho `Content-Length`:",t:"s",o:["Indica o tamanho do corpo da mensagem em bytes.","Indica o número de cabeçalhos.","Indica o tamanho do URL.","Indica o número de pedidos que o cliente pode fazer."],c:[0],e:"É obrigatório nos pedidos com corpo e opcional nas respostas (permite mostrar o progresso)."}
+]},
+{id:"t4",name:"Teste 4",topics:"Tipos MIME e códigos de estado",qs:[
+{q:"MIME significa:",t:"s",o:["Multipurpose Internet Mail Extensions","Multiple Internet Message Encoding","Message Interchange Media Extensions","Media Internet Markup Encoding"],c:[0],e:"Veio do correio eletrónico e é usado no HTTP para indicar o tipo do conteúdo."},
+{q:"O formato do valor do cabeçalho Content-Type é:",t:"s",o:["`subtipo/tipo`","`tipo/subtipo [; parâmetros]`","`extensão.ficheiro`","`charset/tipo`"],c:[1],e:"Exemplos: `text/html; charset=utf-8` e `image/jpeg`."},
+{q:"O valor image/gif usado no header Content-Type de uma mensagem HTTP:",t:"m",o:["Significa que a mensagem tem no corpo os bytes de uma imagem.","Significa que o cliente recebeu uma imagem.","Significa que o servidor é uma aplicação de edição de imagens.","Significa que o servidor vai ter de enviar novamente uma mensagem com a imagem.","Significa que o cliente tem de pedir uma nova imagem."],c:[0,1],e:"Pergunta real com 2 respostas certas no gabarito."},
+{q:"Segundo os slides, qual é o conjunto de caracteres por omissão quando o Content-Type não indica charset?",t:"s",o:["UTF-8","US-ASCII","ISO-8859-1","UTF-16"],c:[2],e:"Os slides indicam ISO-8859-1. O UTF-8 é o conjunto por omissão do HTML5 (no documento), não do cabeçalho HTTP."},
+{q:"Qual é o tipo MIME correto para uma folha de estilos?",t:"s",o:["`text/css`","`style/css`","`application/style`","`text/stylesheet`"],c:[0],e:"Outros tipos que convém conhecer: text/html, text/plain, image/jpeg, audio/x-wav e video/mpeg."},
+{q:"O tipo `multipart/x-mixed-replace; boundary=XPTOText` indica que o corpo:",t:"s",o:["Tem várias partes, separadas pela fronteira indicada, cada uma com o seu próprio Content-Type.","Está comprimido.","Está cifrado com a chave XPTOText.","Vai ser enviado em várias respostas."],c:[0],e:"Cada parte começa com `--XPTOText` e a mensagem termina em `--XPTOText--`."},
+{q:"`<img src=\"data:image/gif;base64,R0lGOD...\">` serve para:",t:"s",o:["Incorporar a imagem no próprio HTML, codificada em Base64, sem precisar de um pedido HTTP adicional.","Pedir a imagem a um servidor chamado data.","Comprimir a imagem.","Cifrar a imagem."],c:[0],e:"Formato data URI: `data:[<mediatype>][;base64],<dados>`."},
+{q:"A necessidade de existirem os códigos de estado:",t:"m",o:["É para classificar a resposta com um tipo e contexto.","É para os clientes interpretarem de forma fácil e rápida o tipo de resposta que recebem.","É um código de CHECKSUM para verificar a validade da mensagem.","É apenas para preencher a linha de estado da mensagem.","É para alertar o cliente de que o servidor sabe gerar números."],c:[0,1],e:"Pergunta real com 2 respostas certas no gabarito."},
+{q:"Os códigos de estado 3xx indicam:",t:"s",o:["Informação (pedido recebido, a continuar).","Sucesso.","Que é preciso uma ação adicional para completar o pedido (redireção).","Erro do cliente.","Erro do servidor."],c:[2],e:"1xx: informação. 2xx: sucesso. 3xx: redireção. 4xx: erro do cliente. 5xx: erro do servidor."},
+{q:"Diferença entre 301 e 302:",t:"s",o:["301: o recurso mudou de lugar permanentemente. 302: mudou temporariamente.","301: erro do cliente. 302: erro do servidor.","301: tem corpo. 302: não tem corpo.","Não há diferença."],c:[0],e:"Os dois usam o cabeçalho Location. Um 301 pode ficar em cache nos proxies, o que dá problemas se for usado para redireções temporárias (como para o login)."},
+{q:"Numa aplicação ASP.NET Core, `return RedirectToAction(\"Lista\")` produz uma resposta com:",t:"s",o:["`200 OK` e o HTML da Lista.","`302 Found` e o cabeçalho `Location`.","`404 Not Found`.","`500 Internal Server Error`."],c:[1],e:"Os slides mostram `HTTP/1.1 302 Found`, `Content-Length: 0` e `Location: /MyController/MyRoute`."},
+{q:"O código `304 Not Modified` significa:",t:"s",o:["O recurso não foi encontrado.","O recurso não mudou desde a data indicada no pedido condicional, por isso o cliente pode usar a cópia em cache.","O servidor não pode modificar o recurso.","O pedido tem de ser repetido com POST."],c:[1],e:"É a resposta a um pedido com `If-Modified-Since` quando o recurso não mudou."},
+{q:"Diferença entre 401 e 403:",t:"s",o:["401: é preciso autenticação (desafio com WWW-Authenticate). 403: acesso proibido.","401: recurso não encontrado. 403: erro do servidor.","401: pedido mal formulado. 403: redireção.","São equivalentes."],c:[0],e:"401 Unauthorized pede credenciais. 403 Forbidden recusa o acesso."},
+{q:"Qual o significado do código de erro HTTP 502 Bad Gateway?",t:"m",o:["O servidor proxy que representa o servidor de gateway não consegue obter um bom resultado do servidor de upstream (servidor base).","Há problemas de acesso provocados por uma falha na comunicação entre dois ou mais servidores que retransmitem dados entre si para carregar a página.","O gateway usado para a comunicação não é o adequado.","O servidor não está configurado para comunicar com um gateway.","Deve ser usado outro gateway."],c:[0,1],e:"Pergunta real com 2 respostas certas no gabarito. O 502 é um erro do servidor (5xx)."},
+{q:"Qual destes é um código de erro do servidor?",t:"m",o:["`500 Internal Server Error`","`503 Service Unavailable`","`505 HTTP Version Not Supported`","`400 Bad Request`","`411 Length Required`"],c:[0,1,2],e:"400 e 411 são erros do cliente (4xx). O 411 aparece quando falta o Content-Length."},
+{q:"O utilizador escreve `http://www.cs.rutgers.edu/~shklar`, sem barra no fim, e `~shklar` é uma diretoria. O servidor:",t:"s",o:["Devolve 404.","Responde com uma redireção (301) para o mesmo URL terminado em `/`.","Devolve 500.","Ignora o pedido."],c:[1],e:"Exemplo do livro: sem a barra final, os URLs relativos da página seriam resolvidos de forma errada."}
+]},
+{id:"t5",name:"Teste 5",topics:"Funcionalidades do servidor: resolução de endereços",qs:[
+{q:"Num servidor Web, o processamento de um pedido segue as etapas:",t:"s",o:["Geração da resposta, resolução de endereços, processamento do pedido.","Resolução de endereços, processamento do pedido, geração da resposta.","Processamento do pedido, autenticação, resolução de endereços.","Autenticação, geração da resposta, resolução de endereços."],c:[1],e:"Diagrama de Shklar & Rosen (p. 123), por cima do suporte às comunicações de rede."},
+{q:"Num servidor Web, a secção «Address Resolution» é responsável por:",t:"s",o:["Associar o endereço do servidor aos ficheiros armazenados.","Um conjunto de etapas que identificam os ficheiros responsáveis pela produção da resposta e verificam a permissão de acesso a estes.","Resolver o problema do endereço do servidor.","Ver se a resposta é estática ou dinâmica.","Analisar os pseudónimos existentes nas definições do servidor."],c:[1],e:"Pergunta real."},
+{q:"Quais são os componentes da resolução de endereços?",t:"m",o:["Virtual hosting","Address mapping","Pseudónimos","Autenticação","CGI"],c:[0,1,2,3],e:"O CGI é uma abordagem à geração de conteúdo dinâmico, não faz parte da resolução de endereços."},
+{q:"O virtual hosting permite:",t:"s",o:["Alojar vários domínios no mesmo servidor (e até no mesmo IP), distinguindo-os pelo cabeçalho `Host`.","Correr o servidor numa máquina virtual.","Esconder o IP do servidor.","Dar a cada ficheiro um nome virtual."],c:[0],e:"No Apache configura-se com `<VirtualHost>`, `ServerName` e `DocumentRoot`."},
+{q:"Um servidor aloja várias aplicações que têm todas o ficheiro `wwwroot/images/logo.png` e recebe `GET /images/logo.png HTTP/1.1`. Como decide qual dos ficheiros usar?",t:"s",o:["Escolhe o ficheiro mais recente.","Usa o cabeçalho `Host` do pedido para encontrar o virtual host certo e procura o ficheiro na raiz (DocumentRoot) desse host.","Escolhe ao acaso.","Responde 300 Multiple Choices."],c:[1],e:"Pergunta do exame de 2021."},
+{q:"Com `DocumentRoot /var/www`, o pedido `GET /tc/index.html` é mapeado para o ficheiro:",t:"s",o:["`/tc/index.html`","`/var/www/tc/index.html`","`/var/tc/index.html`","`/var/www/index.html`"],c:[1],e:"O address mapping junta o caminho do URL à raiz web. Não faz sentido a raiz do URL ser a raiz do disco."},
+{q:"Qual é a raiz web por omissão do IIS no Windows?",t:"s",o:["`/var/www`","`C:\\inetpub\\wwwroot`","`C:\\Program Files\\Apache\\htdocs`","`C:\\Windows\\web`"],c:[1],e:"No Apache em Linux é `/var/www` e no Apache em Windows é a pasta `htdocs` da instalação."},
+{q:"Com a diretiva `Alias \"/image\" \"/ftp/pub/image\"`, o pedido `/image/logo.png` corresponde ao ficheiro:",t:"s",o:["`DocumentRoot/image/logo.png`","`/ftp/pub/image/logo.png`","`/image/logo.png` na raiz do disco","`/ftp/logo.png`"],c:[1],e:"Um pseudónimo (alias) liga um caminho do URL a uma pasta fora da árvore do DocumentRoot."},
+{q:"Num servidor Web, os pseudónimos são usados para:",t:"m",o:["Mascarar caminhos para ficheiros.","Mudar os nomes aos ficheiros.","Associar recursos externos à estrutura de ficheiros da aplicação web.","Criar outros endereços do servidor.","Esconder ficheiros.","Proteger o servidor de ataques."],c:[0,1,2],e:"Pergunta real com 3 respostas certas no gabarito."},
+{q:"Os pseudónimos permitem também:",t:"m",o:["Ligar à árvore de ficheiros de um virtual host conteúdo a que ele normalmente não teria acesso.","Partilhar ficheiros entre virtual hosts.","Cifrar os ficheiros.","Dispensar o DocumentRoot."],c:[0,1],e:"Slides da aula sobre resolução de endereços."},
+{q:"Num servidor Web, o módulo de «Autenticação» da secção «Address resolution»:",t:"m",o:["É a componente que verifica se o pedido tem permissões de acesso ao recurso solicitado.","É a secção responsável por gerar mensagens de resposta com o código 401.","É a secção que verifica o username e a palavra-passe.","É a secção que gera um formulário para inserir as credenciais.","É onde os utilizadores se autenticam para aceder à aplicação."],c:[0,1],e:"Pergunta real com 2 respostas certas no gabarito."},
+{q:"Na autenticação HTTP Basic, a sequência é:",t:"s",o:["O cliente envia `WWW-Authenticate` e o servidor responde `Authorization`.","O servidor responde `401` com `WWW-Authenticate`, e o cliente repete o pedido com `Authorization: Basic <credenciais em Base64>`.","O servidor responde `403` e o cliente desiste.","O servidor responde `302` para uma página de login."],c:[1],e:"Exemplo dos slides: `WWW-Authenticate: Basic realm=\"User Visible Realm\"`."},
+{q:"No fim da resolução de endereços, o servidor já sabe:",t:"m",o:["Qual o recurso (ficheiro) que corresponde ao pedido.","Que a autenticação foi verificada.","Qual o HTML final a enviar.","O tempo que a resposta vai demorar."],c:[0,1],e:"Segundo os slides, o recurso está identificado e a autenticação verificada. Segue-se o processamento do pedido."}
+]},
+{id:"t6",name:"Teste 6",topics:"Conteúdos estáticos e dinâmicos, HTML",qs:[
+{q:"No processamento de um pedido, os conteúdos estáticos:",t:"m",o:["São assim designados por terem um conteúdo estático.","São assim designados porque o seu conteúdo corresponde integralmente ao conteúdo da mensagem de resposta ao pedido.","São assim designados porque obtê-los não implica processar código de qualquer espécie.","São assim designados por estarem sempre na mesma pasta do sistema de ficheiros.","Nenhuma das outras opções."],c:[0,1,2],e:"Pergunta real com 3 respostas certas no gabarito."},
+{q:"Diferença entre «static content pages» e páginas «as-is»:",t:"s",o:["Nas static pages, o servidor gera os cabeçalhos e usa o ficheiro como corpo. Nas as-is, o ficheiro tem a mensagem HTTP completa, com cabeçalhos.","As as-is são dinâmicas.","As static pages não têm cabeçalhos.","Não há diferença."],c:[0],e:"As-is: o conteúdo inteiro do ficheiro é a resposta."},
+{q:"Num servidor web, um Common Gateway Interface (CGI):",t:"s",o:["Serve para produzir dinamicamente conteúdos de respostas.","Serve para produzir de forma mais rápida uma resposta a um pedido HTTP.","Serve para reencaminhar o processamento da resposta para outro servidor web.","Nenhuma das opções apresentadas."],c:[0],e:"Pergunta real."},
+{q:"Qual o principal problema de desempenho do CGI?",t:"s",o:["Só funciona com Perl.","O servidor cria um novo processo do sistema operativo para cada pedido, o que limita a escalabilidade.","Não consegue aceder a bases de dados.","Só gera imagens."],c:[1],e:"O FastCGI resolve isto mantendo os processos do interpretador vivos entre pedidos."},
+{q:"Quais destes passos faz o servidor ao executar um programa CGI?",t:"m",o:["Determina se o recurso é um programa CGI.","Verifica as permissões.","Define variáveis de ambiente.","Cria um processo filho para correr o programa.","Envia o código do programa ao navegador."],c:[0,1,2,3],e:"Depois processa a resposta do programa CGI. O código nunca vai para o navegador."},
+{q:"Os Server Side Includes (SSI):",t:"s",o:["Permitem inserir fragmentos dinâmicos (outros ficheiros, resultados de scripts) diretamente em páginas HTML, através de macros.","São bibliotecas JavaScript.","São um tipo de proxy.","Substituem o protocolo HTTP."],c:[0],e:"Davam algum dinamismo sem o custo de um CGI completo."},
+{q:"São exemplos de APIs nativas de servidores Web:",t:"m",o:["ISAPI (Microsoft IIS)","Apache Server API","PHP","JavaScript"],c:[0,1],e:"As APIs nativas usam código compilado para um servidor específico. O PHP é processamento de templates."},
+{q:"São exemplos de processamento de templates (template processing):",t:"m",o:["PHP","Cold Fusion","Active Server Pages","Servlets"],c:[0,1,2],e:"Servlets e Java Server Pages são categorias à parte nos slides."},
+{q:"As linguagens como o PHP, Java, Perl, etc.:",t:"s",o:["São usadas pelos clientes web para fazer pedidos de conteúdos dinâmicos.","Servem unicamente para desenvolver bibliotecas de funcionalidades extra para o servidor.","São usadas nas aplicações web para produzir conteúdos estáticos.","São usadas pelos servidores para armazenar conteúdos dinâmicos.","Nenhuma das opções apresentadas."],c:[4],e:"Pergunta real. Servem para gerar conteúdo dinâmico, e nenhuma opção diz isso."},
+{q:"Quando o cliente web processa o HTML, que grupo de elementos gera automaticamente pedidos HTTP?",t:"s",o:["`<style>`, `<a>` e `<img>`","`<link>`, `<script>` e `<img>`","`<link>`, `<script>`, `<img>` e `<a>`","`<title>`, `<img>` e `<a>`","`<img>` e `<a>`"],c:[1],e:"Pergunta real. O `<a>` só gera um pedido quando há clique, por isso não conta."},
+{q:"A página `http://www.terrypratchettbooks.com/terry/index.html` contém `<img src=\"img/common/terry.jpg\">`. Que pedido é feito?",t:"s",o:["`GET /img/common/terry.jpg HTTP/1.1`","`GET /terry/img/common/terry.jpg HTTP/1.1`","`GET img/common/terry.jpg HTTP/1.1`","Nenhum, só ao clicar."],c:[1],e:"Sem `/` inicial, o caminho é relativo à pasta da página (`/terry/`). O elemento `<base>` pode mudar esta base."},
+{q:"O parâmetro enctype usado nos elementos form serve para:",t:"s",o:["Definir como os dados são cifrados para uma transmissão segura.","Enviar ficheiros.","Definir como os dados do formulário são codificados.","Enviar dados de tipos diferentes.","Nenhuma das opções apresentadas."],c:[2],e:"Pergunta real. Os valores são `application/x-www-form-urlencoded` (por omissão) e `multipart/form-data` (para ficheiros ou dados binários)."},
+{q:"Num `<form>` sem atributo `method`, o formulário é submetido com:",t:"s",o:["GET","POST","PUT","Depende do navegador"],c:[0],e:"O método por omissão é GET, por isso os dados vão na query string."},
+{q:"Uma aplicação Web, para ser usada, necessita no mínimo de:",t:"s",o:["Vários servidores e vários clientes.","Apenas proxies.","Apenas um servidor.","Um servidor e vários clientes.","Um servidor e um cliente."],c:[4],e:"Pergunta real (a resposta «Apenas um servidor» foi dada como errada)."}
+]}
+];
+
+// Perguntas reais (screenshots do Moodle). Gabarito do professor, mesmo quando discutível.
+const REAL = {id:"real",name:"Moodle real",topics:"Perguntas reais de testes anteriores, com o gabarito oficial",qs:[
+{q:"O status code 404...",t:"m",o:["...é usado para indicar um erro de processamento do pedido.","...indicar que os proxies entregaram a mensagem ao servidor errado.","...indicar que o servidor já não se encontra naquele endereço.","...indicar um erro por pedido mal formulado.","...indicar que o cliente não tem acesso ao recurso solicitado."],c:[0,3],e:"Gabarito do professor: a e d. Na norma, 404 é Not Found (recurso não encontrado) e «pedido mal formulado» é o 400. No teste, segue o gabarito."},
+{q:"Num cliente web, um Helper:",t:"s",o:["É uma aplicação que serve para ler MIME types desconhecidos.","É um upgrade das funcionalidades do cliente web.","Serve para ajudar a navegar na web.","Nenhuma das opções apresentadas.","É uma aplicação externa que permite ao cliente web renderizar um conteúdo que ele desconhece.","É uma aplicação integrada no próprio cliente web usada para renderizar um conteúdo que ele desconhece."],c:[4],e:"O Helper é externo. O Plugin corre dentro do cliente. É matéria de clientes HTTP, mas pode aparecer."},
+{q:"Um Plugin para um cliente web é:",t:"s",o:["Como um Helper mas mais rápido.","Um aplicativo executado dentro do cliente web.","Nenhuma das opções apresentadas.","Um aplicativo externo ao cliente web usado para renderizar conteúdos não conhecidos pelo próprio.","Um aplicativo usado para assegurar a ligação ao servidor web.","Um aplicativo executado dentro do cliente web usado para renderizar conteúdos não conhecidos pelo próprio."],c:[5],e:"A resposta certa é a mais completa (f). A opção b, sozinha, não chega."},
+{q:"HTTP é:",t:"s",o:["Uma sigla que significa High Transfer Terminology Protocol.","Um protocolo de comunicação usado por todos os agentes web num canal de comunicação.","Um protocolo de comunicação.","Linguagem usada entre Proxies e Servidores Web.","Um protocolo de comunicação entre servidor Web e cliente web."],c:[1],e:"Só a b vale a cotação toda. A c teve cotação parcial."},
+{q:"Uma aplicação Web para ser usada necessita:",t:"s",o:["Vários servidores e vários clientes","Apenas proxies","Apenas um servidor","Um servidor e vários clientes","Um servidor + vários proxies","Um servidor e um cliente","Vários servidores e um cliente"],c:[5],e:"Precisa de um servidor e de um cliente."},
+{q:"Quando o utilizador humano escreve na barra de navegação o URL https://www.ads.pt/ é gerada a seguinte mensagem:",t:"s",o:["`POST https://www.ads.pt/ HTTP/1.1`","`GET / HTTPS/1.1`","`GET / HTTP/1.1`","`GET www.ads.pt HTTP/1.1`","`GET https://www.ads.pt/ HTTP/1.1`"],c:[2],e:"A linha de pedido leva só o caminho e a versão HTTP."},
+{q:"O valor image/gif usado no header Content-type de uma mensagem HTTP:",t:"m",o:["Significa que a mensagem tem no corpo os bytes de uma imagem.","Significa que o servidor é uma aplicação de edição de imagens.","Significa que o servidor vai ter de enviar novamente uma mensagem com a imagem correspondente.","Significa que o cliente recebeu uma imagem.","Significa que o cliente tem de pedir uma nova imagem."],c:[0,3],e:"Gabarito: a e d."},
+{q:"O header Accept-Encoding:",t:"m",o:["Indica qual o método de compressão pode ser usado na produção da resposta.","Indica que o cliente aceita conteúdos comprimidos.","Indica que o cliente entende código fonte.","Indica que o servidor aceita conteúdos cifrados.","Indica que a transmissão é segura."],c:[0,1],e:"Gabarito: a e b."},
+{q:"O header Referer permite:",t:"m",o:["Indicar um url da página que estava renderizada no navegador web.","Que o cliente indique o local que deu origem ao pedido.","Referenciar um outro recurso web que não está alojado no servidor para onde se dirige o pedido.","Diferenciar se o pedido foi gerado através de um clique de uma hiperligação ou através de um URL escrito na barra de navegação.","Que o servidor indique a referência base da resposta."],c:[0,1,2,3],e:"Gabarito: a, b, c e d. Só a e está errada."},
+{q:"Qual o significado do código de erro HTTP 502 Bad Gateway?",t:"m",o:["Significa que o gateway usado para a comunicação não é o adequado.","Significa que o servidor proxy que representa o servidor de gateway não consegue obter um bom resultado do servidor de upstream (servidor base).","Significa que o gateway usado para a comunicação não consegue encontrar o servidor a que se destina o pedido. Nestes casos deve ser usado outro gateway.","Significa a existência de problemas de acesso provocados por uma falha na comunicação entre dois ou mais servidores que retransmitem dados entre si para carregar a página.","Significa que o servidor não está configurado para comunicar com um gateway."],c:[1,3],e:"Gabarito: b e d."},
+{q:"Um header HTTP é usado:",t:"s",o:["Apenas quando a mensagem não tem corpo.","Apenas nas mensagens dos pedidos.","Na primeira linha da mensagem.","Nas mensagens dos pedidos e nas mensagens das respostas."],c:[3],e:"Os cabeçalhos aparecem nos pedidos e nas respostas."},
+{q:"A necessidade de existirem os códigos de estado:",t:"m",o:["É um código de CHECKSUM para verificação da validade da mensagem.","É para classificar a resposta com um tipo e contexto.","É para os clientes interpretarem de forma fácil e rápida o tipo de resposta que recebem.","É apenas para preencher a linha de estado da mensagem.","É para alertar o cliente que o servidor sabe gerar números."],c:[1,2],e:"Gabarito: b e c."},
+{q:"Quando um servidor Web faz um pedido ao cliente web:",t:"s",o:["O cliente usa um proxy para devolver uma resposta adequada.","O cliente web apenas responde se o pedido foi efetuado através de um proxy.","Recebe uma resposta em HTML.","O servidor não faz pedidos ao cliente web."],c:[3],e:"Só o cliente faz pedidos."},
+{q:"Quando o cliente web recebe o resultado de um conteúdo gerado dinamicamente:",t:"s",o:["É o mesmo que receber um conteúdo estático.","...A afirmação é falsa porque o servidor não gera conteúdos dinamicamente.","Não consegue interpretar porque o resultado está sempre a mudar (dinâmico).","Está sempre a repetir o pedido para mostrar o conteúdo atualizado."],c:[0],e:"Para o cliente não há diferença."},
+{q:"Num servidor Web, os pseudónimos são usados para:",t:"m",o:["Criar outros endereços do servidor.","Mascarar caminhos para ficheiros.","Esconder ficheiros.","Associar recursos externos à estrutura de ficheiros da aplicação web.","Mudar os nomes aos ficheiros.","Proteger o servidor de ataques."],c:[1,3,4],e:"Gabarito: b, d e e."},
+{q:"No processamento de um pedido, os conteúdos estáticos:",t:"m",o:["...nenhuma das outras opções","São assim designados porque a obtenção do seu conteúdo não implica processamento de código de qualquer espécie.","São assim designados por terem um conteúdo estático.","São assim designados porque o seu conteúdo corresponde integralmente ao conteúdo da mensagem de resposta ao pedido.","São assim designados por estarem sempre na mesma pasta do sistema de ficheiros."],c:[1,2,3],e:"Gabarito: b, c e d."},
+{q:"Num servidor Web, a secção \"Address Resolution\" é responsável por:",t:"s",o:["Associar o endereço do servidor com os ficheiros armazenados.","Um conjunto de etapas que visam identificar os ficheiros responsáveis pela produção da resposta e verificar a permissão de acesso a estes.","Resolver o problema do endereço do servidor.","Ver se a resposta é estática ou dinâmica.","Analisar os pseudónimos existentes nas definições do servidor."],c:[1],e:"Gabarito: b."},
+{q:"As linguagens como o PHP, Java, Perl, etc:",t:"s",o:["São usadas pelos clientes web para fazer pedidos de conteúdos dinâmicos.","Servem unicamente para desenvolver bibliotecas de funcionalidades extra para o servidor (extensões de servidor).","São usadas nas aplicações web para produzir conteúdos estáticos.","...nenhuma das opções apresentadas.","São usadas pelos servidores para o armazenamento de conteúdos dinâmicos."],c:[3],e:"Gabarito: nenhuma das opções."},
+{q:"Num servidor web, um CommonGateway Interface (CGI):",t:"s",o:["Serve para produzir dinâmicamente conteúdos de respostas.","Serve para produzir conteúdos através de processos que correm no servidor.","Serve para produzir de forma mais rápida uma reposta a um pedido HTTP.","...nenhuma das opções apresentadas.","Serve para reencaminhar o processamento da resposta para outro servidor web."],c:[0],e:"Gabarito: a. A b soa bem, mas não é a resposta do gabarito."},
+{q:"Num Servidor Web, o módulo de \"Autenticação\" da secção \"Address resolution\":",t:"m",o:["É a secção que verifica o username e a palavra passe.","É a secção que gera um formulário para serem inseridas as credenciais.","É onde os utilizadores se autenticam para ter acesso à aplicação.","É a componente que verifica se o pedido tem as permissões de acesso ao recurso solicitado.","É a secção responsável por gerar mensagens resposta com o código 401."],c:[3,4],e:"Gabarito: d e e."},
+{q:"Quando o cliente web processa o HTML, quais o grupo de elementos HTML que geram automaticamente pedidos HTTP?",t:"s",o:["`<style>`, `<a>` e `<img>`","`<link>`, `<script>` e `<img>`","`<link>`, `<script>`, `<img>` e `<a>`","`<link>`, `<img>` e `<a>`","`<link>`, `<href>`, `<img>`, `<style>` e `<css>`","`<link>` e `<img>`","`<title>`, `<img>` e `<a>`","`<img>` e `<a>`"],c:[1],e:"Gabarito: b."},
+{q:"O parâmetro enctype usado nos elementos form serve para:",t:"s",o:["Define como os dados são cifrados para uma transmissão segura.","Enviar ficheiros.","Definir como os dados do formulário são codificados.","Nenhuma das opções apresentadas.","Enviar dados de tipos diferentes."],c:[2],e:"Gabarito: c. A opção e teve cotação parcial."}
+]};
+
+const EXTRA = [
+{id:"t8",name:"Reais · outros temas",t2:true,topics:"Restantes perguntas reais do Moodle: SGML, DTD, XML, CSS, JavaScript, JSON, Web Services, frameworks. Matéria provável do Teste Teórico 2.",qs:[
+{q:"Num documento SGML, o que significa esta declaração?",code:"<!ELEMENT XPTO - - EMPTY>",t:"s",o:["É um elemento que necessita apenas da etiqueta de fecho e contém o elemento EMPTY duas vezes.","É um elemento que necessita da etiqueta de abertura e de fecho e não tem qualquer informação dentro.","É um elemento que necessita da etiqueta de abertura e de fecho e contém o elemento EMPTY.","É um elemento que necessita apenas da etiqueta de abertura e não tem qualquer informação dentro.","É um elemento que necessita apenas da etiqueta de fecho e não tem qualquer informação dentro.","É um elemento que não necessita de qualquer etiqueta e não tem qualquer informação dentro."],c:[1],e:"Pergunta real. O primeiro `-` diz que a etiqueta de abertura é obrigatória e o segundo `-` que a de fecho também é. `O` quer dizer que pode ser omitida. EMPTY quer dizer sem conteúdo. Compara com `<!ELEMENT BR - O EMPTY>` do HTML 4."},
+{q:"Um Document Type Definition:",t:"s",o:["É um documento escrito em XML.","É um documento escrito em SGML e XML.","É um documento escrito em SGML.","É um documento escrito em HTML.","Nenhuma das opções apresentadas."],c:[2],e:"Pergunta real. O DTD é escrito na sintaxe de declarações do SGML."},
+{q:"Uma aplicação SGML é caracterizada por:",t:"s",o:["Uma declaração SGML, um DTD e uma especificação para descrição da semântica.","Uma declaração SGML, um DTD, uma especificação XML para descrição da semântica e instâncias dos documentos.","Um DTD.","Um DTD, uma especificação para descrição da semântica e instâncias dos documentos.","Uma declaração SGML, um DTD e instâncias dos documentos.","Uma declaração SGML, um DTD, uma especificação para descrição da semântica e instâncias dos documentos."],c:[5],e:"Pergunta real. São os quatro elementos que caracterizam uma aplicação SGML."},
+{q:"Um documento XML está bem formado quando...",t:"m",o:["...sempre que o documento está válido.","...o documento contém uma referência a um documento DTD.","...o documento está escrito com o código de caracteres ISO-8859-1.","...todos os elementos existentes contêm informação.","...cumpre as regras gramaticais definidas na especificação XML."],c:[0,4],e:"Pergunta real, sem gabarito visível; esta é a resposta proposta. Um documento válido é sempre bem formado. Referenciar um DTD não torna o documento bem formado, e os elementos vazios são permitidos."},
+{q:"Indique quais dos seguintes blocos XML estão bem formados:",t:"m",o:["`<?xml version=\"1.0\" ?><w3resource><programming><design>html xhtml css svg xml </design>php mysql</programming></w3resource>`","`<?xml version=\"1.0\" ?><best.club><name>SCP</name></best.club>`","O mesmo conteúdo da opção a, mas com quebras de linha e indentação.","`<?xml version=\"1.0\" ?><contact type=\"phone\"></contact number=\"0351...\">`","`<?xml version=\"1.0\" ?><w3resource><programming><design>html xhtml css svg xml</programming></w3resource>`","`<?xml version=\"1.0\" ?><data />`"],c:[0,1,2,5],e:"Pergunta real, sem gabarito visível; esta é a resposta proposta. Os pontos são permitidos em nomes de elementos (`best.club`). A d tem atributos numa etiqueta de fecho e a e não fecha `<design>`."},
+{q:"A declaração seguinte permite concluir que:",code:"<!ELEMENT html (head, body)>",t:"m",o:["O elemento html é constituído por uma sequência dos dois elementos head e body.","O elemento body é que contém o texto.","Os elementos head e body surgem como alternativa ao elemento html.","No elemento html, o elemento body aparece sempre depois do elemento head.","Não está definido o que contém cada um dos elementos.","O elemento head apenas surge dentro do elemento html.","O elemento html contém texto."],c:[0,3,4],e:"Pergunta real, sem gabarito visível; esta é a resposta proposta. A vírgula indica uma sequência ordenada, cada um exatamente uma vez. Esta declaração sozinha não diz onde mais o head pode aparecer."},
+{q:"Qual o DTD que valida o seguinte documento XML?",code:"<note>\n<to>Tove</to>\n<from>Jani</from>\n<heading>Reminder</heading>\n<body>Don't forget me this weekend!</body>\n<footer>&writer;&nbsp;&copyright;</footer>\n</note>",t:"s",o:["`<!ELEMENT note (to,from,heading,body)>` + `#PCDATA` para to, from, heading e body","`<!ELEMENT note (to,from,heading,body,footer)>` + `#PCDATA` para os cinco + `<!ENTITY writer \"...\">` e `<!ENTITY copyright \"...\">`","`<!ELEMENT note (to,from,heading,body,footer)>` + `#PCDATA` para os cinco + `<!ENTITY nbsp \"&#xA0;\">`, `<!ENTITY writer \"...\">` e `<!ENTITY copyright \"...\">`","`<!ELEMENT note (to|from|heading|body|footer)>` + `#PCDATA` para os cinco + as três entidades"],c:[2],e:"Variante de uma pergunta real. A a não declara o footer. A b não declara `&nbsp;`, que não é uma entidade predefinida do XML. A d usa `|`, que é escolha de um só elemento e não sequência."},
+{q:"É possível utilizar o protocolo SOAP recorrendo a mensagens HTTP com o comando GET?",t:"m",o:["Não, porque o protocolo SOAP obriga ao envio de dados (envelope) no corpo da mensagem e o comando GET não o usa.","Sim, basta que a mensagem contenha o header content-type com o valor SOAP.","Não, porque o comando GET não permite enviar dados cifrados.","Sim, mas não pode ser usada a estrutura envelope. Terão de ser definidos novos headers.","Sim, porque o comando GET permite enviar dados através de uma query string."],c:[0],e:"Pergunta real. Só a opção a está certa. Selecionar também a c deu «demasiadas opções»."},
+{q:"É possível que duas aplicações com tecnologias diferentes (por exemplo, uma ASP.NET e a outra PHP) troquem informação entre elas com recurso a Web Services?",t:"m",o:["Não, porque são duas tecnologias incompatíveis.","Sim, porque qualquer tecnologia de desenvolvimento de soluções web é baseada no XML.","Não, porque o PHP é uma tecnologia que não implementa web services.","Sim, porque a utilização dos web services usa standards para a comunicação (HTTP) e para os dados (XML ou JSON)."],c:[3],e:"Pergunta real. Só a d está certa."},
+{q:"Um XSLT permite...",t:"m",o:["...transformar um documento XML num documento PDF paginado.","...substituir o uso de HTML nas páginas web.","...transformar um documento XML noutro XML (ou aplicação deste).","...transformar a resposta de um web service em XML para JSON."],c:[2],e:"Pergunta real. Para o professor só a c está certa (o PDF é trabalho do XSL-FO)."},
+{q:"No jQuery AJAX, o método ajaxComplete() especifica:",t:"m",o:["Uma função a ser executada quando o pedido AJAX termina com sucesso.","Um objeto para transportar completamente os pedidos AJAX de um servidor para outro.","Uma verificação se todos os pedidos AJAX estão completos.","Uma função a ser executada quando o pedido AJAX termina com erro.","Uma função a ser executada quando o pedido AJAX termina."],c:[4],e:"Pergunta real. Corre quando o pedido termina, com sucesso ou com erro."},
+{q:"Indique quais dos seguintes seletores CSS são válidos:",t:"m",o:["`divert`","`*text`","`p`","`.divert`","`.whatever`","`H1`","`#id`","`form`"],c:[2,3,4,5,6,7],e:"Pergunta real. Para o gabarito, `divert` não é válido porque não é um elemento HTML, e `*text` não é um seletor válido."},
+{q:"Assinale a forma correta para inserir JavaScript numa página, por meio de documentos externos.",t:"m",o:["`<script src=\"xxx.js\"><\/script>`","`<src file=\"xxx.js\"></src>`","`<script onload=\"xxx.js\"><\/script>`","`<inputJava>xxx.js</inputJava>`","Nenhuma opção está correta.","`<script load(\"xxx.txt\")><\/script>`"],c:[0],e:"Pergunta real."},
+{q:"Qual dos itens apresenta apenas valores que um par nome/valor JSON pode assumir?",t:"s",o:["number, null, string, date, blob.","number, array, object, boolean, blob.","array, object, boolean, string, image.","number, string, boolean, array, object, null.","number, date, array, object, string."],c:[3],e:"Pergunta real. O JSON não tem os tipos date, blob nem image."},
+{q:"Para formatar o texto de um parágrafo a cor vermelha usando estilos CSS inline, devemos incluir a seguinte linha de código HTML:",t:"m",o:["`<p style=\"color:0xFF0000;\">...</p>`","`<p style=\"color:red;\">...</p>`","`<p style=\"color:0x00FF00;\">...</p>`","`<p css=\"color:red;\">...</p>`","`<p css=\"color=red;\">...</p>`","`<p style=\"color=red;\">...</p>`","`<p style=\"text-color:red;\">...</p>`","`<p style=\"color:red;text-align: left;\">...</p>`"],c:[0,1,7],e:"Pergunta real. O gabarito aceita `0xFF0000`, mas no CSS real escreve-se `#FF0000`."},
+{q:"Qual o JSON Schema para este JSON?",code:"{ \"firstName\": \"John\", \"lastName\": \"Doe\", \"age\": 21 }",t:"s",o:["`{\"title\":\"Person\",\"type\":\"object\",\"properties\":{\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"age\":{\"type\":\"integer\",\"minimum\":0}}}`","`{\"title\":\"Person\",\"type\":\"array\",\"items\":{\"type\":\"string\"}}`","`{\"title\":\"Person\",\"type\":\"object\",\"properties\":{\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"age\":{\"type\":\"string\"}}}`","`{\"title\":\"Person\",\"type\":\"object\",\"properties\":[\"firstName\",\"lastName\",\"age\"]}`"],c:[0],e:"Variante de uma pergunta real. O objeto tem três propriedades, e age é um inteiro (21), não uma string."},
+{q:"Numa arquitetura N-Tier, temos sempre as seguintes camadas:",t:"s",o:["Presentation, Database.","Security, Presentation, Database.","Presentation, Business, Database.","Backup, Presentation, Business, Database.","Backup, Database."],c:[2],e:"Pergunta real."},
+{q:"Uma framework web permite, entre outras funcionalidades:",t:"m",o:["Automatizar as tarefas repetitivas de desenvolvimento web.","Fabricar templates para utilização em aplicações web.","Apoiar na gestão da segurança da aplicação.","Gerar CSS para as aplicações web.","Gerir os mecanismos de mapeamento do URL."],c:[0,2,4],e:"Pergunta real. Para o gabarito, «fabricar templates» está errada."},
+{q:"Um Content Management System:",t:"s",o:["É uma framework especializada em aplicações de gestão de conteúdos.","É uma base de dados de conteúdos.","É um software que permite construir web sites.","É uma framework destinada a desenvolver wikis.","É uma wiki."],c:[0],e:"Pergunta real."}
+]},
+{id:"t9",name:"Variantes do professor",topics:"Perguntas novas no estilo do professor (várias respostas certas e opções parecidas) sobre a matéria do Teste 1.",qs:[
+{q:"O header Content-Type:",t:"m",o:["Indica o tipo MIME do conteúdo do corpo da mensagem.","Pode ser usado em pedidos (por exemplo, num POST de um formulário) e em respostas.","É usado apenas nas mensagens de resposta.","Indica o método de compressão aplicado ao corpo.","É obrigatório em todas as mensagens HTTP."],c:[0,1],e:"Baseada no exame de 2021. Para a compressão usa-se o `Content-Encoding`. Mensagens sem corpo (como um GET) não precisam de Content-Type."},
+{q:"O comando GET é mais adequado do que o POST para um formulário de pesquisa porque:",t:"m",o:["O URL com a pesquisa pode ser guardado nos favoritos e partilhado.","A resposta pode ser guardada em cache.","A pesquisa não altera dados no servidor.","O GET esconde os dados do utilizador.","O GET permite enviar ficheiros."],c:[0,1,2],e:"Com GET os dados ficam visíveis no URL e não se podem enviar ficheiros. Isso faz-se com POST e multipart/form-data."},
+{q:"O header Location:",t:"m",o:["Acompanha os códigos de estado 301 e 302.","Indica o URL para onde o cliente deve redirecionar o pedido.","É enviado pelo cliente para indicar a página de origem.","Indica a localização geográfica do servidor.","É um header de resposta."],c:[0,1,4],e:"A página de origem vai no Referer. O Location é um header de resposta."},
+{q:"O header Host:",t:"m",o:["Indica o nome do servidor a que se destina o pedido.","Permite o virtual hosting (vários sites no mesmo servidor).","É um header de pedido.","É preenchido pelo servidor na resposta.","Indica o endereço IP do cliente."],c:[0,1,2],e:"É obrigatório nos pedidos HTTP/1.1."},
+{q:"O header User-Agent permite:",t:"m",o:["Identificar o software cliente que fez o pedido.","Ao servidor diferenciar a resposta conforme o cliente (por exemplo, móvel ou desktop).","Identificar o utilizador autenticado.","Indicar o software do servidor."],c:[0,1],e:"O software do servidor vai no header `Server`. O utilizador autenticado é identificado pelo `Authorization`, por cookies ou por sessões."},
+{q:"O valor `text/html; charset=utf-8` no header Content-Type:",t:"m",o:["Significa que o corpo da mensagem contém HTML.","Significa que os caracteres estão codificados em UTF-8.","Significa que a resposta está comprimida.","Significa que o cliente tem de pedir a folha de estilos.","É formado por tipo/subtipo seguido de um parâmetro."],c:[0,1,4],e:"O formato é `tipo/subtipo [; parâmetros]`."},
+{q:"O status code 401:",t:"m",o:["Indica que o recurso requer autenticação.","É acompanhado do header WWW-Authenticate.","Indica um erro do servidor.","Indica que o recurso mudou de endereço.","Leva o navegador a pedir credenciais ao utilizador."],c:[0,1,4],e:"É um código 4xx. A mudança de endereço é um 3xx."},
+{q:"O status code 302:",t:"m",o:["Indica uma redireção temporária.","É acompanhado do header Location.","Leva o cliente a fazer automaticamente um novo pedido.","Indica um erro do cliente.","É o código devolvido por um RedirectToAction no ASP.NET Core."],c:[0,1,2,4],e:"O utilizador normalmente nem dá pela redireção."},
+{q:"O status code 200:",t:"s",o:["Indica que o pedido foi satisfeito com sucesso.","Indica que o pedido ainda está a ser processado.","Indica que o recurso foi criado.","Indica um erro de processamento."],c:[0],e:"O 201 indica que foi criado um recurso e o 100 é informativo."},
+{q:"Num servidor Web, o Virtual Hosting:",t:"m",o:["Permite alojar vários sites no mesmo servidor.","Usa o header Host para saber a que site se destina o pedido.","Faz parte da resolução de endereços.","Cria máquinas virtuais para cada pedido.","Gera conteúdos dinâmicos."],c:[0,1,2],e:"É o primeiro passo da resolução de endereços."},
+{q:"As páginas «as-is»:",t:"s",o:["São ficheiros que contêm a mensagem de resposta HTTP completa, incluindo os headers.","São páginas geradas por CGI.","São páginas em que o servidor gera os headers e usa o ficheiro como corpo.","São páginas guardadas em cache pelo cliente."],c:[0],e:"Na opção c estão descritas as static content pages normais."},
+{q:"Os Server Side Includes (SSI):",t:"m",o:["Permitem incluir fragmentos (outros ficheiros, datas, resultados de comandos) dentro de páginas HTML.","São processados pelo servidor antes de enviar a resposta.","São executados pelo navegador.","Evitam o custo de um programa CGI completo para pequenas partes dinâmicas.","São definidos através de macros."],c:[0,1,3,4],e:"O navegador recebe o HTML já com os fragmentos incluídos."},
+{q:"No pedido `GET /pesquisa?q=UTAD HTTP/1.1`:",t:"m",o:["`/pesquisa` é o recurso pedido.","`q=UTAD` é a query string.","Os dados do formulário vão no corpo da mensagem.","Pode resultar de um formulário com method=\"get\".","A versão do protocolo é HTTP/1.1."],c:[0,1,3,4],e:"Com GET os dados vão no URL. Com POST iriam no corpo: `POST /pesquisa` seguido de `q=UTAD` no corpo."},
+{q:"Num formulário submetido com POST:",t:"m",o:["Os dados vão no corpo da mensagem.","A codificação pode ser application/x-www-form-urlencoded ou multipart/form-data.","Ao recarregar a página, o navegador avisa que os dados vão ser reenviados.","O pedido pode ser guardado nos favoritos.","Os parâmetros ficam no histórico do navegador."],c:[0,1,2],e:"Os pedidos POST não podem ser guardados nos favoritos e os parâmetros não ficam no histórico."},
+{q:"Uma resposta `HTTP/1.1 302 Found` com `Content-Length: 0` e `Location: /Registos/Lista`:",t:"m",o:["Leva o navegador a fazer um novo pedido `GET /Registos/Lista`.","Não tem corpo.","É uma resposta de erro.","Mostra ao utilizador uma página em branco."],c:[0,1],e:"É o que acontece depois de um RedirectToAction(\"Lista\")."}
+]},
+{id:"t10",name:"Exames escritos",t2:true,topics:"Perguntas de desenvolvimento dos testes escritos (2019–2022) e do exame de 2021, passadas a escolha múltipla. Quase tudo é matéria do Teste Teórico 2.",qs:[
+{q:"Numa aplicação SGML, podemos omitir a definição de um documento DTD?",t:"s",o:["Não, porque o DTD define a sintaxe das marcas (elementos, atributos e entidades) e é parte obrigatória de uma aplicação SGML.","Sim, porque o navegador conhece todas as marcas.","Sim, basta a declaração SGML.","Sim, desde que o documento seja bem formado."],c:[0],e:"Teste de 2022. Uma aplicação SGML é declaração SGML + DTD + especificação da semântica + instâncias."},
+{q:"Considere a declaração SGML seguinte. O que se pode concluir?",code:"<!ELEMENT title - O (#CDATA)>",t:"m",o:["A etiqueta de abertura é obrigatória.","A etiqueta de fecho pode ser omitida.","O conteúdo não é interpretado como marcação, por isso `<b>` ou `<i>` lá dentro seriam texto.","O título pode conter formatações como `<b>` ou `<i>`.","O elemento não tem conteúdo."],c:[0,1,2],e:"Teste de 2021. CDATA é texto não analisado: as marcas lá dentro não são interpretadas."},
+{q:"Sobre os tipos de dados CDATA e PCDATA no SGML/XML:",t:"m",o:["PCDATA é texto analisado (parsed) pelo parser: as entidades são substituídas e as marcas reconhecidas.","CDATA é texto que não é analisado como marcação.","Uma secção `<![CDATA[ ... ]]>` permite escrever `<`, `>` e `&` sem os interpretar.","PCDATA significa «Protected Character Data»."],c:[0,1,2],e:"Teste de 2019. PCDATA quer dizer Parsed Character Data."},
+{q:"Quais são as duas principais vantagens do CSS nas páginas Web?",t:"m",o:["Separa a apresentação do conteúdo.","Permite que várias páginas partilhem a mesma formatação.","Permite transformar um XML noutro formato.","Substitui o JavaScript."],c:[0,1],e:"Teste de 2022. Transformar documentos é trabalho do XSLT."},
+{q:"Considere a aplicação de CSS num documento HTML através de um ficheiro externo. Como são aplicadas as formatações aos elementos?",t:"m",o:["O ficheiro é referenciado com `<link rel=\"stylesheet\" href=\"estilos.css\">`.","Por seletor de elemento, por exemplo `p { ... }`.","Por classe, por exemplo `.destaque { ... }` com `class=\"destaque\"`.","Por id, por exemplo `#topo { ... }` com `id=\"topo\"`.","O ficheiro é referenciado com `<script src=\"estilos.css\">`."],c:[0,1,2,3],e:"Teste de 2021."},
+{q:"Quais as declarações CSS que aplicam a cor preta ao 1.º e ao 3.º parágrafos, ficando o 2.º amarelo?",code:"<p>este parágrafo será na cor preto.</p>\n<p>este parágrafo será na cor amarelo.</p>\n<p>este parágrafo será na cor preto.</p>",t:"m",o:["Dar `class=\"preto\"` ao 1.º e 3.º e declarar `.preto { color: black; }`.","Usar `style=\"color:black\"` no 1.º e no 3.º, e `style=\"color:yellow\"` no 2.º.","Declarar `p { color: black; }` e usar `style=\"color:yellow\"` no 2.º.","Declarar `p { color = black; }`.","Usar `<font color=\"black\">` (válido em HTML5)."],c:[0,1,2],e:"Teste de 2019. O estilo inline sobrepõe-se ao do seletor. `color = black` tem sintaxe errada e `<font>` não existe no HTML5."},
+{q:"Para definir restrições nos dados de uma aplicação XML, deve usar-se XML Schema em vez de DTD porque o XML Schema:",t:"m",o:["Suporta tipos de dados (inteiro, data, decimal...) e restrições de valores.","É escrito em XML.","Suporta namespaces.","É obrigatório para que um XML seja bem formado."],c:[0,1,2],e:"Teste de 2022. Um XML pode ser bem formado sem DTD nem Schema."},
+{q:"Em que contextos se usam os Web Services SOAP e as APIs REST?",t:"m",o:["SOAP: quando é preciso um contrato formal (WSDL), segurança e transações em ambientes empresariais.","REST: serviços leves sobre recursos, usando os métodos HTTP e normalmente JSON, típicos de aplicações web e móveis.","REST obriga ao uso de XML.","SOAP só funciona com o comando GET."],c:[0,1],e:"Testes de 2019 e 2022. O SOAP envia o envelope XML no corpo (POST)."},
+{q:"Nos serviços Web baseados em SOAP, a linguagem WSDL serve para:",t:"s",o:["Descrever em XML o serviço: operações, parâmetros, tipos de dados e endpoint.","Transportar as mensagens.","Registar e procurar serviços.","Cifrar as mensagens SOAP."],c:[0],e:"Teste de 2021. O registo e a descoberta de serviços são feitos pelo UDDI."},
+{q:"No contexto dos Web Services SOAP, qual a utilidade do UDDI?",t:"s",o:["É um registo (diretório) onde se publicam e se procuram Web Services.","É o formato das mensagens.","É a linguagem que descreve as operações de um serviço.","É um método HTTP."],c:[0],e:"Exame de 2021."},
+{q:"Numa API REST, o pedido `DELETE /produtos/7`:",t:"s",o:["Remove o produto 7.","Lê o produto 7.","Cria o produto 7.","Atualiza o produto 7."],c:[0],e:"Teste de 2021. GET lê, POST cria, PUT/PATCH atualizam e DELETE remove."},
+{q:"Para uma aplicação que faz pedidos AJAX, é mais vantajoso receber os dados em:",t:"s",o:["JSON, porque é mais leve e se converte diretamente em objetos JavaScript.","XML, porque é sempre mais rápido.","HTML, porque não precisa de ser interpretado.","Tanto faz, porque são idênticos."],c:[0],e:"Teste de 2022."},
+{q:"Na instrução base do jQuery `$(selector).action()`:",t:"m",o:["`$` dá acesso ao jQuery.","O selector encontra os elementos HTML e aceita seletores do tipo CSS: `\"p\"`, `\".classe\"`, `\"#id\"`.","Também se pode usar `this` como selector.","`action` é o nome do ficheiro JavaScript a carregar."],c:[0,1,2],e:"Teste de 2022. `action()` é a ação aplicada aos elementos, por exemplo `hide()`."},
+{q:"O que distingue uma framework de uso geral (general-purpose) de um CMS?",t:"s",o:["O CMS é uma framework especializada na gestão de conteúdos. A framework geral serve para construir qualquer tipo de aplicação web.","O CMS é uma base de dados.","A framework geral só gera CSS.","Não há diferença."],c:[0],e:"Teste de 2022. Está de acordo com a pergunta real sobre o CMS."},
+{q:"Qual a utilidade do JavaScript e como se relaciona com o DOM?",t:"m",o:["Programa o comportamento das páginas web.","O DOM é a árvore de objetos que representa o documento HTML.","O JavaScript lê e altera o documento através do DOM (por exemplo, `document.getElementById`).","O DOM é um servidor onde o JavaScript corre."],c:[0,1,2],e:"Teste de 2021 e exame de 2021."},
+{q:"Numa aplicação web, como se pode desencadear a execução de funções JavaScript/jQuery?",t:"m",o:["Através de eventos HTML, por exemplo `onclick`.","Quando o documento está pronto, com `$(document).ready(...)`.","Com código dentro de `<script>`, que corre quando a página carrega.","Através do header Content-Type."],c:[0,1,2],e:"Teste de 2019."},
+{q:"No contexto de um servidor web, as variáveis de sessão:",t:"m",o:["São dados guardados no servidor e associados a um utilizador.","São identificadas por um id de sessão, normalmente guardado num cookie no cliente.","São necessárias porque o HTTP é stateless.","Ficam guardadas por inteiro no cookie do cliente."],c:[0,1,2],e:"Exame de 2021. O cookie guarda só o identificador da sessão; os dados ficam no servidor."}
+]}
+];
+
+// ===== Aulas 05 e 06 (perguntas novas) =====
+const A56 = {id:"t11",name:"Aulas 05 e 06",topics:"Clientes HTTP (pedidos e respostas, helpers e plugins) e interações complexas (cache, autenticação, cookies). São as últimas aulas antes do teste.",qs:[
+{aula:5,q:"Quais são os tipos mais comuns de clientes HTTP?",t:"m",o:["Os navegadores (browsers).","Servidores web que fazem pedidos a outros servidores.","Código de qualquer aplicação, web ou não, que contacte um servidor HTTP.","Apenas os navegadores.","Apenas os proxies."],c:[0,1,2],e:"Slides da Aula 05. Um cliente HTTP é qualquer programa que envia pedidos HTTP."},
+{aula:5,q:"Basicamente, o que faz um navegador?",t:"m",o:["Envia pedidos HTTP aos servidores, em nome do utilizador ou por iniciativa própria.","Recebe as respostas HTTP e interpreta-as.","Age conforme essa interpretação (por exemplo, mostra o resultado na janela).","Executa o código do servidor para gerar páginas dinâmicas."],c:[0,1,2],e:"Os pedidos «por iniciativa própria» são, por exemplo, os das imagens, CSS e scripts referenciados no HTML."},
+{aula:5,q:"Ao mostrar uma página, por que ordem o navegador pede os recursos adicionais (CSS, scripts, imagens)?",t:"s",o:["Pela mesma ordem em que aparecem no conteúdo HTML.","Por ordem alfabética do nome do ficheiro.","Primeiro as imagens, depois o CSS e no fim os scripts.","Pela ordem que o servidor indica num cabeçalho."],c:[0],e:"Slides da Aula 05 (exemplo terrypratchettbooks.com)."},
+{aula:5,q:"A página `http://www.terrypratchettbooks.com/terry/` contém `<link rel=\"stylesheet\" href=\"../css/type.css\">`. Que pedido é gerado?",t:"s",o:["`GET /terry/css/type.css HTTP/1.1`","`GET /css/type.css HTTP/1.1`","`GET ../css/type.css HTTP/1.1`","Nenhum, porque o CSS já vem dentro do HTML."],c:[1],e:"`..` sobe um nível a partir de `/terry/`, ficando `/css/type.css`."},
+{aula:5,q:"Ao gerar um pedido, que cabeçalhos pode o navegador acrescentar automaticamente, segundo o diagrama de Shklar & Rosen?",t:"m",o:["`If-Modified-Since` (se tiver o recurso em cache).","`Cookie` (se tiver cookies para aquele domínio e caminho).","`Authorization` (se já se autenticou naquele realm).","`Location`","`WWW-Authenticate`"],c:[0,1,2],e:"Location e WWW-Authenticate são cabeçalhos de resposta, enviados pelo servidor."},
+{aula:5,q:"Ao processar uma resposta, o navegador:",t:"m",o:["Usa o código de estado para decidir o que fazer (por exemplo, com um 3xx faz um novo pedido ao Location).","Usa o Content-Type para decidir como mostrar o corpo.","Perante um 401 com WWW-Authenticate, pede credenciais ao utilizador.","Decide o tipo do conteúdo sobretudo pela extensão do ficheiro no URL."],c:[0,1,2],e:"O tipo do conteúdo é dado pelo MIME (Content-Type), não pela extensão."},
+{aula:5,q:"Como se pode obrigar o navegador a guardar um ficheiro em vez de o mostrar?",t:"m",o:["`Content-Type: application/octet-stream`","`Content-Disposition: attachment; filename=\"file.ext\"`","`Content-Type: text/html`","`Location: download`"],c:[0,1],e:"Slides da Aula 05. Também aparece `Content-Type: application/force-download`."},
+{aula:5,q:"O navegador recebe um conteúdo de um tipo MIME que não sabe mostrar. Pode:",t:"m",o:["Arrancar uma aplicação helper externa para o abrir.","Usar um plugin que corre dentro do próprio navegador.","Guardar o ficheiro no disco.","Pedir ao servidor que converta o ficheiro para HTML."],c:[0,1,2],e:"O servidor não converte nada a pedido do navegador."},
+{aula:6,q:"A cache Web é:",t:"s",o:["O armazenamento temporário de páginas, imagens e outros ficheiros, para reduzir o uso da largura de banda e aumentar a velocidade de acesso.","Uma cópia de segurança permanente do servidor.","Um tipo de cookie.","Um proxy que cifra as comunicações."],c:[0],e:"Definição dos slides da Aula 06 (Wikipedia)."},
+{aula:6,q:"Que tipos de cache existem num ambiente de aplicações web?",t:"m",o:["Do lado do servidor (server-side).","Do lado do cliente, no navegador (client-side).","Nos proxies (proxy-side).","Nos cookies."],c:[0,1,2],e:"Shklar & Rosen falam de server-side, browser-side e proxy-side caching."},
+{aula:6,q:"O cabeçalho `Cache-Control: private` indica que:",t:"s",o:["A resposta é dirigida a um único utilizador e não deve ser guardada numa cache partilhada (proxy).","Nenhuma cache pode guardar a resposta.","Qualquer cache, partilhada ou local, pode guardar a resposta.","A resposta está cifrada."],c:[0],e:"`public` deixa qualquer cache guardar. Segundo o livro, `no-cache` indica que nem browsers nem proxies podem guardar a resposta em cache."},
+{aula:6,q:"Para garantir que nem os agentes HTTP/1.0 nem os HTTP/1.1 guardam a resposta em cache, o servidor deve enviar:",t:"s",o:["`Cache-Control: no-cache` e `Pragma: no-cache`.","Apenas `Cache-Control: public`.","Apenas `Expires` com uma data futura.","`Last-Modified` com a data atual."],c:[0],e:"O Cache-Control só existe desde o HTTP/1.1. Para os agentes HTTP/1.0 usa-se o Pragma (já obsoleto)."},
+{aula:6,q:"Uma entrada da cache expirou e o navegador revalida-a com `If-Modified-Since`. Se o recurso não mudou (revalidate hit), o servidor responde:",t:"s",o:["`304 Not Modified`, sem corpo, e o navegador usa a cópia da cache.","`200 OK` com o recurso completo.","`404 Not Found`.","`302 Found` para a cópia em cache."],c:[0],e:"Se tivesse mudado (revalidate miss), a resposta seria `200` com o conteúdo novo."},
+{aula:6,q:"No Apache, `ExpiresByType image/gif \"access plus 1 month\"` significa que:",t:"s",o:["As imagens GIF podem ficar na cache do cliente até 1 mês depois do acesso.","As imagens GIF são apagadas do servidor ao fim de 1 mês.","O servidor só serve GIFs uma vez por mês.","As imagens GIF nunca ficam em cache."],c:[0],e:"Módulo mod_expires. Gera os cabeçalhos Expires e Cache-Control: max-age."},
+{aula:6,q:"Diferença entre autenticação e autorização:",t:"s",o:["A autenticação verifica a identidade do utilizador. A autorização verifica se ele tem acesso a um recurso.","São sinónimos.","A autorização vem sempre antes da autenticação.","A autenticação só existe em HTTPS."],c:[0],e:"Shklar & Rosen, secção 3.4.3."},
+{aula:6,q:"Sobre o cabeçalho `WWW-Authenticate: <type> realm=<realm>`:",t:"m",o:["É enviado com uma resposta `401 Unauthorized`.","`<type>` é o esquema de autenticação, por exemplo Basic, Bearer ou Digest.","`realm` descreve a área protegida.","É enviado pelo cliente com as credenciais."],c:[0,1,2],e:"As credenciais vão do cliente para o servidor no cabeçalho `Authorization`."},
+{aula:6,q:"O código `407 Proxy Authentication Required` indica que:",t:"s",o:["É o proxy, e não o servidor de origem, que exige autenticação.","O proxy está em baixo.","O servidor de origem recusou o pedido.","A cache do proxy expirou."],c:[0],e:"É o equivalente do 401 para proxies."},
+{aula:6,q:"Cookies de sessão vs cookies persistentes:",t:"m",o:["Um cookie de sessão não tem data de expiração e é apagado quando o navegador fecha.","Um cookie persistente tem uma data de expiração definida pelo servidor e sobrevive ao fecho do navegador.","Um cookie persistente é guardado no servidor.","Um cookie de sessão é partilhado entre todos os sites."],c:[0,1],e:"O navegador identifica um cookie de sessão pela falta de data de expiração."},
+{aula:6,q:"Os cookies de terceiros (third-party):",t:"s",o:["São criados por domínios diferentes do site que o utilizador está a visitar e usados para seguir o utilizador entre sites e para publicidade.","São criados pelo próprio site visitado para guardar a língua escolhida.","São cookies que só funcionam em HTTPS.","São cookies apagados ao fechar o navegador."],c:[0],e:"Os first-party são guardados pelo próprio domínio visitado (preferências, analytics)."},
+{aula:6,q:"Que cabeçalhos HTTP transportam os cookies?",t:"m",o:["`Set-Cookie`, na resposta, enviado pelo servidor.","`Cookie`, nos pedidos seguintes, enviado pelo navegador.","`Set-Cookie`, nos pedidos do navegador.","`Content-Type`"],c:[0,1],e:"O servidor cria o cookie com Set-Cookie e o navegador devolve-o em cada pedido que corresponda ao domínio e ao caminho."},
+{aula:6,q:"Quais destes fazem parte da estrutura de um cookie?",t:"m",o:["Nome e valor","Data de expiração","Caminho (path) e domínio onde se aplica","Indicação de ligação segura (Secure)","Indicação de acesso só por HTTP, sem scripts (HttpOnly)","Endereço IP do cliente"],c:[0,1,2,3,4],e:"Slides da Aula 06: name, value, expiração, path, domain, secure e «can be accessed by means other than HTTP»."},
+{aula:6,q:"Um cookie com `Domain=.rutgers.edu; Path=/test/` e sem data de expiração:",t:"m",o:["É enviado em pedidos para hosts *.rutgers.edu cujo caminho comece por /test/.","Dura apenas até o navegador fechar.","É enviado para qualquer site.","É enviado também para .mit.edu."],c:[0,1],e:"Exemplo do livro (Name=Leon)."},
+{aula:6,q:"Como se podem usar sessões sem cookies (cookieless)?",t:"s",o:["Pondo o identificador da sessão na query string ou como parte do URL.","Não é possível.","Pondo o identificador da sessão no cabeçalho Host.","Guardando a sessão no cabeçalho Content-Type."],c:[0],e:"Slides da Aula 06."}
+]};
+
+// ===== Perguntas de desenvolvimento: respostas-modelo =====
+const WRITTEN = [
+{id:"w1",aula:"02 / 06",q:"Explique o que significa o HTTP ser um protocolo «stateless» e como podem as aplicações web manter estado entre pedidos.",a:"Ser stateless significa que cada interação HTTP é um único pedido seguido de uma única resposta, independente das anteriores. O servidor não guarda informação sobre o cliente entre pedidos (ao contrário do FTP, SMTP ou POP, que mantêm uma sessão). As ligações persistentes do HTTP/1.1 servem só para eficiência e não guardam estado.\nPara manter estado (por exemplo um carrinho de compras ou um login), a aplicação constrói-o por cima do HTTP com cookies e sessões. O servidor envia na resposta o cabeçalho Set-Cookie com um valor (muitas vezes um identificador de sessão). O navegador guarda-o e devolve-o no cabeçalho Cookie em cada pedido seguinte para o mesmo domínio e caminho. Com esse identificador, o servidor encontra as variáveis de sessão que guardou do seu lado. Sem cookies, o identificador pode ir na query string ou no URL.",k:["Um pedido e uma resposta, sem memória entre pedidos","Contraste com protocolos stateful","Set-Cookie (resposta) e Cookie (pedido)","Identificador de sessão, com os dados no servidor","Alternativa sem cookies: URL ou query string"]},
+{id:"w2",aula:"02",q:"O comando GET é mais adequado do que o POST para submeter um formulário de pesquisa do tipo Google ou Bing? Justifique.",a:"Sim. Com GET os dados do formulário vão na query string do URL (por exemplo GET /search?q=UTAD HTTP/1.1). Isso tem vantagens numa pesquisa: o URL do resultado pode ser guardado nos favoritos, partilhado e guardado em cache, fica no histórico, e recarregar a página não tem efeitos secundários. Uma pesquisa só lê dados e não altera nada no servidor, que é o uso próprio do GET.\nAs limitações do GET (tamanho limitado do URL, só ASCII, dados visíveis) não são um problema aqui, porque os termos de pesquisa são curtos e não são sensíveis. O POST seria a escolha certa para dados sensíveis (passwords), grandes ou binários (ficheiros, com multipart/form-data), ou para operações que alteram dados.",k:["GET leva os dados na query string","Favoritos, partilha, cache e histórico","Pesquisa não altera dados (sem efeitos secundários)","As limitações do GET não pesam aqui","Quando usar POST"]},
+{id:"w3",aula:"03",q:"Explique a utilidade do cabeçalho Content-Type nas mensagens HTTP e em quais delas (pedidos e/ou respostas) é usado. Exemplifique.",a:"O Content-Type é um cabeçalho de entidade que indica o tipo MIME do corpo da mensagem, no formato tipo/subtipo [; parâmetros]. É com ele que o destinatário sabe interpretar os bytes do corpo: o navegador não se guia pela extensão do ficheiro, mas pelo Content-Type, para decidir se mostra HTML, desenha uma imagem, aplica um CSS ou chama um helper ou plugin.\nÉ usado nas respostas (por exemplo Content-Type: text/html; charset=utf-8 ou image/gif) e também nos pedidos que têm corpo, como um POST de formulário com Content-Type: application/x-www-form-urlencoded, ou multipart/form-data quando se enviam ficheiros. Nas respostas estáticas é o servidor que o define. Nas dinâmicas também o pode definir o código da aplicação (por exemplo, para devolver JSON).",k:["Cabeçalho de entidade que descreve o corpo","Tipo MIME tipo/subtipo; parâmetros (charset)","O cliente decide como tratar o corpo","Usado em respostas e em pedidos com corpo (POST)","Exemplos concretos"]},
+{id:"w4",aula:"04",q:"Um servidor recebe um pedido cuja primeira linha é «GET /images/logo.png HTTP/1.1». Esse servidor aloja várias aplicações web que têm o ficheiro wwwroot\\images\\logo.png. Como decide o servidor qual usar? Justifique.",a:"A decisão faz parte da resolução de endereços do servidor. O primeiro passo é o virtual hosting: como várias aplicações (sites) partilham o mesmo servidor e até o mesmo IP, a linha de pedido não chega, porque só tem o caminho /images/logo.png. O servidor usa então o cabeçalho Host do pedido (obrigatório no HTTP/1.1), por exemplo Host: www.app1.pt, para escolher o virtual host configurado com esse ServerName.\nDepois faz o address mapping: junta o caminho do URL à raiz web (DocumentRoot, ou wwwroot no ASP.NET Core) desse virtual host e chega ao ficheiro físico. Antes de responder, verifica ainda os pseudónimos (aliases) que possam redirecionar o caminho e se o pedido tem permissões de acesso (autenticação).",k:["Virtual hosting","Cabeçalho Host","Address mapping a partir da DocumentRoot do host","Pseudónimos e autenticação"]},
+{id:"w5",aula:"04",q:"Descreva as etapas da resolução de endereços (address resolution) num servidor HTTP.",a:"A resolução de endereços é o conjunto de etapas que identifica os ficheiros responsáveis por produzir a resposta e verifica a permissão de acesso a eles. Acontece antes do processamento do pedido e da geração da resposta.\n1) Virtual hosting: pelo cabeçalho Host, o servidor descobre a que site (virtual host) se destina o pedido, já que pode alojar vários no mesmo IP.\n2) Address mapping: traduz o caminho do URL para um ficheiro no disco a partir da raiz web desse host (por exemplo /var/www no Apache em Linux ou c:\\Inetpub\\wwwroot no IIS), porque não faz sentido a raiz do URL ser a raiz do disco.\n3) Pseudónimos (aliases): caminhos do URL ligados a pastas fora da árvore do host (Alias \"/image\" \"/ftp/pub/image\"). Mascaram caminhos, mudam nomes, associam recursos externos e permitem partilhar ficheiros entre virtual hosts.\n4) Autenticação: verifica se o pedido tem permissão para o recurso. Se não tiver, responde 401 com WWW-Authenticate, e o cliente repete o pedido com Authorization.\nNo fim, o recurso está identificado e a autenticação verificada. Segue-se perceber se o conteúdo é estático ou dinâmico.",k:["Definição","Virtual hosting (Host)","Address mapping (DocumentRoot)","Pseudónimos","Autenticação (401)"]},
+{id:"w6",aula:"04",q:"Qual a diferença entre a entrega de conteúdo estático e de conteúdo dinâmico num servidor web? Para o navegador há alguma diferença?",a:"No conteúdo estático, o servidor não executa código. Nas static content pages, gera os cabeçalhos da resposta (Content-Type, Content-Length...) e usa o conteúdo do ficheiro como corpo. Nas páginas «as-is», o ficheiro já tem a mensagem HTTP completa, com cabeçalhos, e é enviado tal como está.\nNo conteúdo dinâmico, o servidor executa o código associado ao recurso, e o resultado dessa execução é a resposta (HTML, JSON, binário...). Pode fazê-lo com várias tecnologias: CGI (um processo por pedido), SSI (fragmentos dentro do HTML), APIs nativas (ISAPI, Apache API), FastCGI (processos persistentes), templates (PHP, ASP, ColdFusion), Servlets ou JSP. Nas respostas dinâmicas os cabeçalhos podem ser definidos pelo servidor e também pelo código da aplicação.\nPara o navegador não há diferença: recebe sempre uma resposta HTTP com linha de estado, cabeçalhos e corpo, e trata-a da mesma forma.",k:["Estático: static pages vs as-is","Dinâmico: execução de código","Tecnologias (CGI, SSI, APIs, templates...)","Para o cliente é igual"]},
+{id:"w7",aula:"04",q:"Explique o funcionamento do CGI (Common Gateway Interface) e indique a sua principal limitação e como foi resolvida.",a:"O CGI é uma interface que permite a um servidor web produzir dinamicamente o conteúdo das respostas, executando um programa externo (por exemplo um script Perl). O cliente envia um pedido HTTP normal com variáveis (as variáveis CGI). O servidor percebe, pelas suas regras, que o pedido é para um programa CGI e não para um ficheiro HTML. Então: traduz o pedido para o ficheiro correspondente, verifica se é válido e se há permissões, define variáveis de ambiente, cria um processo filho para correr o programa e processa a saída do programa para construir a resposta.\nA principal limitação é o desempenho: é criado um novo processo do sistema operativo para cada pedido, o que limita a escalabilidade. O FastCGI resolveu isto mantendo os processos do interpretador vivos entre pedidos (processos persistentes). As APIs nativas (código compilado para o servidor, como ISAPI ou Apache API) e os templates são outras alternativas.",k:["Definição: conteúdo dinâmico através de um programa externo","Passos do servidor","Processo filho por pedido","Limitação de escalabilidade","FastCGI e alternativas"]},
+{id:"w8",aula:"05",q:"O que são helpers e plugins e porque precisa o navegador deles?",a:"Um navegador só sabe mostrar alguns tipos de conteúdo (HTML, CSS, imagens, JavaScript). Decide o que fazer com o corpo de uma resposta pelo tipo MIME do cabeçalho Content-Type. Quando recebe um tipo que não sabe mostrar (PDF, DOCX, XLSX, ZIP...), precisa de ajuda.\nUm helper é uma aplicação externa ao navegador: o navegador só a arranca e lhe passa o ficheiro (por exemplo, abrir um .docx no Word). Um plugin é um módulo de código dinâmico, invocado pelo navegador, que integra uma aplicação de terceiros dentro do próprio navegador e lhe estende as capacidades, de modo que o conteúdo aparece dentro da janela.\nO servidor também pode pedir que o conteúdo seja guardado e não mostrado, com Content-Type: application/octet-stream e Content-Disposition: attachment; filename=\"...\".",k:["O browser decide pelo MIME","Helper = externo","Plugin = dentro do browser, estende capacidades","Exemplos e octet-stream/attachment"]},
+{id:"w9",aula:"06",q:"Explique o funcionamento da cache do lado do cliente e os cabeçalhos HTTP envolvidos.",a:"A cache web é o armazenamento temporário de respostas (páginas, imagens, CSS, JS) para reduzir a largura de banda usada e aumentar a velocidade. Pode existir no servidor, no cliente (navegador) e nos proxies.\nQuem decide se uma resposta pode ir para a cache é o servidor ou a aplicação, através de cabeçalhos: Expires (data de validade), Cache-Control (HTTP/1.1, com public, private, no-cache e max-age), Pragma: no-cache (para agentes HTTP/1.0), Last-Modified e Date. No Apache configura-se, por exemplo, com mod_expires (ExpiresByType image/gif \"access plus 1 month\").\nNo cliente: na primeira vez, o navegador guarda a resposta. Enquanto a entrada é válida, usa a cópia sem contactar o servidor (cache hit). Quando expira, revalida com um pedido condicional If-Modified-Since. Se o recurso não mudou, o servidor responde 304 Not Modified sem corpo e a cópia é reutilizada (revalidate hit). Se mudou, responde 200 com o conteúdo novo (revalidate miss). Os proxies funcionam da mesma forma, mas não podem guardar respostas marcadas com private.",k:["Definição e objetivo","Tipos de cache","Cabeçalhos: Expires, Cache-Control, Last-Modified, Pragma","Revalidação: If-Modified-Since e 304","Proxies e private"]},
+{id:"w10",aula:"04 / 06",q:"Descreva o processo de autenticação HTTP (por exemplo Basic) e distinga autenticação de autorização.",a:"A autenticação verifica a identidade do utilizador. A autorização verifica se esse utilizador tem acesso a um recurso.\nNa autenticação HTTP, o cliente pede um recurso protegido. O servidor (o módulo de autenticação da resolução de endereços) verifica que o pedido não tem credenciais válidas e responde 401 Unauthorized com o cabeçalho WWW-Authenticate: <tipo> realm=\"<área protegida>\", por exemplo Basic realm=\"User Visible Realm\". O navegador pede o utilizador e a palavra-passe e repete o pedido com Authorization: Basic <utilizador:password em Base64>. Se as credenciais forem aceites, o servidor responde 200, e o navegador passa a incluir o Authorization nos pedidos seguintes para o mesmo realm.\nHá outros esquemas além do Basic: Bearer, Digest, OAuth e outros. O Basic só codifica em Base64 (não cifra), por isso deve ser usado sobre HTTPS. Quando é um proxy a exigir autenticação, o código é 407.",k:["Autenticação vs autorização","401 + WWW-Authenticate","Authorization: Basic Base64","Pedidos seguintes no mesmo realm","Esquemas / 407 / HTTPS"]},
+{id:"w11",aula:"06",q:"O que são cookies? Indique os tipos, a estrutura e os cabeçalhos HTTP envolvidos.",a:"Os cookies são pequenos pares nome=valor que o servidor pede ao navegador para guardar e devolver nos pedidos seguintes. São o mecanismo para manter estado sobre o HTTP stateless (sessões, login, preferências, carrinho).\nCabeçalhos: o servidor cria-os com Set-Cookie na resposta e o navegador devolve-os com Cookie em cada pedido que corresponda ao domínio e ao caminho.\nEstrutura: nome, valor, data de expiração (Expires ou Max-Age), path e domain onde se aplica, Secure (só por ligação segura) e HttpOnly (só por HTTP, sem acesso por scripts).\nTipos: de sessão (sem data de expiração, ficam em memória e são apagados ao fechar o navegador) ou persistentes (com data de expiração, guardados no disco). E ainda first-party (do domínio visitado: preferências, analytics) ou third-party (de outros domínios: rastreio entre sites e publicidade, os tracking cookies).\nPodem ser um problema de privacidade. Sem cookies, o identificador de sessão pode ir na query string ou no URL (cookieless).",k:["Definição e objetivo (estado)","Set-Cookie e Cookie","Estrutura","Sessão vs persistente","First vs third-party / privacidade"]},
+{id:"w12",aula:"06",q:"No contexto de um servidor web, o que são variáveis de sessão e como se relacionam com os web cookies?",a:"As variáveis de sessão são dados guardados do lado do servidor e associados a um utilizador (a uma sessão de navegação), por exemplo o carrinho de compras ou o utilizador autenticado. São necessárias porque o HTTP é stateless e cada pedido é independente.\nPara saber a que sessão pertence cada pedido, o servidor gera um identificador de sessão e envia-o ao navegador num cookie (Set-Cookie, normalmente de sessão, sem expiração e muitas vezes HttpOnly). O navegador devolve esse cookie (Cookie) em todos os pedidos seguintes, e o servidor usa-o para encontrar as variáveis de sessão dessa pessoa. O cookie leva só o identificador, enquanto os dados ficam no servidor. Se o cliente não aceitar cookies, o identificador pode ir no URL ou na query string.",k:["Dados no servidor por utilizador","Porque são necessárias (stateless)","Id de sessão num cookie","O cookie leva só o id","Alternativa cookieless"]},
+{id:"w13",aula:"02 / 05",q:"Porque é que um navegador faz normalmente vários pedidos HTTP para mostrar uma única página web? Que elementos HTML os provocam?",a:"Porque o HTML recebido na primeira resposta não tem os recursos da página, só referências para eles. Ao interpretar o HTML, o navegador encontra elementos que apontam para outros recursos e gera automaticamente um pedido HTTP por cada um, pela ordem em que aparecem no documento: <link> (folhas de estilo CSS), <script src> (JavaScript) e <img> (imagens). Esses pedidos podem ir para servidores diferentes. À medida que as respostas chegam, o navegador vai mostrando os elementos. Depois, o JavaScript da página pode gerar ainda mais pedidos (AJAX).\nO elemento <a> não gera pedido automático: só quando o utilizador clica. Os URLs relativos são resolvidos a partir do URL da página (ou do <base>).",k:["O HTML só tem referências","<link>, <script>, <img>","Pedidos automáticos, pela ordem, possivelmente a outros servidores","O JS gera mais pedidos","O <a> só com clique"]},
+{id:"w14",aula:"03",q:"Qual a diferença entre os códigos de estado 301 e 302? Que problema pode surgir ao usar 301 de forma incorreta?",a:"Os dois são de redireção (3xx) e vêm com o cabeçalho Location, que indica o novo URL. O navegador faz automaticamente um novo pedido para esse URL. O 301 Moved Permanently diz que o recurso mudou de lugar para sempre, e que clientes e proxies devem passar a usar o novo endereço. O 302 Found diz que a mudança é temporária, só para este pedido (é o que o RedirectToAction do ASP.NET Core devolve).\nProblema: como o 301 é permanente, proxies e navegadores podem guardá-lo em cache e passar a redirecionar sem contactar o servidor. Se uma aplicação usar 301 para mandar o utilizador para a página de login, mesmo depois de ele se autenticar pode continuar a ser enviado para o login, porque a redireção ficou em cache. Para redireções temporárias deve usar-se 302 (ou 303/307).",k:["Ambos 3xx com Location","301 permanente vs 302 temporário","Redireção automática","Cache do 301 e problema do login"]}
+];
+
+// ===== Livro pp. 172–182 (secções 7.6–7.8): perguntas extra =====
+A56.qs.push(
+{aula:6,q:"Que agente envia o cabeçalho `Set-Cookie`, e em que mensagem?",t:"s",o:["O servidor, na resposta.","O browser, no pedido.","O proxy, na resposta.","O browser, na resposta."],c:[0],e:"«Servers transmit cookies to browsers via the Set-Cookie response header.» O browser devolve-os com o cabeçalho de pedido `Cookie`."},
+{aula:6,q:"Um cookie definido com `domain=.mysite.com` aplica-se a:",t:"m",o:["`ecommerce.mysite.com`","`toys.ecommerce.mysite.com`","`mysite.com`","`www.yahoo.com`"],c:[0,1],e:"Livro, 7.6: o padrão tem de coincidir com o fim do nome do host. `mysite.com` não coincide com `.mysite.com`."},
+{aula:6,q:"O servidor `ecommerce.mysite.com` pode definir cookies com que valor de domain?",t:"m",o:["`ecommerce.mysite.com`","`.mysite.com`","`.yahoo.com`","Qualquer domínio que escolher"],c:[0,1],e:"O domain tem de corresponder ao domínio do servidor que envia o cookie. Um site não pode criar cookies para outro domínio."},
+{aula:6,q:"Um cookie com `path=/cgi-bin/` é enviado pelo browser:",t:"s",o:["Só em pedidos para URLs que começam por `/cgi-bin/`.","Em todos os pedidos para o servidor.","Só para scripts CGI de outros servidores.","Nunca, porque o path é só informativo."],c:[0],e:"Com `path=/` seria enviado em todos os pedidos para esse servidor."},
+{aula:6,q:"Quando uma entrada da cache do browser expira:",t:"s",o:["Continua guardada. No próximo pedido o browser revalida com `If-Modified-Since` e só a substitui se o recurso tiver mudado.","É imediatamente apagada do disco.","Continua a ser usada sem perguntar nada ao servidor.","O browser pede sempre o recurso completo com um POST."],c:[0],e:"Livro: deitar fora a cópia expirada «may not be necessary», porque se o recurso não mudou a cópia continua utilizável (304)."},
+{aula:6,q:"Como validava o browser uma cópia em cache no HTTP/1.0 e como o faz no HTTP/1.1?",t:"s",o:["No HTTP/1.0 fazia um HEAD e comparava o `Last-Modified` (podia exigir duas trocas). No HTTP/1.1 envia `If-Modified-Since` e recebe 304 ou o recurso novo numa só troca.","No HTTP/1.0 usava cookies. No HTTP/1.1 usa o Referer.","Os dois usam sempre POST.","No HTTP/1.0 não havia cache."],c:[0],e:"Livro, 7.8.1 (Figura 7.3)."},
+{aula:6,q:"Quando a cache do browser atinge o tamanho máximo:",t:"s",o:["Remove as entradas expiradas e, se for preciso, as menos usadas recentemente (LRU).","Deixa de guardar qualquer coisa nova.","Apaga a cache inteira.","Pede ao servidor mais espaço."],c:[0],e:"Os browsers combinam cache em RAM e em disco, e podem passar entradas da memória para o disco antes de as apagar."},
+{aula:6,q:"No mecanismo de persistência do browser (tabela 7.2), qual é a chave de cada tipo de informação?",t:"m",o:["Cache: o URL pedido (com query string e conteúdo POST).","Cookies: o domain e o path do Set-Cookie.","Credenciais de autorização: o servidor e o realm.","Cookies: o endereço IP do cliente."],c:[0,1,2],e:"Livro, 7.8.3."},
+{aula:6,q:"Onde e durante quanto tempo guarda o browser as credenciais de autorização (Authorization)?",t:"s",o:["Só em memória e só durante a sessão do browser, nunca em disco.","No disco, para sempre.","Num cookie persistente.","Na cache, junto com as páginas."],c:[0],e:"São sempre guardadas, mas sempre apagadas quando a sessão do browser termina."},
+{aula:6,q:"Um `Set-Cookie` chega com uma data de expiração que já passou. O browser:",t:"s",o:["Apaga o cookie.","Guarda-o como cookie de sessão.","Guarda-o para sempre.","Ignora a data."],c:[0],e:"Sem data, o cookie dura a sessão. Com uma data no passado, o cookie é apagado. É assim que um servidor «remove» um cookie."},
+{aula:6,q:"O utilizador falha repetidamente as credenciais pedidas por um servidor com autenticação HTTP Basic. O que acontece normalmente?",t:"s",o:["O servidor responde 401 a cada tentativa e, ao fim de algumas, passa a responder 403 Forbidden.","O servidor responde 404.","O servidor responde 302 para a página inicial.","O browser bloqueia o site para sempre."],c:[0],e:"Livro, 7.8.2."},
+{aula:6,q:"Como protegem normalmente os servidores web os recursos?",t:"m",o:["Com segurança por endereço IP (gamas permitidas ou negadas).","Com uma ACL (Access Control List) de utilizadores e passwords.","Organizando os recursos protegidos em realms.","Com o cabeçalho Content-Type."],c:[0,1,2],e:"Livro, 7.8.2."},
+{aula:6,q:"Sobre o P3P (Platform for Privacy Preferences):",t:"m",o:["É uma iniciativa do W3C.","Permite a um site declarar a sua política de privacidade, legível por humanos e por máquinas.","Com base nas preferências do utilizador, o browser pode aceitar, bloquear, despromover ou fazer leashing dos cookies.","Garante que o site cumpre a política que declarou."],c:[0,1,2],e:"O P3P funciona «por honra»: o browser não consegue verificar se a política é cumprida, mas as discrepâncias podem dar processos em tribunal."},
+{aula:6,q:"No P3P, fazer «leashing» de cookies de terceiros significa que o browser:",t:"s",o:["Só os envia em pedidos de recursos de apoio feitos a partir de uma página do site original (first party).","Apaga-os todos.","Transforma-os em cookies persistentes.","Envia-os para todos os sites."],c:[0],e:"É uma forma suave de bloqueio. Despromover é tornar um cookie não persistente."},
+{aula:6,q:"Os cookies de terceiros chegam ao browser:",t:"s",o:["Nas respostas a recursos de apoio (imagens, CSS, JavaScript) servidos por um domínio diferente do da página principal.","Sempre na resposta à página principal.","Através do cabeçalho Cookie enviado pelo servidor.","Só por HTTPS."],c:[0],e:"Livro, 7.7. São considerados «particularmente perigosos» porque permitem seguir o utilizador entre sites."},
+{aula:6,q:"A «anomalia do histórico» descrita no livro consiste em:",t:"s",o:["O botão Voltar mostrar a página guardada mesmo quando a resposta original tinha `Cache-Control: no-cache`.","O histórico apagar a cache.","O browser não guardar o histórico das páginas com formulários.","O servidor receber o histórico do browser."],c:[0],e:"O browser deveria tratar o «Voltar» como um novo pedido e só reutilizar a página depois de verificar as diretivas de cache."},
+{aula:5,q:"Que componente do browser analisa o HTML recebido, encontra as referências a imagens, CSS e JS e pede ao módulo de geração de pedidos que as vá buscar?",t:"s",o:["O módulo de interpretação de conteúdo (Content Interpretation).","O módulo de cache.","O módulo de configuração.","O servidor web."],c:[0],e:"Livro, 7.8.4 (pedidos de recursos de apoio)."},
+{aula:5,q:"Quais são as desvantagens dos helpers, segundo o livro?",t:"m",o:["O objeto é apresentado fora da janela do browser, o que é confuso para o utilizador.","Só funcionam com links diretos para o objeto (por exemplo `<a href=\"filme.swf\">`), não com objetos incorporados na página.","Exigem a tag `<EMBED>`.","Só funcionam com HTML."],c:[0,1],e:"Os plugins resolvem isto, porque mostram o objeto dentro da página."},
+{aula:6,q:"Segundo o diagrama da Aula 06, como decorre a autenticação HTTP Basic?",t:"m",o:["O primeiro pedido é um GET normal, sem cabeçalho Authorization.","O servidor responde `401 Unauthorized` com `WWW-Authenticate: Basic realm=\"...\"`.","O browser pede o utilizador e a palavra-passe e repete o pedido com `Authorization: Basic <Base64>`.","O servidor verifica as credenciais e responde `200 OK`, ou `401 Unauthorized` outra vez se estiverem erradas.","O servidor envia as credenciais ao browser no cabeçalho Authorization."],c:[0,1,2,3],e:"Diapositivo novo da Aula 06 (Client/Server). O Authorization vai sempre do cliente para o servidor. Se não for indicado realm, o browser costuma mostrar o nome do host."},
+{aula:5,q:"Que elementos HTML usa o mecanismo de plugins para incorporar conteúdo na página?",t:"s",o:["`<EMBED>` e `<OBJECT>` (o `<EMBED>` está obsoleto em favor de `<OBJECT>`).","`<link>` e `<script>`.","`<a>` e `<img>`.","`<iframe>` e `<form>`."],c:[0],e:"Se não houver associação para um tipo MIME, o browser usa um helper e deixa o sistema operativo escolher."}
+);
+WRITTEN.push(
+{id:"w15",aula:"06",q:"O browser guarda conteúdos em cache, cookies e credenciais de autorização. Compare a forma como trata cada um destes tipos de informação.",a:"Os três são formas de persistência no browser, e o livro sugere um mecanismo comum, com persistência em memória (só durante a sessão) e persistência permanente (em disco).\nCache: a decisão de guardar baseia-se nos cabeçalhos da resposta (Cache-Control, Expires...). A chave é o URL pedido (com query string e conteúdo POST). A validade é dada pelo Expires; se a data já passou, a entrada só dura a sessão. Quando a cache se aproxima do tamanho máximo, removem-se as entradas menos usadas recentemente (LRU).\nCookies: guardam-se se o utilizador aceitar cookies e se as suas preferências de privacidade (P3P) o permitirem. A chave é o domain e o path do Set-Cookie. Sem data de expiração, duram só a sessão; com uma data já passada, são apagados.\nCredenciais de autorização: não há decisão a tomar, são sempre guardadas. A chave é o servidor e o realm. Ficam só em memória e são sempre apagadas quando a sessão do browser termina, nunca vão para disco.",k:["Mecanismo comum: memória vs disco","Cache: cabeçalhos, chave URL, Expires, LRU","Cookies: aceitação/P3P, chave domain+path, expiração","Credenciais: sempre guardadas, chave servidor+realm, só em memória"]},
+{id:"w16",aula:"06",q:"O que são cookies de terceiros, porque são considerados perigosos e que mecanismo foi proposto para dar ao utilizador controlo sobre eles?",a:"Os cookies de terceiros (third-party) são criados por domínios diferentes do que o utilizador está a visitar. Chegam nas respostas a recursos de apoio (imagens, CSS, scripts, anúncios) que a página principal vai buscar a outros domínios. Como o mesmo terceiro está presente em muitos sites, o seu cookie é enviado em todos eles, o que permite seguir o utilizador entre sites (cross-site tracking), retargeting e publicidade. Por isso o livro diz que são particularmente perigosos: podem juntar o comportamento de navegação a dados pessoais e vendê-los ou usá-los de forma abusiva.\nPara dar controlo ao utilizador, o W3C propôs o P3P (Platform for Privacy Preferences). Os sites declaram a sua política de privacidade em linguagem humana e em formato legível por máquina (num <LINK>, num cabeçalho de resposta P3P ou em /w3c/p3p.xml). O browser compara-a com as preferências do utilizador e pode aceitar, bloquear, despromover (tornar não persistentes) ou fazer leashing dos cookies (enviá-los a terceiros só quando o pedido vem do site original). O P3P funciona por honra, mas uma política que não corresponda à prática pode dar processos em tribunal.",k:["Definição de third-party","Como chegam (recursos de apoio de outro domínio)","Rastreio entre sites e privacidade","P3P: declaração da política","Aceitar, bloquear, despromover, leashing / por honra"]}
+);
+
+// ===== Simulações no formato do teste: 15 escolha múltipla (≥1 por aula) + 2 de desenvolvimento =====
+function _src(id){return [...TESTS,REAL,...EXTRA,A56].find(t=>t.id===id)}
+function _r(id,i,aula){const q=_src(id).qs[i];return Object.assign({},q,{aula:aula||q.aula})}
+const SIMS = [
+{id:"s1",name:"Simulação 1",sim:true,topics:"Formato do teste: 15 de escolha múltipla (pelo menos uma por aula) e 2 de desenvolvimento.",qs:[
+_r("t1",0,1),_r("t1",4,1),_r("t2",1,2),_r("t2",8,2),_r("t2",10,2),_r("t3",4,3),_r("t4",2,3),_r("t4",8,3),_r("t5",2,4),_r("t5",8,4),_r("t6",2,4),_r("t11",0),_r("real",1,5),_r("t11",17),_r("t11",10)
+],written:["w5","w11"]},
+{id:"s2",name:"Simulação 2",sim:true,topics:"Formato do teste: 15 de escolha múltipla (pelo menos uma por aula) e 2 de desenvolvimento.",qs:[
+_r("t1",1,1),_r("real",4,1),_r("t2",0,2),_r("t2",4,2),_r("t1",11,2),_r("t3",5,3),_r("t4",13,3),_r("t3",11,3),_r("t5",1,4),_r("t6",0,4),_r("t5",10,4),_r("real",2,5),_r("t11",6),_r("t11",12),_r("t11",19)
+],written:["w7","w9"]},
+{id:"s3",name:"Simulação 3",sim:true,topics:"Formato do teste: 15 de escolha múltipla (pelo menos uma por aula) e 2 de desenvolvimento.",qs:[
+_r("t1",5,1),_r("t1",3,1),_r("t2",3,2),_r("t2",12,2),_r("t1",9,2),_r("t4",7,3),_r("t3",0,3),_r("t4",12,3),_r("t6",8,4),_r("t5",4,4),_r("t6",3,4),_r("t6",9,5),_r("t11",3),_r("t11",20),_r("t11",14)
+],written:["w8","w10"]}
+];
+
+const ALL = [...SIMS, ...TESTS, REAL, A56, ...EXTRA];
+const MIX = {id:"mix",name:"Aleatório 20",topics:"20 perguntas sorteadas da matéria do Teste 1 (todos os testes menos os de matéria do Teste 2), como num teste novo",qs:[]};
+
+const state = {cur:"s1", answers:{}, graded:{}, order:{}};
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const fmt = s => esc(s).replace(/`([^`]+)`/g,"<code>$1</code>");
+const L = "abcdefgh";
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let best = load("ew-t1-best",{});
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function buildMix(){
+  const pool=[];ALL.filter(t=>!t.t2&&!t.sim).forEach(t=>t.qs.forEach(q=>pool.push(q)));
+  const seen=new Set();MIX.qs=shuffle(pool).filter(q=>{if(seen.has(q.q))return false;seen.add(q.q);return true}).slice(0,20);
+}
+function testById(id){return id==="mix"?MIX:ALL.find(t=>t.id===id)}
+
+function renderTabs(){
+  const tabs=[...ALL,MIX];
+  $("#tabs").innerHTML=tabs.map(t=>{
+    const b=best[t.id]!=null&&t.id!=="mix"?`<span class="best">${best[t.id].toFixed(1).replace(".",",")}</span>`:"";
+    return `<button class="tab" role="tab" aria-selected="${t.id===state.cur}" data-id="${t.id}">${t.name}${b}</button>`}).join("");
+  $("#tabs").querySelectorAll(".tab").forEach(b=>b.onclick=()=>{state.cur=b.dataset.id;if(state.cur==="mix"){buildMix();reset("mix")}save("ew-t1-tab",state.cur);render();window.scrollTo({top:0})});
+}
+function reset(id){state.answers[id]={};state.graded[id]=false;state.order[id]={}}
+
+function optOrder(id,qi,n){
+  state.order[id]=state.order[id]||{};
+  if(!state.order[id][qi]){const idx=[...Array(n).keys()];state.order[id][qi]=$("#shuf").checked?shuffle(idx):idx}
+  return state.order[id][qi];
+}
+function qScore(q,sel){
+  if(q.t==="s") return sel.length===1&&q.c.includes(sel[0])?1:0;
+  const k=q.c.length;let s=0;sel.forEach(i=>{s+=q.c.includes(i)?1/k:-1/k});return Math.max(0,Math.min(1,s));
+}
+function render(){
+  renderTabs();
+  const T=testById(state.cur); const id=T.id;
+  if(!state.answers[id]) reset(id);
+  const graded=state.graded[id]; const ans=state.answers[id];
+  const per=20/T.qs.length;
+  let html=`<div class="testhead"><h2>${T.name}</h2><span class="meta">${T.qs.length} perguntas · ${per.toFixed(2).replace(".",",")} valores cada</span></div><p class="topics">${esc(T.topics)}</p>`;
+  if(graded){
+    let tot=0;T.qs.forEach((q,i)=>tot+=qScore(q,ans[i]||[])*per);
+    const cls=tot>=17.5?"s2":tot>=9.5?"s3":"s4";
+    const line=tot>=17.5?"200 OK":tot>=9.5?"206 Partial Content":"404 Nota Not Found";
+    const nOk=T.qs.filter((q,i)=>qScore(q,ans[i]||[])===1).length;
+    html+=`<div class="result ${cls}" id="result"><div class="status">HTTP/1.1 <span class="code">${line}</span></div><p><span class="score">${tot.toFixed(2).replace(".",",")} / 20</span> · ${nOk} de ${T.qs.length} perguntas totalmente certas. As respostas certas estão marcadas a verde e as que faltou assinalar têm contorno tracejado.</p></div>`;
+  }
+  html+=`<div class="qs">`;
+  T.qs.forEach((q,qi)=>{
+    const sel=ans[qi]||[]; const ord=optOrder(id,qi,q.o.length);
+    const qg=graded||(($("#instant").checked)&&q._done&&q._doneIn===id);
+    let st="";if(qg){const s=qScore(q,sel);st=s===1?"ok":s>0?"part":"bad"}
+    const isReal=id==="real"||REAL.qs.includes(q)||/^Pergunta real/.test(q.e);
+    html+=`<section class="q ${st}" data-qi="${qi}"><div class="qhead"><span class="n">Pergunta ${qi+1}</span><span>${per.toFixed(2).replace(".",",")} val.</span><span class="tag">${q.t==="m"?"uma ou mais":"uma resposta"}</span>${q.aula?`<span class="tag">Aula 0${q.aula}</span>`:""}${isReal?'<span class="tag real">real</span>':""}</div>`;
+    html+=`<p class="qtext">${fmt(q.q)}</p>${q.code?`<pre class="snip">${esc(q.code)}</pre>`:""}<p class="hint">${q.t==="m"?"Selecione uma ou mais opções de resposta:":"Selecione uma opção de resposta:"}</p><div class="opts">`;
+    ord.forEach((oi,pos)=>{
+      const checked=sel.includes(oi); let c="",mk="";
+      if(qg){const right=q.c.includes(oi); if(checked&&right){c="right";mk="✓"} else if(checked&&!right){c="wrong";mk="✗"} else if(right){c="missed";mk="✓"}}
+      const nm=`q-${id}-${qi}`;
+      html+=`<label class="opt ${c}" for="${nm}-${oi}"><input type="${q.t==="m"?"checkbox":"radio"}" name="${nm}" id="${nm}-${oi}" data-oi="${oi}" ${checked?"checked":""} ${graded?"disabled":""}><span class="l">${L[pos]}.</span><span class="t">${fmt(q.o[oi])}</span><span class="mk" aria-hidden="true">${mk}</span></label>`;
+    });
+    html+=`</div>`;
+    if(qg) html+=`<div class="fb"><b>${q.c.length>1?"Respostas certas":"Resposta certa"}: ${q.c.map(i=>L[ord.indexOf(i)]).sort().join(", ")}</b>${fmt(q.e)}</div>`;
+    else if($("#instant").checked) html+=`<div class="actions"><button class="btn ghost chk" data-qi="${qi}">Verificar</button></div>`;
+    html+=`</section>`;
+  });
+  html+=`</div>`;
+  if(T.written){
+    html+=`<h3 class="wh">Parte 2 · Perguntas de desenvolvimento</h3><p class="topics">Escreve a tua resposta antes de abrires a resposta-modelo. Esta parte não entra na nota calculada acima.</p><div class="qs">`;
+    T.written.forEach((wid,wi)=>{const w=WRITTEN.find(x=>x.id===wid);
+      html+=`<section class="q"><div class="qhead"><span class="n">Desenvolvimento ${wi+1}</span><span class="tag">Aula ${w.aula}</span></div><p class="qtext">${fmt(w.q)}</p><textarea id="wa-${id}-${wid}" rows="6" placeholder="A tua resposta..."></textarea><details><summary>Ver resposta-modelo</summary><div class="model">${w.a.split("\n").map(p=>`<p>${fmt(p)}</p>`).join("")}<p class="kp"><b>Pontos que deves referir:</b></p><ul>${w.k.map(x=>`<li>${fmt(x)}</li>`).join("")}</ul></div></details></section>`});
+    html+=`</div>`;
+  }
+  html+=`<div class="actions">`;
+  html+=graded?`<button class="btn" id="retry">Repetir este teste</button>${id==="mix"?'<button class="btn ghost" id="newmix">Sortear outras 20</button>':""}`:`<button class="btn" id="submit">Submeter e corrigir</button><button class="btn ghost" id="clear">Limpar respostas</button>`;
+  html+=`</div>`;
+  $("#main").innerHTML=html;
+
+  $("#main").querySelectorAll(".opt input").forEach(inp=>inp.onchange=()=>{
+    const qi=+inp.closest(".q").dataset.qi; const q=T.qs[qi];
+    if(q.t==="s") ans[qi]=[+inp.dataset.oi];
+    else{const s=new Set(ans[qi]||[]); inp.checked?s.add(+inp.dataset.oi):s.delete(+inp.dataset.oi); ans[qi]=[...s]}
+  });
+  $("#main").querySelectorAll(".chk").forEach(b=>b.onclick=()=>{const q=T.qs[+b.dataset.qi];q._done=true;q._doneIn=id;render()});
+  const sb=$("#submit"); if(sb) sb.onclick=()=>{
+    state.graded[id]=true;
+    let tot=0;T.qs.forEach((q,i)=>tot+=qScore(q,ans[i]||[])*per);
+    if(id!=="mix"){best[id]=Math.max(best[id]||0,tot);save("ew-t1-best",best)}window.EW_report&&window.EW_report("t",id,T.name,tot*5);
+    render(); $("#result").scrollIntoView({behavior:"smooth",block:"start"});
+  };
+  const cl=$("#clear"); if(cl) cl.onclick=()=>{T.qs.forEach(q=>q._done=false);reset(id);render()};
+  const rt=$("#retry"); if(rt) rt.onclick=()=>{T.qs.forEach(q=>q._done=false);reset(id);render();window.scrollTo({top:0})};
+  const nm=$("#newmix"); if(nm) nm.onclick=()=>{buildMix();reset("mix");render();window.scrollTo({top:0})};
+}
+$("#shuf").onchange=()=>{state.order[state.cur]={};render()};
+$("#instant").onchange=render;
+const savedTab=load("ew-t1-tab","s1"); state.cur=savedTab==="mix"?"s1":(testById(savedTab)?savedTab:"s1");
+render();
+
+})();
+(function(){
+
+// ⟦a|b⟧ = caixa de texto (respostas aceites). ⟦?op1|*op2|op3⟧ = lista; * marca a certa.
+const SETS = [
+{id:"c2",name:"Tutorial 2",topics:"Formulários: form HTML, IFormCollection, [HttpPost], ViewData, Tag Helpers, validação com ModelState, TempData, RedirectToAction, DataAnnotations.",xs:[
+{t:"Formulário HTML estático",i:"A view Index do ExampleController tem um formulário que submete o nome e a idade para a própria action Index.",
+code:`<form method="⟦post⟧" action="">
+    <label>Name</label>
+    <input type="⟦text⟧" name="⟦name⟧" />
+    <label>Age</label>
+    <input type="text" name="age" />
+    <input type="⟦submit⟧" value="Let's go submit this" />
+</form>`,e:"Com `action=\"\"` o formulário é submetido para a mesma action (Index). O atributo `name` de cada input é a chave com que o valor chega ao controller (`formData[\"name\"]`)."},
+{t:"Action que processa o formulário",i:"Completa as duas actions Index: a primeira responde ao GET e a segunda ao POST do formulário. A segunda passa os dados para a view Index2.",
+code:`public IActionResult Index()
+{
+    return View();
+}
+
+⟦[HttpPost]⟧
+public IActionResult Index(⟦IFormCollection⟧ formData)
+{
+    ⟦ViewData⟧["text_inserted"] = formData["⟦name⟧"];
+    ViewData["other_text_inserted"] = formData["age"];
+    return View("⟦Index2⟧");
+}`,e:"O filtro `[HttpPost]` e o parâmetro `IFormCollection` distinguem esta action da do GET. `ViewData` é um dicionário que passa dados do controller para a view no mesmo pedido. `View(\"Index2\")` usa outra view em vez da que tem o nome da action."},
+{t:"Mostrar os dados na view Index2",i:"Completa a view que mostra os dados recebidos.",
+code:`@{
+    ViewData["Title"] = "Index2";
+}
+<h1>Index2</h1>
+Name field: ⟦@ViewData⟧["text_inserted"]<br />
+Age field: @ViewData["⟦other_text_inserted⟧"]`,e:"No Razor, o `@` passa de HTML para código C#. As chaves do ViewData têm de ser iguais às usadas no controller."},
+{t:"Formulário gerado com Tag Helpers",i:"View Create, gerada a partir do modelo Person (template Create).",
+code:`@model Aula02.Models.⟦Person⟧
+
+<form asp-⟦action⟧="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-⟦for⟧="Name" class="control-label"></label>
+        <input asp-for="⟦Name⟧" class="form-control" />
+        <span asp-⟦validation-for⟧="Name" class="text-danger"></span>
+    </div>
+</form>`,e:"Cada propriedade tem um label, um input e um span. `asp-for` liga o elemento à propriedade do modelo e `asp-validation-for` mostra a mensagem de erro dessa propriedade. `asp-action` indica a action que processa a submissão."},
+{t:"Validação manual com ModelState",i:"Action Create (POST) do PersonController, com validação feita à mão.",
+code:`[HttpPost]
+[⟦ValidateAntiForgeryToken⟧]
+public ActionResult Create(IFormCollection collection)
+{
+    if (string.⟦IsNullOrEmpty⟧(collection["name"]))
+    {
+        ⟦ModelState⟧.⟦AddModelError⟧("name", "Mandatory field");
+    }
+    if (ModelState.⟦IsValid⟧)
+    {
+        ⟦TempData⟧["values"] = collection["name"] + " [" + collection["age"] + "]";
+        return ⟦RedirectToAction⟧(nameof(Index));
+    }
+    return View();
+}`,e:"Os erros acumulam-se no `ModelState` e aparecem sozinhos no formulário quando se faz `return View()`. O `TempData` guarda informação entre dois pedidos seguidos, porque o `RedirectToAction` gera um 302 e depois um novo GET."},
+{t:"Validação com DataAnnotations",i:"Classe Person com as restrições definidas por anotações.",
+code:`public class Person
+{
+    [⟦Required⟧(ErrorMessage = "The field {0} is mandatory")]
+    public string? Name { get; set; }
+
+    [Required(ErrorMessage = "The field {0} is mandatory")]
+    [⟦Range⟧(18, 100, ErrorMessage = "{0} must be between {1} and {2}")]
+    public int Age { get; set; }
+
+    [⟦DisplayName⟧("Birth date")]
+    [DataType(DataType.⟦DateTime|Date⟧)]
+    public DateTime BirthDate { get; set; }
+
+    [DataType(DataType.⟦EmailAddress⟧)]
+    public string? Email { get; set; }
+}`,e:"`DisplayName` muda o texto do label. `DataType.DateTime` gera um calendário (HTML5) no formulário e `DataType.EmailAddress` valida o formato do email. Na mensagem, {0} é o nome do campo, {1} o mínimo e {2} o máximo."},
+{t:"Create com o modelo em vez de IFormCollection",i:"Com as DataAnnotations, a validação é feita automaticamente quando a instância é criada.",
+code:`[HttpPost]
+[ValidateAntiForgeryToken]
+public ActionResult Create(⟦Person⟧ newPerson)
+{
+    if (⟦ModelState⟧.IsValid)
+    {
+        TempData["values"] = newPerson.⟦Name⟧ + " [" + newPerson.Age + "]";
+        return RedirectToAction(⟦nameof⟧(Index));
+    }
+    return ⟦View⟧();
+}`,e:"O model binding cria o objeto Person a partir dos campos do formulário e valida as anotações. Se houver erros, `return View()` volta a mostrar o formulário com as mensagens."},
+{t:"Conceitos do Tutorial 2",i:"Escolhe a opção certa em cada lista.",text:true,
+code:`O ViewData tem âmbito ⟦?*o controller e a view do mesmo pedido|entre dois pedidos seguidos|toda a sessão do utilizador⟧. Para passar dados de uma action para outra depois de um RedirectToAction usa-se o ⟦?ViewData|*TempData|ViewBag⟧. A view de uma action é procurada em Views/⟦?*nome do controller|Shared|Home⟧/⟦?*nome da action|Index|Create⟧.cshtml. Ao fazer RedirectToAction, o servidor responde com o código ⟦?200|*302|404⟧.`,e:"O TempData sobrevive ao redirect porque é guardado entre pedidos. O ViewData e o ViewBag só duram o pedido atual."}
+]},
+{id:"c3",name:"Tutorial 3",topics:"Entity Framework Core, Code First: modelo com DataAnnotations, DbContext, connection string, migrações, DbInitializer, actions CRUD geradas.",xs:[
+{t:"Modelo Category",i:"Completa o modelo. O Id é a chave primária, o Name tem entre 3 e 50 caracteres, a Description no máximo 256 e o State é verdadeiro por omissão.",
+code:`public class Category
+{
+    [⟦Key⟧]
+    public int Id { get; set; }
+
+    [Required(ErrorMessage = "Required field")]
+    [⟦StringLength⟧(50, ⟦MinimumLength⟧ = 3, ErrorMessage = "{0} length must be between {2} and {1}")]
+    public string? Name { get; set; }
+
+    [Required(ErrorMessage = "Required field")]
+    [⟦MaxLength⟧(256, ErrorMessage = "{0} length can not exceed {1} characters")]
+    public string? Description { get; set; }
+
+    public Boolean State { get; set; } = ⟦true⟧;
+}`,e:"Atenção: no `StringLength`, {1} é o máximo (50) e {2} o mínimo (3). Na base de dados, `Required` passa a NOT NULL e `StringLength(50)` passa a NVARCHAR(50)."},
+{t:"Chave primária e Identity",i:"Completa as frases sobre a chave primária.",text:true,
+code:`A chave primária pode ser definida com uma propriedade chamada ⟦Id⟧, com o nome da classe seguido de Id (por exemplo ⟦CategoryId⟧) ou com qualquer nome e a anotação [⟦Key⟧]. Se for int, a base de dados gera os valores automaticamente (Identity(1,1)). Para desligar isso usa-se [⟦DatabaseGenerated⟧(DatabaseGeneratedOption.⟦None⟧)].`,e:"É o que diz o tutorial da Classe 3."},
+{t:"DbContext",i:"Classe de contexto gerada pelo scaffold, com um DbSet por entidade.",
+code:`public class Class03Context : ⟦DbContext⟧
+{
+    public Class03Context(⟦DbContextOptions⟧<Class03Context> options)
+        : ⟦base⟧(options)
+    {
+    }
+
+    public ⟦DbSet⟧<Class03.Models.Category> Category { get; set; } = default!;
+}`,e:"O DbContext tem os conjuntos de dados (DbSet) usados na base de dados. As opções (provider e connection string) chegam pelo construtor, por injeção de dependências."},
+{t:"Connection string e registo do contexto",i:"appsettings.json e Program.cs.",
+code:`// appsettings.json
+"⟦ConnectionStrings⟧": {
+  "Class03Context": "Server=(localdb)\\\\mssqllocaldb;Database=Class03;Trusted_Connection=True"
+}
+
+// Program.cs
+builder.Services.⟦AddDbContext⟧<Class03Context>(options =>
+    options.⟦UseSqlServer⟧(builder.Configuration.⟦GetConnectionString⟧("Class03Context")));`,e:"O contexto é registado como serviço no `CreateBuilder`. Os controllers recebem-no pelo construtor (injeção de dependências)."},
+{t:"Injeção do contexto no controller",i:"Construtor do CategoriesController.",
+code:`public class CategoriesController : Controller
+{
+    private ⟦readonly⟧ Class03Context _context;
+
+    public CategoriesController(⟦Class03Context⟧ context)
+    {
+        _context = ⟦context⟧;
+    }
+}`,e:"O ASP.NET Core cria o contexto e entrega-o ao controller através do parâmetro do construtor."},
+{t:"Migrações (Package Manager Console)",i:"Comandos para criar a migração e a base de dados. Escolhe também o ficheiro certo.",
+code:`PM> ⟦add-migration|Add-Migration⟧ FirstStep
+PM> ⟦update-database|Update-Database⟧
+
+// O ficheiro que guarda o esquema atual, e que serve para calcular a próxima migração, é o
+// ⟦?*ModelSnapshot|Migration (FirstStep.cs)|appsettings.json|Program.cs⟧`,e:"O `add-migration` cria a classe de migração (métodos Up e Down) e atualiza o Snapshot. O `update-database` aplica as migrações à base de dados."},
+{t:"Inicializar a base de dados com dados de teste",i:"Classe DbInitializer.",
+code:`public void Run()
+{
+    _context.Database.⟦EnsureCreated⟧();
+    if (_context.Category.⟦Any⟧())
+    {
+        return;  // já tem dados
+    }
+    var categorias = new Category[]
+    {
+        new Category{ Name="Programming", Description="Algorithms and programming area courses" },
+        new Category{ Name="Administration", Description="Public administration courses" }
+    };
+    _context.Category.⟦AddRange⟧(categorias);
+    _context.⟦SaveChanges⟧();
+}`,e:"Só insere os dados de teste se a tabela estiver vazia. Sem `SaveChanges()`, nada é gravado na base de dados."},
+{t:"Chamar o DbInitializer no arranque",i:"Program.cs.",
+code:`builder.Services.⟦AddTransient⟧<DbInitializer>();
+var app = builder.Build();
+
+using var scope = app.Services.⟦CreateScope⟧();
+var services = scope.ServiceProvider;
+var initializer = services.⟦GetRequiredService⟧<DbInitializer>();
+initializer.⟦Run⟧();`,e:"Regista-se a classe como serviço e depois obtém-se uma instância dentro de um scope para chamar o método Run."},
+{t:"Action DeleteConfirmed",i:"Action gerada pelo scaffold para apagar uma categoria.",
+code:`[HttpPost, ⟦ActionName⟧("Delete")]
+[ValidateAntiForgeryToken]
+public ⟦async⟧ Task<IActionResult> DeleteConfirmed(int id)
+{
+    var category = await _context.Category.⟦FindAsync⟧(id);
+    if (category != null)
+    {
+        _context.Category.⟦Remove⟧(category);
+    }
+    await _context.⟦SaveChangesAsync⟧();
+    return RedirectToAction(nameof(⟦Index⟧));
+}`,e:"`ActionName(\"Delete\")` faz o POST para /Categories/Delete chegar a esta action, embora o método se chame DeleteConfirmed (não pode ter a mesma assinatura que o Delete do GET)."},
+{t:"Trabalho de casa: novo campo Date",i:"Adicionar um campo Date com valor por omissão e incluí-lo na edição.",
+code:`[DisplayName("Creation Date")]
+public DateTime Date { get; set; } = DateTime.⟦Now⟧;
+
+// No Package Manager Console:
+PM> add-migration ⟦SecondStep⟧
+PM> update-database
+
+// Edit (POST): acrescentar o campo ao Bind
+public async Task<IActionResult> Edit(int id, [⟦Bind⟧("Id,Name,Description,State,⟦Date⟧")] Category category)`,e:"O valor por omissão `DateTime.Now` só existe no código da aplicação, não passa para a base de dados. Sem o campo no `Bind`, o valor do formulário seria ignorado no Edit."}
+]},
+{id:"c4",name:"Tutorial 4",topics:"Modelo relacional com Code First: chave estrangeira, propriedades de navegação, [Column(TypeName)], DbSet novo, migração AddCourse, Include, SelectList para escolher a categoria, dados iniciais e menu.",xs:[
+{t:"Classe Course com chave estrangeira",i:"Cada Course pertence a uma Category. Completa a chave estrangeira, a propriedade de navegação e o tipo money do custo.",
+code:`public class Course
+{
+    public int Id { get; set; }
+    [Required(ErrorMessage = "Required field")]
+    [StringLength(50, MinimumLength = 3)]
+    public string? Name { get; set; }
+    public int Credits { get; set; }
+
+    [DataType(DataType.⟦Currency⟧)]
+    [⟦Column⟧(TypeName = "⟦money⟧")]
+    public decimal Cost { get; set; }
+    public bool State { get; set; }
+
+    public int ⟦CategoryId⟧ { get; set; }        // chave estrangeira
+    public ⟦Category⟧? Category { get; set; }    // propriedade de navegação
+}`,e:"Pelo nome CategoryId (nome da classe + Id), o EF reconhece a chave estrangeira. `[Column(TypeName = \"money\")]` muda o tipo SQL da coluna para MONEY e `DataType.Currency` mostra o valor como moeda."},
+{t:"Lado «muitos» da relação na Category",i:"Uma Category pode ter vários Courses.",
+code:`public class Category
+{
+    [Key]
+    public int Id { get; set; }
+    ...
+    public bool State { get; set; } = true;
+
+    public ⟦ICollection⟧<⟦Course⟧>? ⟦Courses⟧ { get; set; }
+}`,e:"A coleção é a propriedade de navegação do lado «um para muitos»: uma categoria tem muitos cursos."},
+{t:"DbContext e migração",i:"Acrescentar a nova entidade ao contexto e atualizar a base de dados.",
+code:`public class Class03Context : DbContext
+{
+    ...
+    public DbSet<Class03.Models.Category> Category { get; set; } = default!;
+    public ⟦DbSet⟧<Class03.Models.Course> ⟦Course⟧ { get; set; }
+}
+
+PM> add-migration ⟦AddCourse⟧
+PM> ⟦update-database⟧`,e:"Cada entidade que vai ser uma tabela precisa de um DbSet. A migração regista a alteração ao modelo e o update-database cria a tabela Course."},
+{t:"SQL gerado para a tabela Course",i:"Código SQL visto em SQL Server Object Explorer, com a opção View Code.",
+code:`CREATE TABLE [dbo].[Course] (
+    [Id]          INT IDENTITY (1, 1) NOT NULL,
+    [Name]        NVARCHAR (50)  NOT NULL,
+    [Cost]        ⟦MONEY|money⟧          NOT NULL,
+    [CategoryId]  INT            NOT NULL,
+    CONSTRAINT [PK_Course] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Course_Category_CategoryId] ⟦FOREIGN KEY⟧ ([CategoryId])
+        ⟦REFERENCES⟧ [dbo].[Category] ([Id]) ON DELETE ⟦CASCADE⟧
+);`,e:"A chave estrangeira aponta para Category(Id). Com ON DELETE CASCADE, ao apagar uma categoria os seus cursos também são apagados."},
+{t:"Conceitos da relação",i:"Escolhe a opção certa.",text:true,
+code:`Uma Category tem ⟦?*muitos Courses|um único Course|nenhum Course⟧ e um Course pertence a ⟦?*uma Category|várias Categories|nenhuma Category⟧. A propriedade CategoryId é a ⟦?*chave estrangeira|chave primária|propriedade de navegação⟧ e a propriedade Category é a ⟦?chave estrangeira|*propriedade de navegação|tabela da categoria⟧. Para criar o CoursesController deve escolher-se o contexto ⟦?*existente (Class03Context)|novo, criado com o botão +|nenhum⟧.`,e:"No scaffold do CoursesController não se cria um contexto novo: a tabela Course fica na mesma base de dados."},
+{t:"Listagem dos cursos com a categoria",i:"Action Index gerada pelo scaffold e coluna da categoria na view (trabalho de casa: mostrar o Name em vez da Description).",
+code:`public async Task<IActionResult> Index()
+{
+    var class03Context = _context.Course.⟦Include⟧(c => c.⟦Category⟧);
+    return View(await class03Context.⟦ToListAsync⟧());
+}
+
+<!-- Index.cshtml -->
+<td>@Html.DisplayFor(modelItem => item.Category.⟦Name⟧)</td>`,e:"Sem o `Include`, `item.Category` seria null. O scaffold mostra a Description, e o trabalho de casa pede o Name."},
+{t:"Escolher a categoria no Create e no Edit",i:"Lista de categorias no formulário. Trabalho de casa: mostrar o Name e apenas as categorias com State verdadeiro.",
+code:`// CoursesController.Create (GET)
+ViewData["CategoryId"] = new ⟦SelectList⟧(_context.Category.⟦Where⟧(c => c.⟦State⟧), "Id", "⟦Name⟧");
+
+<!-- Create.cshtml -->
+<select asp-for="CategoryId" class="form-control" ⟦asp-items⟧="ViewBag.CategoryId"></select>`,e:"`SelectList(fonte, valor, texto)`: o value de cada option é o Id e o texto visível é o Name. O `asp-items` preenche as opções do select."},
+{t:"Dados iniciais com relação",i:"No DbInitializer, depois de gravar as categorias, criar os cursos.",
+code:`_context.Category.AddRange(categorias);
+_context.⟦SaveChanges⟧();          // as categorias passam a ter Id
+
+var courses = new Course[]
+{
+    new Course { Name="Web Engineering", Cost=50, Credits=6,
+                 CategoryId = categorias.⟦Single⟧(c => c.Name == "Programming").⟦Id⟧ },
+    new Course { Name="Strategic Leadership and Management", Cost=100, Credits=6,
+                 ⟦Category⟧ = categorias.Single(c => c.Name == "Administration") }
+};
+_context.Course.⟦AddRange⟧(courses);
+_context.SaveChanges();`,e:"Pode ligar-se o curso à categoria pelo Id (CategoryId) ou pelo objeto (Category). Para os dados novos serem criados no arranque, é preciso apagar primeiro os dados que já existem."},
+{t:"Trabalho de casa: menu e categorias com os seus cursos",i:"Itens no menu do layout e listagem das categorias com os cursos de cada uma.",
+code:`<!-- _Layout.cshtml -->
+<a class="⟦nav-link⟧ text-dark" asp-controller="⟦Categories⟧" asp-action="Index">Categories</a>
+<a class="nav-link text-dark" asp-controller="Courses" asp-action="Index">Courses</a>
+
+// CategoriesController.Index
+return View(await _context.Category.⟦Include⟧(c => c.⟦Courses⟧).ToListAsync());
+
+<!-- Categories/Index.cshtml -->
+<td><ul>@foreach (var c in item.⟦Courses⟧) { <li>@c.Name</li> }</ul></td>`,e:"O `Include(c => c.Courses)` carrega os cursos de cada categoria (o lado «muitos» da relação)."}
+]},
+
+{id:"c5",name:"Tutorial 5",topics:"Upload e download de ficheiros: enctype, input file, IFormFile, ViewModel, IWebHostEnvironment, Path, FileStream, File(), tipos MIME.",xs:[
+{t:"Formulário que envia ficheiros",i:"View Create do BooksController.",
+code:`<form asp-action="Create" enctype="⟦multipart/form-data⟧">
+    <input asp-for="Title" class="form-control" />
+    <input type="⟦file⟧" asp-for="CoverPhoto" class="form-control"
+           ⟦?*accept|filter|types|extensions⟧=".jpg,.jpeg,.png,.gif,.bmp" />
+    <input type="file" asp-for="Document" class="form-control" />
+    <input type="submit" value="Create" class="btn btn-primary" />
+</form>`,e:"Sem `enctype=\"multipart/form-data\"` os ficheiros não são enviados, porque o formulário usa por omissão `application/x-www-form-urlencoded`. O atributo `accept` mostra apenas as extensões permitidas (trabalho de casa)."},
+{t:"Modelo e ViewModel",i:"O modelo guarda na base de dados o nome do ficheiro. O ViewModel recebe o ficheiro do formulário.",
+code:`public class Book
+{
+    [Key] public int Id { get; set; }
+    [Required] public string? Title { get; set; }
+    [Required] public ⟦string⟧? CoverPhoto { get; set; }    // nome do ficheiro
+}
+
+public class BookViewModel
+{
+    [Required] public string? Title { get; set; }
+    [Required(ErrorMessage = "Select a Image File")]
+    public ⟦IFormFile⟧? CoverPhoto { get; set; }           // o ficheiro enviado
+}
+
+// Usa-se um ViewModel quando ⟦?*os dados do formulário não correspondem ao modelo da entidade (tipos diferentes ou várias entidades)|se quer evitar a base de dados|o formulário usa GET⟧.`,e:"`IFormFile` é o tipo que representa um ficheiro submetido. Na base de dados só se guarda o nome, e o ficheiro vai para o disco (wwwroot)."},
+{t:"Aceder à pasta wwwroot",i:"Injeção de IWebHostEnvironment no BooksController.",
+code:`private readonly Class05Context _context;
+private readonly ⟦IWebHostEnvironment⟧ _webHostEnvironment;
+
+public BooksController(Class05Context context, IWebHostEnvironment environment)
+{
+    _context = context;
+    _webHostEnvironment = ⟦environment⟧;
+}
+// _webHostEnvironment.⟦WebRootPath⟧ dá o caminho absoluto da pasta wwwroot`,e:"`WebRootPath` devolve o caminho absoluto da pasta com os ficheiros de conteúdo da aplicação (wwwroot)."},
+{t:"Validar a extensão do ficheiro",i:"Início da action Create (POST).",
+code:`var PhotoExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+var extension = Path.⟦GetExtension⟧(book.CoverPhoto.⟦FileName⟧).⟦ToLower⟧();
+if (!PhotoExtensions.⟦Contains⟧(extension))
+{
+    ModelState.⟦AddModelError⟧("CoverPhoto", "Please, submit a valid image (jpg, jpeg, png, gif, bmp).");
+}`,e:"O `ToLower()` faz com que `.JPG` também seja aceite."},
+{t:"Gravar o ficheiro no disco e o livro na base de dados",i:"Continuação da action Create (POST).",
+code:`if (ModelState.IsValid)
+{
+    var newBook = new Book();
+    newBook.Title = book.Title;
+    newBook.CoverPhoto = Path.⟦GetFileName⟧(book.CoverPhoto.FileName);
+
+    string coverFullPath = Path.⟦Combine⟧(_webHostEnvironment.WebRootPath, "Cover", newBook.CoverPhoto);
+    using (var stream = new ⟦FileStream⟧(coverFullPath, FileMode.⟦Create⟧))
+    {
+        await book.CoverPhoto.⟦CopyToAsync⟧(stream);
+    }
+    _context.⟦Add⟧(newBook);
+    await _context.SaveChangesAsync();
+    return RedirectToAction(nameof(Index));
+}
+return View(book);`,e:"`Path.GetFileName` serve para alguns browsers antigos que enviam o caminho completo. O ficheiro é copiado para wwwroot/Cover e só o nome vai para a base de dados."},
+{t:"Action Download",i:"Devolve o ficheiro com o tipo MIME certo.",
+code:`public IActionResult Download(string? id)   // id = nome do ficheiro
+{
+    string pathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Documents", id);
+    byte[] fileBytes = System.IO.File.⟦ReadAllBytes⟧(pathFile);
+    string? mimeType;
+    if (new ⟦FileExtensionContentTypeProvider⟧().⟦TryGetContentType⟧(id, out mimeType) == false)
+    {
+        mimeType = "⟦application/force-download|application/octet-stream⟧";
+    }
+    return ⟦File⟧(fileBytes, mimeType);
+}`,e:"O tipo MIME vai no cabeçalho Content-Type e diz ao browser como tratar o conteúdo. Se não for reconhecido, usa-se `application/force-download` para obrigar ao download."},
+{t:"Link para o download na view Index",i:"Substituir os links Edit e Details por um link de download.",
+code:`<a asp-action="⟦Download⟧" asp-route-⟦id⟧="@item.Document" target="⟦_blank⟧">Download</a> |
+<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>`,e:"`asp-route-id` passa o parâmetro id à action `Download(string id)`. `target=\"_blank\"` abre o ficheiro num separador novo."},
+{t:"Trabalho de casa: mostrar a capa e apagar ficheiros",i:"View Index e action DeleteConfirmed.",
+code:`<!-- Index: mostrar a imagem em vez do nome -->
+<⟦img⟧ src="⟦~/Cover/|/Cover/⟧@item.CoverPhoto" width="80" />
+
+// DeleteConfirmed: apagar também o ficheiro do disco
+string path = Path.Combine(_webHostEnvironment.WebRootPath, "Documents", book.Document);
+System.IO.File.⟦Delete⟧(path);`,e:"Os ficheiros em wwwroot ficam acessíveis pelo URL a partir da raiz (`~/Cover/...`)."}
+]},
+{id:"c6",name:"Tutorial 6",topics:"Database First (Scaffold-DbContext), Include, partial views, filtros com LINQ, endpoints com MapControllerRoute, restrições (regex, inline, IRouteConstraint) e ViewBag.",xs:[
+{t:"Gerar o modelo a partir da base de dados",i:"Comando no Package Manager Console (é um único comando).",
+code:`PM> ⟦Scaffold-DbContext⟧ -Connection name="Class06Context" Microsoft.EntityFrameworkCore.⟦SqlServer⟧
+      -Context Class06Context -ContextDir ⟦Data⟧ -OutputDir ⟦Models⟧ -⟦DataAnnotations⟧`,e:"`-ContextDir Data` guarda o DbContext na pasta Data, `-OutputDir Models` guarda as classes em Models e `-DataAnnotations` importa as restrições dos campos como anotações."},
+{t:"Code First vs Database First",i:"Escolhe a opção certa.",text:true,
+code:`O Tutorial 3 usa ⟦?*Code First|Database First⟧ (as classes geram a base de dados). O Tutorial 6 usa ⟦?Code First|*Database First⟧ (a base de dados gera as classes). No Tutorial 6, depois de Add-migration FirstStep, é preciso ⟦?*apagar o código dentro dos métodos Up e Down|apagar a base de dados|correr update-database duas vezes⟧, para não destruir a base de dados que já existe. Antes do scaffold têm de estar instalados os pacotes EntityFrameworkCore.⟦Tools⟧ e EntityFrameworkCore.⟦SqlServer⟧.`,e:"A primeira migração não conhece a base de dados que já existe. Por isso o Up e o Down ficam vazios, e as migrações seguintes passam a funcionar normalmente."},
+{t:"Listar alunos com a turma",i:"Action Index do StudentsController.",
+code:`public IActionResult Index()
+{
+    var allStudents = _context.Students.⟦Include⟧(c => c.⟦Class⟧);
+    return ⟦View⟧(allStudents);
+}`,e:"O `Include` carrega a entidade relacionada (a turma). Sem ele, `item.Class` seria null na view."},
+{t:"View com partial view",i:"View Index e partial view Listing.",
+code:`@model ⟦IEnumerable⟧<Aula06.Models.Student>
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Students List</h1>
+<⟦partial⟧ name="⟦Listing⟧" model="Model" />
+
+<!-- Listing.cshtml (partial, template List) -->
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@Html.⟦DisplayFor⟧(modelItem => item.Number)</td>
+        <td>@Html.DisplayFor(modelItem => item.Name)</td>
+        <td>@Html.DisplayFor(modelItem => item.Class.⟦Name⟧)</td>
+    </tr>
+}`,e:"A partial view recebe o mesmo modelo (uma coleção de Student). Na listagem mostra-se o nome da turma, `item.Class.Name`."},
+{t:"Filtrar pela primeira letra",i:"Action Index2.",
+code:`public async Task<IActionResult> Index2(string ⟦letter⟧)
+{
+    if (!string.IsNullOrEmpty(letter))
+        return View(await _context.Students.⟦Where⟧(x => x.Name.⟦StartsWith⟧(letter))
+                                            .Include(c => c.Class).⟦ToListAsync⟧());
+    return View(await _context.Students.Include(c => c.Class).ToListAsync());
+}
+// Sem endpoint próprio, testa-se com: https://localhost:7026/students/index2?⟦letter=A⟧`,e:"Sem endpoint próprio, a letra tem de ir na query string, porque não faz parte do URL."},
+{t:"Endpoint personalizado",i:"Program.cs: aceitar /Filter/B em vez de /students/index2?letter=B.",
+code:`app.⟦MapControllerRoute⟧(
+    name: "filtered",
+    pattern: "Filter/{⟦letter⟧?}",
+    defaults: new { Controller = "⟦Students⟧", Action = "⟦Index2⟧" },
+    ⟦constraints⟧: new { letter = @"[A-ZÂÁÉÓ]" });
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=⟦Home⟧}/{action=⟦Index⟧}/{⟦id⟧?}");`,e:"O `?` torna o campo opcional. A restrição é uma expressão regular (um carácter do conjunto). Se o URL não respeitar a restrição, é avaliado pelo endpoint seguinte (o default)."},
+{t:"Restrições inline e classe IRouteConstraint",i:"Três alternativas para restringir o campo letter.",
+code:`// 1) Inline constraint: uma única letra
+pattern: "Filter/{letter:⟦alpha⟧:⟦length(1)⟧?}"
+
+// 2) Classe própria
+public class MyRulesConstraint : ⟦IRouteConstraint⟧
+{
+    public bool ⟦Match⟧(HttpContext? httpContext, IRouter? route, string routeKey,
+                      RouteValueDictionary values, RouteDirection routeDirection)
+    {
+        return values[routeKey] is null || Regex.⟦IsMatch⟧(values[routeKey] as string, @"^[a-zA-ZÂÁÉÓ]$");
+    }
+}
+constraints: new { letter = new ⟦MyRulesConstraint⟧() }
+
+// 3) A mesma classe como inline constraint
+builder.Services.⟦AddRouting⟧(options => options.⟦ConstraintMap⟧.Add("myRule", typeof(MyRulesConstraint)));
+pattern: "Filter/{letter:⟦myRule⟧?}"`,e:"A interface `IRouteConstraint` só obriga a implementar o método `Match`, que devolve true ou false. Para usar a classe inline, regista-se com um nome no `ConstraintMap`."},
+{t:"Menu de letras com ViewBag",i:"Action Index2 e view com os links para cada letra.",
+code:`// Index2
+⟦ViewBag⟧.letter = letter;
+
+// View
+@for (char c = 'A'; c <= 'Z'; c++)
+{
+    if (ViewBag.letter == "" + c)
+    {
+        <span style="color:red; font-weight:bold;">@c</span>
+    }
+    else
+    {
+        <a asp-⟦route⟧="filtered" asp-route-⟦letter⟧="@c">@c</a>
+    }
+}`,e:"`asp-route=\"filtered\"` constrói o link a partir do endpoint com esse nome, e por isso gera /Filter/B. O `asp-route-letter` preenche o campo {letter}."},
+{t:"Trabalho de casa: ordenar",i:"Endpoint /order/byNumber/Descending e a action Index3.",
+code:`app.MapControllerRoute(
+    name: "ordered",
+    pattern: "Order/{⟦by⟧}/{⟦order⟧}",
+    defaults: new { Controller = "Students", Action = "⟦Index3⟧" });
+
+public async Task<IActionResult> Index3(string by, string order)
+{
+    var students = _context.Students.Include(c => c.Class);
+    if (by == "byNumber" && order == "Descending")
+        return View(await students.⟦OrderByDescending⟧(x => x.Number).ToListAsync());
+    return View(await students.⟦OrderBy⟧(x => x.Name).ToListAsync());
+}`,e:"Os nomes dos campos no pattern ({by} e {order}) têm de ser iguais aos nomes dos parâmetros da action."}
+]},
+{id:"ex",name:"Exames anteriores",ex:true,topics:"Matéria que costuma aparecer nos enunciados práticos (2021–2024): DataAnnotations e índice único, sessões, cookies, cache, AJAX unobtrusive, utilizador autenticado e rota de arranque. Pode corresponder às aulas práticas sem tutorial enviado.",xs:[
+{t:"Modelo com valor único e intervalo (exame de 2024)",i:"RegistoNota: Id é a chave; NumAluno é obrigatório e único; Nota é obrigatória e está entre 0 e 20.",
+code:`[⟦Index⟧(nameof(NumAluno), ⟦IsUnique⟧ = true)]
+public class RegistoNota
+{
+    [Key]
+    public int Id { get; set; }
+
+    [⟦Required⟧]
+    public int NumAluno { get; set; }
+
+    [Required]
+    [⟦Range⟧(0, 20)]
+    public int Nota { get; set; }
+
+    public string? Alxxxxx { get; set; }
+}`,e:"No EF Core, o valor único define-se com o atributo `[Index(..., IsUnique = true)]` na classe. A base de dados chama-se DB_alXXXXX e cria-se com add-migration e update-database."},
+{t:"Enum ou lista de valores com valor por omissão (2024)",i:"Regime com valores Ordinário (por omissão), Especial ou Super; Valido é falso por omissão.",
+code:`[Required]
+[⟦RegularExpression⟧("Ordinário|Especial|Super")]
+public string Regime { get; set; } = "⟦Ordinário⟧";
+
+public bool Valido { get; set; } = ⟦false⟧;
+
+<!-- na view: select com os valores permitidos -->
+<select asp-for="Regime" class="form-control">
+    <⟦option⟧>Ordinário</option>
+    <option>Especial</option>
+    <option>Super</option>
+</select>`,e:"Uma alternativa ao `RegularExpression` é usar um enum. O valor por omissão define-se inicializando a propriedade."},
+{t:"Variáveis de sessão (exames de 2024)",i:"Ativar sessões e criar a variável PorValidar no login. A view mostra o valor.",
+code:`// Program.cs
+builder.Services.⟦AddSession⟧();
+...
+app.⟦UseSession⟧();
+
+// No login
+HttpContext.Session.⟦SetInt32⟧("PorValidar", _context.Notas.Count(n => n.Alxxxxx == "Anónimo"));
+HttpContext.Session.⟦SetString⟧("estado", "editar");
+
+// Na view
+@if (User.Identity.⟦IsAuthenticated⟧)
+{
+    <p>Notas por validar = @Context.Session.⟦GetInt32⟧("PorValidar")</p>
+}`,e:"Os dados da sessão ficam no servidor. O browser guarda só o identificador da sessão num cookie. Lembra-te da teoria: o HTTP é stateless."},
+{t:"Cookie com validade de 1 ano (Parte 2, 2024)",i:"No login, entregar ao cliente o cookie UserName. Na view Index, mostrar boas-vindas se o utilizador não estiver autenticado e o cookie existir.",
+code:`Response.⟦Cookies⟧.⟦Append⟧("UserName", Input.Email, new ⟦CookieOptions⟧
+{
+    ⟦Expires⟧ = DateTime.Now.⟦AddYears⟧(1)
+});
+
+// Na view Index
+@if (!User.Identity.IsAuthenticated && Context.Request.Cookies["⟦UserName⟧"] != null)
+{
+    <p>Bem-Vindo @Context.⟦Request⟧.Cookies["UserName"] faça login para comentar</p>
+}`,e:"Isto gera um `Set-Cookie` na resposta (é o servidor que o envia). Nos pedidos seguintes, o browser devolve-o no cabeçalho `Cookie`, que se lê com `Request.Cookies`."},
+{t:"Cache só do lado do cliente (2024)",i:"Configurar a aplicação para que qualquer recurso só possa ficar em cache no cliente.",
+code:`[⟦ResponseCache⟧(Location = ResponseCacheLocation.⟦Client⟧, Duration = 60)]
+public class HomeController : Controller { ... }
+
+// Cabeçalho HTTP gerado: Cache-Control: ⟦?*private, max-age=60|public, max-age=60|no-cache⟧`,e:"`Location.Client` gera `Cache-Control: private`: só o browser pode guardar, e os proxies (cache partilhada) não. É a ligação direta à teoria da Aula 06."},
+{t:"Links com AJAX (Microsoft.jQuery.Unobtrusive.Ajax)",i:"Os links Valida e Invalida atualizam só a zona da listagem (div com id lista).",
+code:`<div id="lista">
+    <partial name="_Lista" model="Model" />
+</div>
+
+<a asp-action="Valida" asp-route-id="@item.RegistoId"
+   data-ajax="⟦true⟧"
+   data-ajax-method="⟦GET|POST⟧"
+   data-ajax-mode="⟦replace⟧"
+   data-ajax-update="⟦#lista⟧">Valida</a>
+
+// Action
+public IActionResult Valida(int id)
+{
+    var r = _context.Registos.Find(id);
+    r.Valido = true;
+    _context.⟦SaveChanges⟧();
+    return ⟦PartialView⟧("_Lista", _context.Registos.ToList());
+}
+
+<!-- no fim da página -->
+<script src="~/lib/jquery-ajax-unobtrusive/⟦jquery.unobtrusive-ajax.min.js|jquery.unobtrusive-ajax.js⟧"><\/script>`,e:"A action devolve uma PartialView, e o HTML que chega substitui o conteúdo do elemento indicado em `data-ajax-update` (com `data-ajax-mode=\"replace\"`)."},
+{t:"Formulário AJAX para inserir comentários (Parte 2, 2024)",i:"O formulário submete para /Home/Inserir e o resultado substitui a listagem de comentários.",
+code:`<form asp-action="⟦Inserir⟧" data-ajax="true" data-ajax-method="⟦POST⟧"
+      data-ajax-mode="replace" data-ajax-update="#comentarios">
+    <input type="hidden" name="NoticiaId" value="@Model.Id" />
+    Texto: <input type="text" name="Texto" />
+    <input type="submit" value="Inserir" />
+</form>
+
+[HttpPost]
+public IActionResult Inserir(Comentario c)
+{
+    c.Username = User.Identity.⟦Name⟧;
+    c.Data = DateTime.⟦Now⟧;
+    if (!string.IsNullOrEmpty(c.Texto)) { _context.Add(c); _context.SaveChanges(); }
+    return PartialView("_Comentarios", _context.Comentarios.Where(x => x.NoticiaId == c.NoticiaId).ToList());
+}`,e:"`User.Identity.Name` dá o username do utilizador autenticado (Individual Accounts)."},
+{t:"Utilizador autenticado, autorização e rota de arranque",i:"Completa os vários pedaços.",
+code:`// Só utilizadores autenticados podem aceder
+[⟦Authorize⟧]
+public IActionResult Comentarios(int id) { ... }
+
+// Link só para autenticados
+@if (User.Identity.⟦IsAuthenticated⟧)
+{
+    <a asp-action="Comentarios" asp-route-⟦id⟧="@item.Id">@item.Titulo</a>
+}
+
+// Username: "Anónimo" se ninguém estiver autenticado
+nota.Alxxxxx = User.Identity.IsAuthenticated ? User.Identity.Name : "⟦Anónimo⟧";
+
+// Página de arranque /Gestao/Notas
+app.MapControllerRoute(name: "default", pattern: "{controller=⟦Gestao⟧}/{action=⟦Notas⟧}/{id?}");`,e:"Mudar os valores por omissão do endpoint default muda a página que abre quando se acede à raiz (/)."}
+]}
+];
+
+// Opções erradas (distratores) para cada resposta, para as listas de escolha.
+const DIS = {
+"post":["get","put","send"],"text":["string","input","field"],"name":["id","value","for"],"submit":["button","send","post"],
+"[httppost]":["[HttpGet]","[Post]","[HttpSubmit]"],"iformcollection":["IFormFile","FormData","IActionResult"],"viewdata":["TempData","ViewBag","Session"],
+"index2":["Index","Result","Create"],"@viewdata":["@TempData","@Model","ViewData"],"other_text_inserted":["age","text_inserted","Age"],
+"person":["Persons","PersonController","Model"],"action":["controller","route","for"],"for":["model","name","bind"],"validation-for":["validation-summary","error-for","for"],
+"validateantiforgerytoken":["HttpPost","Authorize","ValidateModel"],"isnullorempty":["IsEmpty","Equals","IsNull"],"modelstate":["ViewData","TempData","ModelError"],
+"addmodelerror":["AddError","ShowError","SetError"],"isvalid":["IsValidated","Valid","HasErrors"],"tempdata":["ViewData","ViewBag","Session"],
+"redirecttoaction":["View","RedirectToView","Redirect"],"required":["Mandatory","NotNull","Key"],"range":["Between","StringLength","MinMax"],
+"displayname":["Label","Display","Name"],"datetime":["Calendar","Time","Text"],"emailaddress":["Email","Mail","Text"],"nameof":["typeof","string","view"],
+"view":["RedirectToAction","PartialView","Index"],"key":["Id","PrimaryKey","Required"],"stringlength":["MaxLength","Range","Length"],
+"minimumlength":["MinLength","Minimum","MaximumLength"],"maxlength":["StringLength","Length","Range"],"true":["false","1","null"],"false":["true","0","null"],
+"id":["Key","Number","Code"],"categoryid":["IdCategory","Category_Id","CategoryKey"],"databasegenerated":["Key","Identity","AutoIncrement"],"none":["Identity","Computed","False"],
+"dbcontext":["Controller","DbSet","Context"],"dbcontextoptions":["DbSet","DbContext","Options"],"base":["this","super","Class03Context"],"dbset":["List","DbContext","IEnumerable"],
+"connectionstrings":["ConnectionString","Databases","DbContexts"],"adddbcontext":["AddDatabase","AddTransient","UseDbContext"],"usesqlserver":["UseSql","AddSqlServer","UseDatabase"],
+"getconnectionstring":["GetSection","ConnectionString","GetValue"],"readonly":["static","const","public"],"class03context":["DbContext","Category","CategoriesController"],
+"context":["_context","this","options"],"add-migration":["update-database","new-migration","create-migration"],"update-database":["add-migration","create-database","apply-migration"],
+"ensurecreated":["EnsureDeleted","Create","Migrate"],"any":["Count","All","Exists"],"addrange":["Add","Insert","AddAll"],"savechanges":["Save","Commit","Update"],
+"addtransient":["AddDbContext","AddService","AddScoped"],"createscope":["GetService","CreateService","Build"],"getrequiredservice":["GetService","CreateService","Resolve"],"run":["Start","Execute","Main"],
+"actionname":["Route","HttpPost","Action"],"async":["await","static","Task"],"findasync":["FirstAsync","GetAsync","WhereAsync"],"remove":["Delete","Drop","Erase"],
+"savechangesasync":["SaveAsync","CommitAsync","UpdateAsync"],"index":["Create","Details","Delete"],"now":["Today","UtcNow","Date"],"secondstep":["FirstStep","update-database","AddDate"],
+"bind":["Include","Model","FromForm"],"date":["Created","DateTime","Now"],"multipart/form-data":["application/x-www-form-urlencoded","text/plain","application/octet-stream"],
+"file":["upload","text","image"],"string":["IFormFile","byte[]","File"],"iformfile":["FileStream","string","File"],"iwebhostenvironment":["IConfiguration","IHostEnvironment","DbContext"],
+"environment":["context","_webHostEnvironment","WebRootPath"],"webrootpath":["ContentRootPath","RootPath","WebPath"],"getextension":["GetFileName","Extension","GetType"],
+"filename":["Name","ContentType","Length"],"tolower":["ToUpper","Trim","ToString"],"contains":["Equals","Any","IndexOf"],"getfilename":["GetExtension","GetFullPath","GetDirectoryName"],
+"combine":["Join","Concat","GetFullPath"],"filestream":["MemoryStream","StreamReader","FileInfo"],"create":["Open","Append","Read"],"copytoasync":["SaveAsync","WriteAsync","CopyTo"],
+"add":["Insert","Save","Attach"],"readallbytes":["ReadAllText","OpenRead","ReadBytes"],"fileextensioncontenttypeprovider":["MimeTypeProvider","ContentTypeProvider","FileTypeProvider"],
+"trygetcontenttype":["GetContentType","GetMimeType","TryGetMimeType"],"application/force-download":["text/html","application/json","image/gif"],"file":["upload","text","image"],
+"download":["Details","Delete","File"],"_blank":["_self","_new","_parent"],"img":["image","picture","a"],"~/cover/":["~/wwwroot/Cover/","C:/Cover/","~/Documents/"],"delete":["Remove","Erase","Clear"],
+"scaffold-dbcontext":["Add-Migration","Scaffold-Model","Update-Database"],"sqlserver":["Tools","Design","Sqlite"],"data":["Models","Controllers","Views"],"models":["Data","Controllers","Entities"],
+"dataannotations":["Force","UseDatabaseNames","Annotations"],"tools":["Design","Relational","Core"],"include":["Where","Join","Select"],"class":["Classes","ClassId","Name"],
+"ienumerable":["List","Student","DbSet"],"partial":["view","include","render"],"listing":["Index","_Layout","Index2"],"displayfor":["DisplayNameFor","EditorFor","LabelFor"],
+"letter":["id","name","c"],"where":["Select","Include","Find"],"startswith":["Contains","EndsWith","Equals"],"tolistasync":["ToList","FindAsync","FirstAsync"],"letter=a":["A","letter/A","id=A"],
+"mapcontrollerroute":["MapRoute","AddRoute","UseRouting"],"students":["StudentsController","Student","Filter"],"constraints":["defaults","pattern","rules"],"home":["Students","Index","Default"],
+"alpha":["char","string","letter"],"length(1)":["max(1)","minlength(1)","range(1)"],"irouteconstraint":["IRouteValidator","IConstraint","IRouter"],"match":["Validate","IsValid","Check"],
+"ismatch":["Match","Contains","Equals"],"myrulesconstraint":["IRouteConstraint","RegexConstraint","MyRule"],"addrouting":["AddRoutes","MapControllerRoute","UseRouting"],
+"constraintmap":["Constraints","RouteMap","ConstraintList"],"myrule":["MyRulesConstraint","alpha","rule"],"viewbag":["ViewData","TempData","Model"],"route":["action","controller","for"],
+"by":["criteria","sort","field"],"order":["direction","sort","asc"],"index3":["Index2","Order","Sort"],"orderbydescending":["OrderBy","SortDescending","Reverse"],"orderby":["OrderByDescending","SortBy","GroupBy"],
+"isunique":["Unique","IsPrimary","NotNull"],"regularexpression":["Range","AllowedValues","StringLength"],"ordinário":["Especial","Super","null"],"option":["item","select","value"],
+"addsession":["UseSession","AddCookies","AddMemoryCache"],"usesession":["AddSession","UseCookies","MapSession"],"setint32":["SetString","SetInt","Set"],"setstring":["SetInt32","Set","Add"],
+"isauthenticated":["IsLogged","IsValid","Authenticated"],"getint32":["GetString","Get","GetInt"],"cookies":["Headers","Session","Cookie"],"append":["Add","Set","Write"],
+"cookieoptions":["CookieSettings","SessionOptions","HttpCookie"],"expires":["MaxAge","Duration","Validity"],"addyears":["AddDays","AddMonths","Year"],"username":["Email","Cookie","Name"],
+"request":["Response","Session","User"],"responsecache":["Cache","OutputCache","CacheControl"],"client":["Any","None","Server"],"get":["PUT","DELETE","AJAX"],"replace":["after","before","update"],
+"#lista":["lista",".lista","#Valida"],"partialview":["View","Json","RedirectToAction"],"jquery.unobtrusive-ajax.min.js":["jquery.validate.min.js","bootstrap.min.js","site.js"],
+"inserir":["Comentarios","Create","Index"],"authorize":["AllowAnonymous","Authenticate","HttpPost"],"anónimo":["null","Guest",""],"gestao":["Home","Notas","Index"],"notas":["Index","Gestao","Home"],
+// Tutorial 4
+"icollection":["Course","List","DbSet"],"course":["Courses","Category","DbSet"],"courses":["Course","Category","Courses2"],"column":["DataType","Table","Key"],"money":["decimal","currency","float"],
+"currency":["Money","Decimal","Price"],"addcourse":["FirstStep","update-database","Course"],"selectlist":["List","SelectListItem","DropDown"],"category":["Categories","CategoryId","Course"],
+"cascade":["NO ACTION","SET NULL","RESTRICT"],"asp-items":["asp-for","asp-list","asp-options"],"nav-link":["navbar","link","btn"],"single":["First","Where","Find"],"state":["Valid","Active","Enabled"],
+"foreign key":["primary key","index","unique"],"references":["links","joins","points"],"categories":["Category","Courses","Home"],"mapcontroller":["x"]
+};
+
+// Simulação: mistura de todos os tutoriais
+const SIM = {id:"sim",name:"Simulação prática",topics:"Mistura de exercícios de todos os tutoriais e dos exames, como poderia sair no Moodle.",xs:[]};
+(function(){const pick=[["c2",4],["c2",5],["c3",0],["c3",3],["c4",0],["c4",6],["c3",8],["c5",0],["c5",4],["c5",5],["c6",5],["c6",3],["ex",2],["ex",4]];
+pick.forEach(([s,i])=>{const set=SETS.find(t=>t.id===s);SIM.xs.push(Object.assign({},set.xs[i],{from:set.name}))})})();
+const ALL=[SIM,...SETS];
+
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const fmt=s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>");
+const norm=s=>String(s).trim().replace(/\s+/g," ").replace(/;$/,"").toLowerCase();
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let best=load("ew-prat-best",{});
+const state={cur:load("ew-prat-tab","sim"),mode:load("ew-prat-mode","list"),vals:{},checked:{}};
+if(!ALL.find(t=>t.id===state.cur))state.cur="sim";
+
+function hash(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function seeded(seed){let a=seed;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function parse(code){
+  const out=[];const re=/⟦([^⟧]*)⟧/g;let m,last=0;
+  while((m=re.exec(code))){out.push({txt:code.slice(last,m.index)});
+    const b=m[1]; if(b[0]==="?"){const opts=b.slice(1).split("|");const ok=opts.findIndex(o=>o[0]==="*");out.push({sel:opts.map(o=>o.replace(/^\*/,"")),ok})}
+    else out.push({alts:b.split("|")}); last=re.lastIndex}
+  out.push({txt:code.slice(last)});return out;
+}
+function blanks(x){return parse(x.code).filter(p=>!("txt" in p))}
+// opções da lista para uma caixa de texto: a certa + 3 erradas (do dicionário ou de outras respostas)
+const optCache={};
+function optionsFor(set,xi,bi,b){
+  const key=set.id+"|"+xi+"|"+bi; if(optCache[key])return optCache[key];
+  const right=b.alts[0]; const bad=new Set(b.alts.map(norm)); const picks=[];
+  const add=o=>{if(o==null)return;const n=norm(o);if(!n||bad.has(n)||picks.some(p=>norm(p)===n))return;picks.push(o)};
+  (DIS[norm(right)]||[]).forEach(add);
+  if(picks.length<3){blanks(set.xs[xi]).forEach(o=>o.alts&&add(o.alts[0]))}
+  if(picks.length<3){set.xs.forEach(x=>blanks(x).forEach(o=>o.alts&&add(o.alts[0])))}
+  const rnd=seeded(hash(key+right));
+  const opts=[right,...picks.slice(0,3)];
+  for(let i=opts.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]]}
+  return optCache[key]=opts;
+}
+function isRight(b,v){if(b.sel)return v!==""&&v!=null&&+v===b.ok;return b.alts.some(a=>norm(a)===norm(v||""))}
+function grade(set,xi){const bl=blanks(set.xs[xi]);let ok=0;bl.forEach((b,bi)=>{if(isRight(b,(state.vals[set.id]||{})[xi+"-"+bi]))ok++});return {ok,n:bl.length}}
+
+function renderTabs(){
+  $("#ptabs").innerHTML=ALL.map(t=>{const b=best[t.id]!=null?`<span class="best">${Math.round(best[t.id])}%</span>`:"";
+    return `<button class="tab" role="tab" aria-selected="${t.id===state.cur}" data-id="${t.id}">${t.name}${b}</button>`}).join("")+
+    `<span class="modes"><button class="tab mode" aria-pressed="${state.mode==="list"}" data-m="list">Escolher nas listas</button><button class="tab mode" aria-pressed="${state.mode==="type"}" data-m="type">Escrever</button></span>`;
+  $("#ptabs").querySelectorAll(".tab[data-id]").forEach(b=>b.onclick=()=>{state.cur=b.dataset.id;save("ew-prat-tab",state.cur);render();window.scrollTo({top:0})});
+  $("#ptabs").querySelectorAll(".mode").forEach(b=>b.onclick=()=>{state.mode=b.dataset.m;save("ew-prat-mode",state.mode);render()});
+}
+function render(){
+  renderTabs();
+  const S=ALL.find(t=>t.id===state.cur);state.vals[S.id]=state.vals[S.id]||{};state.checked[S.id]=state.checked[S.id]||{};
+  const nb=S.xs.reduce((a,x)=>a+blanks(x).length,0);
+  let h=`<div class="testhead"><h2>${S.name}</h2><span class="meta">${S.xs.length} exercícios · ${nb} caixas</span></div><p class="topics">${esc(S.topics)}</p>`;
+  if(state.checked[S.id].all){let ok=0;S.xs.forEach((x,xi)=>ok+=grade(S,xi).ok);const p=100*ok/nb;
+    const cls=p>=85?"s2":p>=50?"s3":"s4";const line=p>=85?"200 OK":p>=50?"206 Partial Content":"400 Bad Request";
+    h+=`<div class="result ${cls}" id="presult"><div class="status">HTTP/1.1 <span class="code">${line}</span></div><p>${ok} de ${nb} caixas certas (${p.toFixed(0)}%), cerca de ${(p/5).toFixed(1).replace(".",",")} valores em 20. Nas caixas erradas, a resposta certa aparece a verde ao lado.</p></div>`}
+  h+=`<div class="xs">`;
+  S.xs.forEach((x,xi)=>{
+    const done=state.checked[S.id].all||state.checked[S.id][xi];
+    let st="";if(done){const g=grade(S,xi);st=g.ok===g.n?"ok":g.ok>0?"part":"bad"}
+    h+=`<section class="x ${st}" data-xi="${xi}"><div class="xhead"><span class="n">Exercício ${xi+1}</span><span>${blanks(x).length} caixas</span>${x.from?`<span class="tag">${x.from}</span>`:""}${S.ex?'<span class="tag ex">exames anteriores</span>':""}</div>`;
+    h+=`<p class="xtitle">${esc(x.t)}</p><p class="intro">${fmt(x.i)}</p>`;
+    let bi=0;const parts=parse(x.code).map(p=>{
+      if("txt" in p)return esc(p.txt);
+      const myBi=bi++;const key=xi+"-"+myBi;const v=state.vals[S.id][key]??"";const id=`b-${S.id}-${key}`;
+      let cls="",sol="";
+      if(done){const r=isRight(p,v);cls=r?"right":"wrong";if(!r)sol=`<span class="sol">${esc(p.sel?p.sel[p.ok]:p.alts[0])}</span>`}
+      if(p.sel){return `<select class="blank ${cls}" id="${id}" data-k="${key}" aria-label="Escolha ${myBi+1}"><option value="">…</option>${p.sel.map((o,oi)=>`<option value="${oi}" ${String(oi)===String(v)?"selected":""}>${esc(o)}</option>`).join("")}</select>${sol}`}
+      if(state.mode==="list"){const opts=optionsFor(S,xi,myBi,p);
+        return `<select class="blank code-opt ${cls}" id="${id}" data-k="${key}" aria-label="Caixa ${myBi+1}"><option value="">…</option>${opts.map(o=>`<option value="${esc(o)}" ${norm(o)===norm(v)&&v!==""?"selected":""}>${esc(o)}</option>`).join("")}</select>${sol}`}
+      const w=Math.max(4,...p.alts.map(a=>a.length))+1;
+      return `<input class="blank ${cls}" id="${id}" data-k="${key}" style="width:${w}ch" value="${esc(v)}" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Caixa ${myBi+1}">${sol}`;
+    }).join("");
+    h+=x.text?`<p class="ptext">${parts}</p>`:`<pre class="code">${parts}</pre>`;
+    if(done)h+=`<div class="fb">${fmt(x.e)}</div>`;
+    h+=`<div class="actions"><button class="btn ghost chk" data-xi="${xi}">Verificar</button><button class="btn ghost show" data-xi="${xi}">Mostrar soluções</button></div></section>`;
+  });
+  h+=`</div><div class="actions"><button class="btn" id="pall">Verificar tudo</button><button class="btn ghost" id="pclear">Limpar respostas</button></div>`;
+  $("#pmain").innerHTML=h;
+  $("#pmain").querySelectorAll(".blank").forEach(el=>{const f=()=>{state.vals[S.id][el.dataset.k]=el.value};el.addEventListener("input",f);el.addEventListener("change",f)});
+  $("#pmain").querySelectorAll(".chk").forEach(b=>b.onclick=()=>{state.checked[S.id][b.dataset.xi]=true;render();document.querySelector(`.x[data-xi="${b.dataset.xi}"]`).scrollIntoView({block:"nearest"})});
+  $("#pmain").querySelectorAll(".show").forEach(b=>b.onclick=()=>{const xi=+b.dataset.xi;let bi=0;parse(S.xs[xi].code).forEach(p=>{if("txt" in p)return;state.vals[S.id][xi+"-"+bi]=p.sel?String(p.ok):p.alts[0];bi++});state.checked[S.id][xi]=true;render();document.querySelector(`.x[data-xi="${xi}"]`).scrollIntoView({block:"nearest"})});
+  $("#pall").onclick=()=>{state.checked[S.id].all=true;let ok=0;S.xs.forEach((x,xi)=>ok+=grade(S,xi).ok);best[S.id]=Math.max(best[S.id]||0,100*ok/nb);window.EW_report&&window.EW_report("p",S.id,S.name,100*ok/nb);save("ew-prat-best",best);render();$("#presult").scrollIntoView({behavior:"smooth"})};
+  $("#pclear").onclick=()=>{state.vals[S.id]={};state.checked[S.id]={};render()};
+}
+render();
+
+})();
+</script>
+
+</body>
+</html>
