@@ -69,6 +69,8 @@ pre.snip{font-family:var(--f-mono);font-size:13px;background:var(--bg);border:1p
 .opt.missed{outline:1px dashed var(--ok)} .opt.missed .mk{color:var(--ok)}
 .fb{margin-top:10px;padding:10px 12px;border-radius:4px;background:var(--warn-soft);color:var(--ink);font-size:14px}
 .fb b{display:block;margin-bottom:2px}
+.ref{display:block;width:fit-content;margin-top:8px;font:600 13px var(--f-body);color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor}
+.ref:hover{opacity:.8}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
 .btn{font:600 15px var(--f-body);padding:10px 18px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);cursor:pointer}
 .btn.ghost{background:transparent;color:var(--accent)}
@@ -152,7 +154,7 @@ section.view{padding-top:8px}
   <header class="hero">
     <div class="eyebrow">Engenharia Web · UTAD · 2026/2027</div>
     <h1>Treino Engenharia Web</h1>
-    <p class="lede">Testes teóricos (escolha múltipla e desenvolvimento) e práticos (completar código ASP.NET Core) feitos a partir das aulas, dos tutoriais, do livro de Shklar &amp; Rosen e das perguntas reais do Moodle. Responde, verifica e vê logo a explicação de cada resposta. O teu progresso fica guardado no teu browser.</p>
+    <p class="lede">Testes teóricos (escolha múltipla e desenvolvimento) e práticos (completar código ASP.NET Core) feitos a partir das aulas, dos tutoriais, do livro de Shklar &amp; Rosen e das perguntas reais do Moodle. Responde, verifica e vê logo a explicação de cada resposta e a página do resumo onde a matéria está explicada. O teu progresso fica guardado no teu browser.</p>
     <nav class="nav" role="tablist">
       <button class="navbtn" role="tab" data-v="teorico" aria-selected="true">Teórico<small>Teste 22 out · 15 escolha múltipla + 2 escrita</small></button>
       <button class="navbtn" role="tab" data-v="pratico" aria-selected="false">Prático<small>Completar código · tutoriais 2 a 6</small></button>
@@ -480,6 +482,39 @@ function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 let best = load("ew-t1-best",{});
 
+
+// Página do resumo (Guia de Estudo) onde a matéria de cada pergunta está explicada
+const RESUMO="resumo.pdf";
+const REFS=[
+ [/P3P|leash|domain=|Domain=|path=\/|Path=\/|valor de domain/i,19,"Cookies: domain, path e P3P"],
+ [/persistência|credenciais de autoriza|tabela 7\.2/i,19,"Persistência no browser"],
+ [/cookie|Set-Cookie|variáveis de sessão|cookieless/i,18,"Cookies"],
+ [/processamento de um pedido segue|módulo de .?Autentica|Address Resolution|resolução de endereços|address mapping|virtual host|DocumentRoot|wwwroot|logo\.png|raiz web|IIS/i,11,"Resolução de endereços"],
+ [/pseudónim|Alias/i,12,"Pseudónimos"],
+ [/autentica|autoriza|WWW-Authenticate|Authorization|\b407\b|ACL|realm|\bBasic\b|protegem/i,18,"Autenticação HTTP"],
+ [/502|Bad Gateway/i,9,"Códigos de estado (502)"],
+ [/Cache-Control|Pragma|agentes HTTP\/1\.0|ExpiresByType|max-age|revalid|LRU|anomalia|cópia em cache no HTTP|entrada da cache|cache do browser atinge/i,16,"Cabeçalhos que controlam a cache"],
+ [/cache/i,15,"Proxies e tipos de cache"],
+ [/proxy|proxies/i,15,"O que é um proxy"],
+ [/helper|plugin|EMBED|OBJECT|guardar um ficheiro|tipo MIME que não sabe/i,14,"Helpers e plugins"],
+ [/tipo MIME|MIME|Content-Type|image\/gif|charset|multipart|data:image/i,8,"Tipos MIME"],
+ [/<link|<script|<img|automaticamente pedidos|recursos adicionais|clientes HTTP|faz um navegador|processar uma resposta|ao gerar um pedido|analisa o HTML|terrypratchett/i,14,"HTML visto pelo cliente"],
+ [/enctype|<form/i,14,"Formulários"],
+ [/linha de pedido|request line|ads\.pt|frase explicativa|ordem dos elementos|o texto `Not Found`/i,4,"Estrutura das mensagens HTTP"],
+ [/stateless|camada|^HTTP é|servidor web faz um pedido|Sobre os proxies/i,4,"HTTP: terminologia"],
+ [/cliente web recebe|conteúdo gerado dinamicamente|pedido de conteúdo dinâmico/i,3,"Estático vs dinâmico no browser"],
+ [/CGI|\bSSI\b|Server Side Includes|FastCGI|as-is|template|Servlet|APIs nativas|ISAPI|PHP|estátic|dinâmic/i,13,"Conteúdo estático e dinâmico"],
+ [/código.*estado|status code|[1-5]xx|\b(200|301|302|303|304|307|400|401|403|404|411|500|503|505)\b|RedirectToAction|barra no fim/i,9,"Códigos de estado"],
+ [/scheme:|esquemas válidos/i,3,"URL e navegação"],
+ [/forbidden|proibid|quem insere|AddHeader/i,7,"Quem insere os cabeçalhos / proibidos"],
+ [/cabeçalho|header|Referer|User-Agent|Accept-Encoding|Host|Location|Content-Length/i,6,"Cabeçalhos HTTP"],
+ [/\bGET\b|\bPOST\b|HEAD|PATCH|REST|método/i,5,"Métodos e GET vs POST"],
+ [/URL|query string|esquema|encoding|espaço|pedidos HTTP|pedidos adicionais|navegador/i,3,"URL e navegação"],
+ [/porta|\b443\b|desktop|cliente-servidor|aplicação Web|CRM|circula/i,2,"Aplicações cliente-servidor"]
+];
+function refFor(text){for(const [re,p,l] of REFS){if(re.test(text))return {p,l}}return null}
+function refLink(text,alt){const r=refFor(text)||(alt?refFor(alt):null);return r?`<a class="ref" href="${RESUMO}#page=${r.p}" target="_blank" rel="noopener">Ver no resumo, p. ${r.p} · ${esc(r.l)}</a>`:""}
+
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function buildMix(){
   const pool=[];ALL.filter(t=>!t.t2&&!t.sim).forEach(t=>t.qs.forEach(q=>pool.push(q)));
@@ -534,7 +569,7 @@ function render(){
       html+=`<label class="opt ${c}" for="${nm}-${oi}"><input type="${q.t==="m"?"checkbox":"radio"}" name="${nm}" id="${nm}-${oi}" data-oi="${oi}" ${checked?"checked":""} ${graded?"disabled":""}><span class="l">${L[pos]}.</span><span class="t">${fmt(q.o[oi])}</span><span class="mk" aria-hidden="true">${mk}</span></label>`;
     });
     html+=`</div>`;
-    if(qg) html+=`<div class="fb"><b>${q.c.length>1?"Respostas certas":"Resposta certa"}: ${q.c.map(i=>L[ord.indexOf(i)]).sort().join(", ")}</b>${fmt(q.e)}</div>`;
+    if(qg) html+=`<div class="fb"><b>${q.c.length>1?"Respostas certas":"Resposta certa"}: ${q.c.map(i=>L[ord.indexOf(i)]).sort().join(", ")}</b>${fmt(q.e)}${T.t2?"":refLink(q.q,q.e)}</div>`;
     else if($("#instant").checked) html+=`<div class="actions"><button class="btn ghost chk" data-qi="${qi}">Verificar</button></div>`;
     html+=`</section>`;
   });
@@ -542,7 +577,7 @@ function render(){
   if(T.written){
     html+=`<h3 class="wh">Parte 2 · Perguntas de desenvolvimento</h3><p class="topics">Escreve a tua resposta antes de abrires a resposta-modelo. Esta parte não entra na nota calculada acima.</p><div class="qs">`;
     T.written.forEach((wid,wi)=>{const w=WRITTEN.find(x=>x.id===wid);
-      html+=`<section class="q"><div class="qhead"><span class="n">Desenvolvimento ${wi+1}</span><span class="tag">Aula ${w.aula}</span></div><p class="qtext">${fmt(w.q)}</p><textarea id="wa-${id}-${wid}" rows="6" placeholder="A tua resposta..."></textarea><details><summary>Ver resposta-modelo</summary><div class="model">${w.a.split("\n").map(p=>`<p>${fmt(p)}</p>`).join("")}<p class="kp"><b>Pontos que deves referir:</b></p><ul>${w.k.map(x=>`<li>${fmt(x)}</li>`).join("")}</ul></div></details></section>`});
+      html+=`<section class="q"><div class="qhead"><span class="n">Desenvolvimento ${wi+1}</span><span class="tag">Aula ${w.aula}</span></div><p class="qtext">${fmt(w.q)}</p><textarea id="wa-${id}-${wid}" rows="6" placeholder="A tua resposta..."></textarea><details><summary>Ver resposta-modelo</summary><div class="model">${w.a.split("\n").map(p=>`<p>${fmt(p)}</p>`).join("")}<p class="kp"><b>Pontos que deves referir:</b></p><ul>${w.k.map(x=>`<li>${fmt(x)}</li>`).join("")}</ul>${refLink(w.q)}</div></details></section>`});
     html+=`</div>`;
   }
   html+=`<div class="actions">`;
