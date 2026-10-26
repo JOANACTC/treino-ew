@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Teste 2 de Engenharia Web</title>
+<title>Teste Treino de Engenharia Web</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -120,7 +120,7 @@ body.dragging{cursor:grabbing;user-select:none}
 
 <header class="top">
   <div class="wrap">
-    <h1>Teste 2 · 10h–11h<small>Engenharia Web · versão de arrastar</small></h1>
+    <h1>Teste Treino<small>Engenharia Web · ASP.NET Core MVC</small></h1>
     <div class="score"><span>Pontuação <b id="sc">0</b> / <span id="tot">13</span></span><div class="bar"><i id="scbar"></i></div></div>
   </div>
 </header>
@@ -129,7 +129,7 @@ body.dragging{cursor:grabbing;user-select:none}
 
 <script>
 const T = {
-t2:{ name:"Teste 2", qs:[
+t2:{ name:"Teste Treino", qs:[
 {type:"mc", rep:true, q:"O que entende por <b>ModelState</b> e qual o seu papel no processo de validação do ASP.NET Core MVC?", opts:[
  "Uma estrutura que armazena os valores submetidos nos diversos campos, mas sem informação de erros",
  "Uma estrutura que armazena valores de campos, com informação sobre erros de preenchimento e permite verificar o estado da validação",
@@ -342,7 +342,7 @@ function render(){
   sc.hidden=false;
   const test = T[cur];
   document.getElementById("tot").textContent = test.qs.length;
-  let h = `<p class="intro">${test.qs.length} perguntas do teste das 10h às 11h. Nas perguntas de preencher, <b>arrasta</b> cada caixa para o espaço certo no código (ou toca numa caixa e depois no espaço). Cada caixa pode ser usada várias vezes. Para tirar uma resposta, arrasta-a para fora do código ou toca no espaço duas vezes.</p>
+  let h = `<p class="intro">${test.qs.length} perguntas de treino. Nas perguntas de preencher, <b>arrasta</b> cada caixa para o espaço certo no código (ou toca numa caixa e depois no espaço). Cada caixa pode ser usada várias vezes. Para tirar uma resposta, arrasta-a para fora do código ou toca no espaço duas vezes.</p>
   <div class="actions"><button class="btn primary" id="checkAll">Corrigir teste</button><button class="btn" id="showAll">Mostrar todas as respostas</button><button class="btn" id="reset">Recomeçar</button></div>`;
   test.qs.forEach((q,i)=>{
     const id = `${cur}-q${i}`;

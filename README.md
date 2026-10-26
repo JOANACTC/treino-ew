@@ -5,4 +5,4 @@ Testes teóricos e práticos interativos para preparar a avaliação de Engenhar
 Site: https://joanactc.github.io/treino-ew/
 
 Testes de 26 de outubro (Teste 1 e Teste 2, com correção): https://joanactc.github.io/treino-ew/testes.html
-Teste 2 (10h–11h) com caixas de arrastar: https://joanactc.github.io/treino-ew/teste2-arrastar.html
+Teste treino com caixas de arrastar: https://joanactc.github.io/treino-ew/teste2-arrastar.html
