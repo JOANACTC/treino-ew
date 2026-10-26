@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Testes de Engenharia Web</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: coluna única de leitura; barra de progresso fixa no topo; cada pergunta é uma ficha numerada pela ordem do teste */
+:root{
+  --bg:#f3f5f4; --surface:#ffffff; --ink:#15212b; --muted:#5b6872; --line:#d7dedb;
+  --accent:#0f6e6a; --accent-ink:#ffffff; --code-bg:#eef2f1;
+  --ok:#1d7a3e; --ok-bg:#e3f3e8; --bad:#b3261e; --bad-bg:#fbe7e5; --warn-bg:#fff4d6; --warn:#7a5a00;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11181d; --surface:#18222a; --ink:#e4ebe8; --muted:#97a5ad; --line:#2b3841;
+  --accent:#4cc1b8; --accent-ink:#0b1714; --code-bg:#0f171c;
+  --ok:#6fd492; --ok-bg:#16301f; --bad:#ff8a80; --bad-bg:#3a1a18; --warn-bg:#352b0e; --warn:#f2cf6b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11181d; --surface:#18222a; --ink:#e4ebe8; --muted:#97a5ad; --line:#2b3841;
+  --accent:#4cc1b8; --accent-ink:#0b1714; --code-bg:#0f171c;
+  --ok:#6fd492; --ok-bg:#16301f; --bad:#ff8a80; --bad-bg:#3a1a18; --warn-bg:#352b0e; --warn:#f2cf6b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+header.top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding-block:12px}
+h1{font-size:1.15rem;margin:0;font-weight:700;letter-spacing:-.01em}
+h1 small{display:block;font-weight:400;font-size:.8rem;color:var(--muted);letter-spacing:.02em}
+.tabs{display:flex;gap:4px;background:var(--code-bg);padding:4px;border-radius:8px}
+.tabs button{border:0;background:transparent;color:var(--muted);font:600 .9rem var(--f-body);padding:7px 14px;border-radius:6px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.score{margin-left:auto;display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums;font-size:.9rem;color:var(--muted)}
+.score b{color:var(--ink);font-size:1.05rem}
+.bar{width:110px;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+main .wrap{padding-block:24px 64px;display:flex;flex-direction:column;gap:18px}
+.intro{color:var(--muted);font-size:.92rem;max-width:65ch;margin:0}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:600 .88rem var(--f-body);padding:8px 14px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:focus-visible,.tabs button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.q-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.num{font:600 .75rem var(--f-mono);color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+.tag{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 8px}
+.tag.rep{border-color:var(--accent);color:var(--accent)}
+.status{margin-left:auto;font-size:.82rem;font-weight:600;font-variant-numeric:tabular-nums}
+.status.ok{color:var(--ok)} .status.bad{color:var(--bad)}
+.prompt{margin:0;max-width:70ch;text-wrap:pretty}
+.prompt code,.exp code{font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:7px;cursor:pointer}
+.opt input{margin-top:4px;accent-color:var(--accent)}
+.opt .l{font:600 .85rem var(--f-mono);color:var(--muted);min-width:1.2em}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.bad{border-color:var(--bad);background:var(--bad-bg)}
+.tf{flex-direction:row;flex-wrap:wrap}
+.tf .opt{flex:1 1 140px}
+.codebox{overflow-x:auto;background:var(--code-bg);border:1px solid var(--line);border-radius:8px}
+pre{margin:0;padding:14px 16px;font:400 .82rem/1.75 var(--f-mono);white-space:pre;color:var(--ink)}
+pre .file{color:var(--muted);font-weight:600}
+pre select{font:600 .8rem var(--f-mono);color:var(--ink);background:var(--surface);border:1px dashed var(--accent);border-radius:4px;padding:1px 2px;max-width:330px}
+pre select.ok{border:1px solid var(--ok);background:var(--ok-bg);color:var(--ok)}
+pre select.bad{border:1px solid var(--bad);background:var(--bad-bg);color:var(--bad)}
+.fix{font:600 .72rem var(--f-mono);color:var(--ok);margin-left:2px}
+.exp{border-left:3px solid var(--accent);background:var(--code-bg);padding:10px 14px;border-radius:0 6px 6px 0;font-size:.92rem;max-width:72ch}
+.exp p{margin:0 0 6px} .exp p:last-child{margin:0}
+.exp ol{margin:4px 0 0;padding-left:1.4em} .exp li{margin:2px 0}
+.note{background:var(--warn-bg);color:var(--warn);padding:8px 12px;border-radius:6px;font-size:.88rem;max-width:72ch}
+.q-foot{display:flex;gap:8px;flex-wrap:wrap}
+.summary{background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:16px 20px}
+.summary h2{margin:0 0 4px;font-size:1.1rem}
+.summary p{margin:0;color:var(--muted)}
+@media (max-width:520px){.score{margin-left:0;width:100%}.q{padding:14px}}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <h1>Testes de Engenharia Web<small>ASP.NET Core MVC · treino</small></h1>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-t1" aria-selected="true" data-t="t1">Teste 1 · 9h–10h</button>
+      <button role="tab" id="tab-t2" aria-selected="false" data-t="t2">Teste 2 · 10h–11h</button>
+    </div>
+    <div class="score"><span>Pontuação <b id="sc">0</b> / <span id="tot">13</span></span><div class="bar"><i id="scbar"></i></div></div>
+  </div>
+</header>
+
+<main><div class="wrap" id="app"></div></main>
+
+<script>
+const T = {
+t1:{ name:"Teste 1", qs:[
+{type:"mc", q:"O que é o Scaffolding no ASP.NET Core MVC?", opts:[
+ "Um sistema que cria automaticamente a estrutura de navegação da aplicação com base nos controllers e funcionalidades definidas no projeto.",
+ "Um sistema de geração automática de código, que cria a estrutura básica de controllers e views com base nos models de dados.",
+ "Uma funcionalidade que gera automaticamente as classes e configurações necessárias para estabelecer a ligação entre os models e views da aplicação.",
+ "Um mecanismo de segurança que gera automaticamente estruturas de autenticação e autorização com base nos models da aplicação."], a:1,
+ exp:"<p>O scaffolding gera <b>código</b>: a partir de um model cria o controller com as ações CRUD (Index, Create, Edit, Details, Delete) e as views correspondentes.</p>"},
+{type:"mc", rep:true, q:"O que entende por <b>ModelState</b> e qual o seu papel no processo de validação do ASP.NET Core MVC?", opts:[
+ "Um ficheiro temporário que guarda os Models todos do projeto",
+ "Um ficheiro temporário que guarda os erros todos do projeto",
+ "Uma estrutura que armazena valores de campos, com informação sobre erros de preenchimento e permite verificar o estado da validação",
+ "Uma estrutura que armazena os valores submetidos nos diversos campos, mas sem informação de erros",
+ "Um Dictionary que armazena valores de campos, preenchido com os dados a ser validados."], a:2,
+ exp:"<p>O <code>ModelState</code> guarda os valores submetidos <b>e</b> os erros de validação de cada campo. <code>ModelState.IsValid</code> diz se passou tudo, e <code>ModelState.AddModelError(...)</code> acrescenta erros à mão.</p>"},
+{type:"tf", rep:true, q:"O comando <b>update-database</b> cria a classe de Migration correspondente às alterações detetadas no modelo e, de seguida, atualiza a base de dados.", a:false,
+ exp:"<p>Quem cria a Migration é o <code>add-migration</code>. O <code>update-database</code> só aplica à base de dados as migrations que já existem e ainda não foram aplicadas.</p>"},
+{type:"tf", q:"Uma propriedade chamada <b>XXX_Id</b>, numa classe de entidade denominada <b>XXX_</b>, pode ser reconhecida pelo Entity Framework Core como chave primária sem ser necessário utilizar explicitamente a anotação <b>[Key]</b>.", a:true,
+ exp:"<p>A convenção do EF Core reconhece como chave primária uma propriedade chamada <code>Id</code> ou <code>&lt;NomeDaClasse&gt;Id</code>. Como a classe é <code>XXX_</code>, o nome <code>XXX_Id</code> segue a convenção.</p>"},
+{type:"tf", q:"Uma Data Annotation pode ser utilizada para influenciar a forma como uma propriedade é mapeada para a base de dados.", a:true,
+ exp:"<p>Por exemplo <code>[Key]</code>, <code>[Column(\"nome\")]</code>, <code>[MaxLength(50)]</code>, <code>[Required]</code> (coluna NOT NULL) ou <code>[NotMapped]</code> mudam o esquema gerado.</p>"},
+{type:"mc", q:"No ASP.NET Core, a injeção de dependência do DbContext nos controladores é tipicamente configurada em que local do ciclo de vida do projeto?", opts:[
+ "Diretamente no construtor de cada classe pertencente à pasta Models.",
+ "Dentro das diretivas de topo de cada vista Razor (.cshtml).",
+ "Dentro do ficheiro appsettings.json",
+ "Dentro do ficheiro Program.cs, adicionando o contexto ao contentor de serviços da aplicação (builder.Services.AddDbContext<...>)."], a:3,
+ exp:"<p>O DbContext é registado em <code>Program.cs</code> com <code>builder.Services.AddDbContext&lt;...&gt;()</code>. O appsettings.json só guarda a connection string que esse registo lê.</p>"},
+{type:"mc", q:"Qual é a utilidade da propriedade <b>WebRootPath</b>?", opts:[
+ "Obter o caminho absoluto no disco rígido do servidor para a pasta que contém os ficheiros de conteúdo da aplicação.",
+ "Conectar a aplicação à base de dados local do SQL Server.",
+ "Fazer o download automático de pacotes NuGet para o projeto.",
+ "Redirecionar o utilizador para a homepage do projeto."], a:0,
+ exp:"<p><code>IWebHostEnvironment.WebRootPath</code> devolve o caminho absoluto da pasta <code>wwwroot</code>. É o que se usa para gravar ficheiros enviados pelo utilizador.</p>"},
+{type:"mc", rep:true, q:"Para que um formulário HTML envie ficheiros corretamente para o controlador ASP.NET Core, que atributo deve ser obrigatoriamente adicionado à tag <code>&lt;form&gt;</code>?", opts:[
+ "enctype=\"multipart/form-data\"", "method=\"file\"", "asp-action=\"File\""], a:0,
+ exp:"<p>Sem <code>enctype=\"multipart/form-data\"</code> o browser envia só o nome do ficheiro e o <code>IFormFile</code> chega a <code>null</code>.</p>"},
+{type:"mc", q:"No pattern <code>\"Filter/{number?}\"</code>, o que significa o '?' a seguir a number?", opts:[
+ "O parâmetro number é lido da query string", "O parâmetro number é obrigatório",
+ "O parâmetro number só aceita valores numéricos", "O parâmetro number é opcional"], a:3,
+ exp:"<p>O <code>?</code> torna o segmento opcional: <code>/Filter</code> e <code>/Filter/5</code> encaixam ambos. Para aceitar só números seria uma constraint, por exemplo <code>{number:int}</code>.</p>"},
+{type:"fill", rep:true, q:"O endpoint deve responder a <b>/Filtrar/a</b>, executar <b>Filter</b> do controller <b>Teachers</b> e aceitar apenas uma letra minúscula não acentuada.",
+ code:`app.MapControllerRoute(
+    [[0]]: "filtered",
+    [[1]]: "Filtrar/{letter?}",
+    [[2]]: new { Controller = "Teacher", Action = "[[3]]" },
+    [[4]]: new { letter = @"[[5]]" });`,
+ bank:["constraints","filters","name","[a-z]","endpoint","Filter","defaults","pattern"],
+ ans:[["name"],["pattern"],["defaults"],["Filter"],["constraints"],["[a-z]"]],
+ exp:"<p>Os quatro argumentos de <code>MapControllerRoute</code> são sempre <code>name</code>, <code>pattern</code>, <code>defaults</code> e <code>constraints</code>. <code>[a-z]</code> aceita exatamente um carácter de a a z, sem acentos.</p>"},
+{type:"fill", rep:true, q:"Considere uma classe de nome Carro com os atributos Id, Nome e Equipa. O valor do Id não é de preenchido aquando da criação dos carros. Complete os blocos de código de forma a que reflitam a correta estrutura referente à classe, ao formulário de criação e à ação que recebe o formulário.",
+ code:`<span class="file">// Piloto.cs</span>
+public class Carro
+{
+    [[0]]
+    public int Id { get; set; }
+    [[1]]
+    public string? Nome { get; set; }
+    [[2]]
+    public string? Equipa { get; set; }
+}
+
+<span class="file">// Create.cshtml</span>
+@model PAPP1.Models.Carro
+&lt;form asp-action="Create"&gt;
+  &lt;div class="form-group"&gt;
+    &lt;label asp-for="[[3]]" class="control-label"&gt;&lt;/label&gt;
+    &lt;input asp-for="[[4]]" class="form-control" /&gt;
+    &lt;span [[5]]="[[6]]" class="text-danger"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group"&gt;
+    &lt;label asp-for="[[7]]" class="control-label"&gt;&lt;/label&gt;
+    &lt;input asp-for="[[8]]" class="form-control" /&gt;
+    &lt;span [[9]]="[[10]]" class="text-danger"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group"&gt;
+    &lt;input type="[[11]]" value="Create" class="btn btn-primary" /&gt;
+  &lt;/div&gt;
+&lt;/form&gt;
+
+<span class="file">// PilotosController.cs</span>
+[HttpPost]
+public ActionResult Create([[12]] dados)
+{
+    if ([[13]].IsValid)
+    {
+        // processar a informação
+        return RedirectToAction(nameof(Index));
+    }
+    else
+    {
+        return View();
+    }
+}`,
+ bank:["[Required]","asp-for","FormCollection","asp-validation-for","IFormCollection","[Key]","Model","validation-for","asp-validation-message","ForeignKey","Id","Carro","create","ModelState","submit","Equipa","Nome","Collection","[Mandatory]","edit"],
+ ans:[["[Key]"],["[Required]"],["[Required]"],["Nome"],["Nome"],["asp-validation-for"],["Nome"],["Equipa"],["Equipa"],["asp-validation-for"],["Equipa"],["submit"],["Carro"],["ModelState"]],
+ exp:"<p><code>[Key]</code> marca o Id como chave (é gerado pela BD, por isso não aparece no formulário). Nome e Equipa levam <code>[Required]</code>. Cada grupo do formulário usa o mesmo campo no label, no input e no <code>asp-validation-for</code>. A ação recebe o próprio model (<code>Carro</code>) e testa <code>ModelState.IsValid</code>.</p>"},
+{type:"fill", rep:true, q:"Complete o código para que a aplicação reconheça <b>/Make/PracticalTest/12345</b> e <b>/Make/TheoreticalTest/12345</b>, que executam o controlador <b>WebEngineering</b> nas ações PracticalTest e TheoreticalTest, com number = 12345. Só devem ser reconhecidas strings com caracteres numéricos para o number e os métodos PracticalTest e TheoreticalTest.",
+ pre:`public class WebEngineeringController : Controller
+{
+    public IActionResult PracticalTest(string number) { /* ... */ return View(); }
+    public IActionResult TheoreticalTest(string number) { /* ... */ return View(); }
+}`,
+ code:`app.MapControllerRoute(
+    [[0]]: "Assessment",
+    [[1]]: "[[2]]/{test}/[[3]]",
+    [[4]]: new { [[5]] = "[[6]]" },
+    [[7]]: [[8]] { number = @"[[9]]", [[10]] = @"([[11]]|[[12]])" });
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.Run();`,
+ bank:["int","{number}","Route","defaults","Save","TheoreticalTest","[0-9]","Controller","[1-9][0-9]*","string","constraints","[1-9][0-9]","PracticalTest","pattern","WebEngineering","test","name","new","Make"],
+ ans:[["name"],["pattern"],["Make"],["{number}"],["defaults"],["Controller"],["WebEngineering"],["constraints"],["new"],["[1-9][0-9]*"],["test"],["PracticalTest","TheoreticalTest"],["TheoreticalTest","PracticalTest"]],
+ exp:"<p><code>[1-9][0-9]*</code> é a única opção que aceita um número com vários dígitos (12345). <code>[0-9]</code> e <code>[1-9][0-9]</code> só aceitam 1 ou 2 dígitos. A constraint de <code>test</code> limita aos dois nomes de ação.</p>",
+ note:"Num projeto real o segmento teria de se chamar <code>{action}</code> (não <code>{test}</code>) para o ASP.NET escolher a ação. O enunciado já traz <code>{test}</code> fixo, por isso responde-se com as opções dadas."},
+{type:"fill", rep:true, q:"Considere a classe A, que deve ter a referência para um ficheiro (nome do ficheiro) guardado na pasta /wwwroot/Documentos. Complete o código para cumprir esta gestão de dados usando a Entity Framework. Assuma que o controlador, na sua ação Index, usa uma View com um Model que recebe uma coleção de elementos A.",
+ code:"", bank:[], ans:[], exp:"", a13:"t1"}
+]},
+t2:{ name:"Teste 2", qs:[
+{type:"mc", rep:true, q:"O que entende por <b>ModelState</b> e qual o seu papel no processo de validação do ASP.NET Core MVC?", opts:[
+ "Uma estrutura que armazena os valores submetidos nos diversos campos, mas sem informação de erros",
+ "Uma estrutura que armazena valores de campos, com informação sobre erros de preenchimento e permite verificar o estado da validação",
+ "Um Dictionary que armazena valores de campos, preenchido com os dados a ser validados.",
+ "Um ficheiro temporário que guarda os Models todos do projeto",
+ "Um ficheiro temporário que guarda os erros todos do projeto"], a:1,
+ exp:"<p>O <code>ModelState</code> guarda os valores submetidos <b>e</b> os erros de validação de cada campo. <code>ModelState.IsValid</code> diz se passou tudo.</p>"},
+{type:"mc", q:"Tudo o que fica entre chavetas, na(s) instrução(ões) <code>@{...}</code>, corresponde a:", opts:[
+ "Um bloco de código HTML","Um bloco de código ASP.NET","Um bloco de código SQL","Um bloco de código C#"], a:3,
+ exp:"<p>Em Razor, <code>@{ ... }</code> abre um bloco de código <b>C#</b> dentro da view (declarar variáveis, definir <code>ViewData[\"Title\"]</code>, etc.).</p>"},
+{type:"tf", q:"A Connection String guardada em appsettings.json indica ao Entity Framework onde e como ligar-se ao <b>web server</b>.", a:false,
+ exp:"<p>A connection string diz onde e como ligar ao <b>servidor de base de dados</b> (servidor, nome da BD, autenticação), não ao web server.</p>"},
+{type:"tf", rep:true, q:"O comando <b>update-database</b> aplica sempre todas as Migrations construídas no modelo para atualizar a base de dados.", a:false,
+ exp:"<p>Aplica apenas as migrations <b>pendentes</b> (as já aplicadas ficam registadas na tabela <code>__EFMigrationsHistory</code>). Também se pode indicar uma migration alvo, por exemplo <code>update-database NomeDaMigration</code>, para ir só até ela ou voltar atrás.</p>"},
+{type:"tf", q:"O método <b>context.Course.AddRange(courses)</b> permite adicionar múltiplas classes (neste caso, courses) à árvore de monitorização do EF Core numa única operação em memória, otimizando a operação de envio de dados à base de dados.", a:true,
+ exp:"<p><code>AddRange</code> marca vários objetos como <i>Added</i> no change tracker de uma vez. Nada vai à BD até ao <code>SaveChanges()</code>, que depois os envia em lote.</p>",
+ note:"O enunciado diz \"classes\" quando quer dizer objetos (instâncias). A ideia está certa, por isso a resposta esperada deve ser Verdadeiro."},
+{type:"mc", q:"Numa relação entre duas entidades, qual é a função de uma propriedade de navegação?", opts:[
+ "Substituir obrigatoriamente a chave primária.","Permitir representar no modelo a ligação entre entidades relacionadas.",
+ "Criar automaticamente uma nova base de dados.","Definir exclusivamente o tipo SQL de uma coluna."], a:1,
+ exp:"<p>Ex.: <code>public Curso Curso { get; set; }</code> num Aluno, ou <code>ICollection&lt;Aluno&gt; Alunos</code> num Curso. Permite navegar de uma entidade para as relacionadas.</p>"},
+{type:"mc", rep:true, q:"Para que um formulário HTML envie ficheiros corretamente para o controlador ASP.NET Core, que atributo deve ser obrigatoriamente adicionado à tag <code>&lt;form&gt;</code>?", opts:[
+ "enctype=\"multipart/form-data\"", "asp-action=\"File\"", "method=\"file\""], a:0,
+ exp:"<p>Sem <code>enctype=\"multipart/form-data\"</code> o conteúdo do ficheiro não é enviado.</p>"},
+{type:"tf", q:"Guardar numa entidade o nome de um ficheiro implica que o conteúdo físico desse ficheiro esteja necessariamente armazenado na base de dados.", a:false,
+ exp:"<p>É exatamente o padrão da pergunta 13: a BD guarda só o nome (string), e o ficheiro fica no disco, em <code>wwwroot/Documentos</code>.</p>"},
+{type:"tf", q:"No ASP.NET Core, é possível definir restrições (constraints) nas rotas através de Expressões Regulares (Regex) diretamente no padrão da URL.", a:true,
+ exp:"<p>Ex.: <code>\"{letter:regex(^[[a-z]]$)}\"</code> no próprio pattern, além da forma <code>constraints: new { ... }</code>.</p>"},
+{type:"mc", q:"Qual dos seguintes URLs usa um parâmetro de rota (e não uma query string) para enviar a letra à action Index2?", opts:[
+ "/filter/Z","/students/index2&letter=Z","/students?index2=Z","/students/index2?letter=Z"], a:0,
+ exp:"<p>Em <code>/filter/Z</code> a letra é um segmento do caminho, apanhado por uma rota do tipo <code>filter/{letter}</code>. Tudo o que vem depois de <code>?</code> é query string.</p>"},
+{type:"fill", rep:true, q:"Considere uma classe de nome Piloto com os atributos Nome, Nacionalidade e Idade. Apenas a Nacionalidade não é de preenchimento obrigatório. Complete os blocos de código de forma a que reflitam a correta estrutura referente à classe, ao formulário de criação e à ação que recebe o formulário.",
+ code:`<span class="file">// Piloto.cs</span>
+public class Piloto
+{
+    public string? Nome { get; set; }
+    public string? Nacionalidade { get; set; }
+    public int Idade { get; set; }
+}
+
+<span class="file">// Create.cshtml</span>
+@model PAPP1.Models.Piloto
+&lt;form asp-action="Create"&gt;
+  &lt;div class="form-group"&gt;
+    &lt;label asp-for="[[0]]" class="control-label"&gt;&lt;/label&gt;
+    &lt;input asp-for="[[1]]" class="form-control" /&gt;
+    &lt;span [[2]]="[[3]]" class="text-danger"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group"&gt;
+    &lt;label asp-for="[[4]]" class="control-label"&gt;&lt;/label&gt;
+    &lt;input asp-for="[[5]]" class="form-control" /&gt;
+    &lt;span [[6]]="[[7]]" class="text-danger"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  …
+
+<span class="file">// Controller</span>
+[HttpPost]
+public ActionResult Create([[8]] dados)
+{
+    if (String.IsNullOrEmpty(dados.Nome))
+    {
+        [[9]].AddModelError("Nome", "Campo obrigatório!");
+    }
+    if (String.IsNullOrEmpty(dados.[[10]]))
+    {
+        [[11]].AddModelError("[[12]]", "Campo obrigatório!");
+    }
+    if ([[13]].IsValid)
+    {
+        // processar a informação
+        return RedirectToAction(nameof(Index));
+    }
+    else
+    {
+        return View();
+    }
+}`,
+ bank:["asp-for","Model","Idade","ModelState","submit","Nacionalidade","asp-validation-for","edit","Piloto","Collection","IFormCollection","Nome","FormCollection","asp-validation-message","validation-for","create"],
+ ans:[["Nome"],["Nome"],["asp-validation-for"],["Nome"],["Idade","Nacionalidade"],["Idade","Nacionalidade"],["asp-validation-for"],["Idade","Nacionalidade"],["Piloto"],["ModelState"],["Idade"],["ModelState"],["Idade"],["ModelState"]],
+ same:[[4,5,7]],
+ exp:"<p>Como a classe não tem <code>[Required]</code>, a validação é feita à mão: para cada campo obrigatório (Nome e Idade) faz-se <code>ModelState.AddModelError(\"Campo\", ...)</code>, e no fim testa-se <code>ModelState.IsValid</code>. A ação recebe o model <code>Piloto</code>.</p><p>No segundo grupo do formulário aceito Idade ou Nacionalidade (o resto do formulário não aparecia na foto), mas os três espaços desse grupo têm de ter o mesmo campo.</p>",
+ note:"Idade é <code>int</code>, por isso <code>String.IsNullOrEmpty(dados.Idade)</code> nem compilaria. Mas é o único outro campo obrigatório, por isso é a resposta que o enunciado espera."},
+{type:"fill", rep:true, q:"Assumindo uma aplicação que possui o controlador seguinte, com um método <b>Order</b> que recebe um argumento (<b>way</b>) para indicar a ordem de preparação dos dados (crescente, decrescente, progressiva, transversal). Complete o código para que a aplicação reconheça <b>/PrepareData/crescente</b>, <b>/PrepareData/decrescente</b>, <b>/PrepareData/progressiva</b> e <b>/PrepareData/transversal</b>, executando o controlador <b>Kafta</b> na ação <b>Order</b>.",
+ pre:`public class KaftaController : Controller
+{
+    public IActionResult Order(string way) { /* ... */ return View(); }
+}`,
+ code:`app.[[0]](
+    name: "Order",
+    pattern: "/PrepareData/[[1]]",
+    defaults: new { [[2]] = "[[3]]", Action = "Order" },
+    [[4]]: [[5]] { [[6]] = @"[[7]]" });
+
+app.[[8]](
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.Run();`,
+ bank:["crescente|decrescente|progressiva|transversal","test","transversal","progressiva","ControllerRoute","int","MapControllerRoute","Controller","Kafta","new","{way}","crescente","way","(crescente&decrescente&progressiva&transversal)","{number}","constraints","(crescente|decrescente|progressiva|transversal)","string","decrescente","Action","MapRoute"],
+ ans:[["MapControllerRoute"],["{way}"],["Controller"],["Kafta"],["constraints"],["new"],["way"],["(crescente|decrescente|progressiva|transversal)","crescente|decrescente|progressiva|transversal"],["MapControllerRoute"]],
+ exp:"<p>O segmento <code>{way}</code> tem de ter o mesmo nome do parâmetro do método. A constraint usa <code>|</code> (\"ou\"): aceita qualquer um dos quatro valores. A versão com <code>&amp;</code> está errada. Os parênteses são opcionais, por isso aceito as duas versões com <code>|</code>.</p>"},
+{type:"fill", rep:true, q:"Considere a classe A, que deve ter a referência para um ficheiro (nome do ficheiro) guardado na pasta /wwwroot/Documentos. Complete o código para cumprir esta gestão de dados usando a Entity Framework. Assuma que o controlador, na sua ação Index, usa uma View com um Model que recebe uma coleção de elementos A.",
+ code:"", bank:[], ans:[], exp:"", a13:"t2"}
+]}
+};
+
+// Pergunta 13 (igual nos dois testes; o teste 2 mostra o construtor e tem mais opções)
+function buildQ13(q, v){
+  const ctor = v==="t2" ? `
+    public PAPP1Context(DbContextOptions&lt;PAPP1Context&gt; options)
+        : base(options)
+    { }
+` : "";
+  q.code = `<span class="file">// A.cs</span>
+public class A
+{
+    public Id;
+    [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório")]
+    public string ValorA { get; set; }
+    public string? Ficheiro { get; set; } // caminho para o ficheiro
+}
+
+<span class="file">// AViewModel.cs — para o formulário de inserção/criação de elementos A</span>
+public class AViewModel
+{
+    [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório")]
+    public string ValorA { get; set; }
+    public [[0]]? Ficheiro { get; set; }
+}
+
+<span class="file">// PAPP1Context.cs</span>
+public class PAPP1Context : [[1]]
+{${ctor}
+    public [[2]]&lt;A&gt; TodosA { get; set; } = default!;
+}
+
+<span class="file">// LetrasController.cs</span>
+[HttpPost]
+public async [[3]]&lt;IActionResult&gt; Create([[4]] myA)
+{
+    if (ModelState.IsValid)
+    {
+        var newA = new A();
+        newA.ValorA = myA.ValorA;
+        newA.Ficheiro = Path.GetFileName(myA.Ficheiro.FileName);
+
+        string novoFicheiro = Path.GetFileName(myA.Ficheiro.FileName);
+        string caminhoTotal = Path.Combine(_webHostEnvironment.[[5]], novoFicheiro);
+
+        using (var stream = new FileStream(caminhoTotal, FileMode.Create))
+        {
+            await myA.Ficheiro.[[6]](stream);
+        }
+        _context.[[7]].[[8]](newA); // adiciona ao modelo de dados
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+    return View(myA);
+}
+
+<span class="file">// Create.cshtml</span>
+@[[9]] PAPP1.Models.AViewModel
+&lt;h1&gt;Create&lt;/h1&gt;
+&lt;form asp-action="Create" enctype="[[10]]"&gt;
+  &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+  &lt;div class="form-group"&gt;
+    &lt;label asp-for="ValorA" class="control-label"&gt;&lt;/label&gt;
+    &lt;input asp-for="ValorA" class="form-control" /&gt;
+    &lt;span asp-validation-for="ValorA" class="text-danger"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group"&gt;
+    &lt;label asp-for="Ficheiro" class="control-label"&gt;&lt;/label&gt;
+    &lt;input type="[[11]]" asp-for="Ficheiro" class="form-control"/&gt;
+    &lt;span asp-validation-for="Ficheiro" class="text-danger"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group"&gt;
+    &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
+  &lt;/div&gt;
+&lt;/form&gt;`;
+  q.bank = ["model","DbContext","IFile","SaveFile","form-file","modelItem","DisplayBase","Insert","PAPP1Context","multipart/form-file","DbContextClass","DisplayFor","Add","IFormFile","DisplayNameFor","item","DbTable","AViewModel","Save","multipart/file","ViewModel","input-file","Display","CopyToAsync","DbSet","multipart/form-data","WebRootPath","Task","Model","CopyAsync","IEnumerable","TodosA","application/form-file","WwwRootPath","Multi","FormFile"];
+  if(v==="t2") q.bank.push("application/x-www-form-urlencoded","WwwRoot","file","Table","A");
+  else q.bank.push("file");
+  q.ans = [["IFormFile"],["DbContext"],["DbSet"],["Task"],["AViewModel"],["WebRootPath"],["CopyToAsync"],["TodosA"],["Add"],["model"],["multipart/form-data"],["file"]];
+  q.exp = `<ol>
+<li><code>IFormFile</code>: o tipo que recebe um ficheiro enviado num formulário.</li>
+<li><code>DbContext</code>: o contexto herda da classe base do EF Core.</li>
+<li><code>DbSet</code>: cada tabela é um <code>DbSet&lt;Entidade&gt;</code>.</li>
+<li><code>Task</code>: uma ação <code>async</code> devolve <code>Task&lt;IActionResult&gt;</code>.</li>
+<li><code>AViewModel</code>: o formulário envia o ViewModel (é ele que tem o <code>IFormFile</code>).</li>
+<li><code>WebRootPath</code>: caminho absoluto da pasta wwwroot.</li>
+<li><code>CopyToAsync</code>: copia o conteúdo do <code>IFormFile</code> para o stream do ficheiro em disco.</li>
+<li><code>TodosA</code>: o nome do <code>DbSet</code> definido no contexto.</li>
+<li><code>Add</code>: adiciona a nova entidade ao contexto (vai para a BD no <code>SaveChangesAsync</code>).</li>
+<li><code>model</code>: a diretiva Razor é <code>@model</code>, com m minúsculo. <code>Model</code> com maiúscula é a propriedade que se usa no corpo da view.</li>
+<li><code>multipart/form-data</code>: obrigatório para enviar ficheiros.</li>
+<li><code>file</code>: <code>&lt;input type="file"&gt;</code> mostra o seletor de ficheiros.</li></ol>`;
+  q.note = v==="t1" ? null : "Igual à pergunta 13 do Teste 1: os mesmos 12 espaços com as mesmas respostas. Só muda o construtor visível e algumas opções extra.";
+}
+T.t1.qs[12].a13 && buildQ13(T.t1.qs[12],"t1");
+T.t2.qs[13].a13 && buildQ13(T.t2.qs[13],"t2");
+
+const state = {t1:{}, t2:{}};
+let cur = "t1";
+const app = document.getElementById("app");
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const L = "abcdefgh";
+
+function render(){
+  const test = T[cur];
+  document.getElementById("tot").textContent = test.qs.length;
+  let h = `<p class="intro">${test.name}: ${test.qs.length} perguntas. Responde, carrega em <b>Verificar</b> em cada pergunta ou em <b>Corrigir teste</b> no fim. As perguntas marcadas com <span class="tag rep">também no outro teste</span> aparecem nos dois testes, com o mesmo tema.</p>
+  <div class="actions"><button class="btn primary" id="checkAll">Corrigir teste</button><button class="btn" id="showAll">Mostrar todas as respostas</button><button class="btn" id="reset">Recomeçar</button></div>`;
+  test.qs.forEach((q,i)=>{
+    const id = `${cur}-q${i}`;
+    const kind = {mc:"Escolha múltipla", tf:"Verdadeiro / Falso", fill:"Preencher"}[q.type];
+    h += `<section class="q" id="${id}"><div class="q-head"><span class="num">Pergunta ${i+1}</span><span class="tag">${kind}</span>${q.rep?'<span class="tag rep">também no outro teste</span>':''}<span class="status" id="${id}-st"></span></div>
+    <p class="prompt">${q.q}</p>`;
+    if(q.pre) h += `<div class="codebox"><pre>${esc(q.pre)}</pre></div>`;
+    if(q.type==="mc"){
+      h += `<div class="opts">` + q.opts.map((o,j)=>`<label class="opt" id="${id}-o${j}"><input type="radio" name="${id}" id="${id}-r${j}" value="${j}"><span class="l">${L[j]}.</span><span>${esc(o)}</span></label>`).join("") + `</div>`;
+    } else if(q.type==="tf"){
+      h += `<div class="opts tf">` + [["true","Verdadeiro"],["false","Falso"]].map(([v,t])=>`<label class="opt" id="${id}-o${v}"><input type="radio" name="${id}" id="${id}-r${v}" value="${v}"><span>${t}</span></label>`).join("") + `</div>`;
+    } else {
+      const bank = [...new Set(q.bank)].sort((a,b)=>a.localeCompare(b,"pt",{sensitivity:"base"}));
+      const sel = k => `<select id="${id}-b${k}" aria-label="Espaço ${+k+1}"><option value="">▾ ${+k+1}</option>${bank.map(b=>`<option value="${esc(b)}">${esc(b)}</option>`).join("")}</select>`;
+      h += `<div class="codebox"><pre>${q.code.replace(/\[\[(\d+)\]\]/g,(m,k)=>sel(k))}</pre></div>`;
+    }
+    if(q.note) h += `<div class="note" hidden id="${id}-note">${q.note}</div>`;
+    h += `<div class="exp" hidden id="${id}-exp">${q.exp}</div>
+    <div class="q-foot"><button class="btn primary" data-check="${i}">Verificar</button><button class="btn" data-show="${i}">Ver resposta</button></div></section>`;
+  });
+  h += `<div class="summary" id="summary" hidden></div>`;
+  app.innerHTML = h;
+  // repor respostas guardadas na sessão
+  const st = state[cur];
+  Object.entries(st.vals||{}).forEach(([k,v])=>{const el=document.getElementById(k); if(!el)return; if(el.type==="radio") el.checked=v; else el.value=v;});
+  Object.keys(st.checked||{}).forEach(i=>check(+i,false));
+  updateScore();
+}
+
+function remember(e){
+  const t=e.target; if(!t.id) return;
+  const st = state[cur]; st.vals = st.vals||{};
+  if(t.type==="radio"){ document.querySelectorAll(`input[name="${t.name}"]`).forEach(r=>st.vals[r.id]=r.checked); }
+  else st.vals[t.id]=t.value;
+}
+
+function check(i, reveal){
+  const q = T[cur].qs[i], id = `${cur}-q${i}`, st = state[cur];
+  st.checked = st.checked||{}; st.score = st.score||{};
+  let pts = 0;
+  if(q.type==="mc"||q.type==="tf"){
+    const chosen = document.querySelector(`input[name="${id}"]:checked`);
+    const right = q.type==="mc" ? String(q.a) : String(q.a);
+    const opts = q.type==="mc" ? q.opts.map((_,j)=>String(j)) : ["true","false"];
+    opts.forEach(v=>{const o=document.getElementById(`${id}-o${v}`); o.classList.remove("ok","bad");
+      if(v===right) o.classList.add("ok"); else if(chosen && chosen.value===v) o.classList.add("bad");});
+    pts = chosen && chosen.value===right ? 1 : 0;
+    setStatus(id, pts===1 ? "Certa" : (chosen?"Errada":"Sem resposta"), pts===1);
+  } else {
+    let ok = 0; const n = q.ans.length; const vals=[];
+    q.ans.forEach((acc,k)=>{ const s=document.getElementById(`${id}-b${k}`); vals[k]=s.value; });
+    const good = q.ans.map((acc,k)=>acc.includes(vals[k]));
+    (q.same||[]).forEach(g=>{ const v=vals[g[0]]; if(!g.every(k=>vals[k]===v)) g.forEach(k=>good[k]=false); });
+    // as duas ações na pergunta de rotas não podem repetir-se
+    if(q.ans.length===13 && q.bank.includes("PracticalTest") && vals[11]===vals[12]) {good[11]=false;good[12]=false;}
+    q.ans.forEach((acc,k)=>{
+      const s=document.getElementById(`${id}-b${k}`); s.classList.remove("ok","bad");
+      const nx = s.nextElementSibling; if(nx && nx.classList.contains("fix")) nx.remove();
+      if(good[k]){ s.classList.add("ok"); ok++; }
+      else { s.classList.add("bad"); const f=document.createElement("span"); f.className="fix"; f.textContent="→ "+acc[0]; s.after(f); }
+    });
+    pts = ok/n;
+    setStatus(id, `${ok}/${n} espaços certos`, ok===n);
+  }
+  st.checked[i]=true; st.score[i]=pts;
+  document.getElementById(`${id}-exp`).hidden=false;
+  const nt=document.getElementById(`${id}-note`); if(nt) nt.hidden=false;
+  updateScore();
+}
+
+function show(i){
+  const q = T[cur].qs[i], id = `${cur}-q${i}`;
+  if(q.type==="mc"||q.type==="tf"){ const r=document.getElementById(`${id}-r${String(q.a)}`); r.checked=true; r.dispatchEvent(new Event("change",{bubbles:true})); }
+  else q.ans.forEach((acc,k)=>{ const s=document.getElementById(`${id}-b${k}`); s.value=acc[0]; s.dispatchEvent(new Event("change",{bubbles:true})); });
+  check(i);
+}
+
+function setStatus(id, txt, ok){ const s=document.getElementById(`${id}-st`); s.textContent=txt; s.className="status "+(ok?"ok":"bad"); }
+
+function updateScore(){
+  const st = state[cur], n = T[cur].qs.length;
+  const total = Object.values(st.score||{}).reduce((a,b)=>a+b,0);
+  const fmt = x => (Math.round(x*10)/10).toString().replace(".",",");
+  document.getElementById("sc").textContent = fmt(total);
+  document.getElementById("scbar").style.width = (total/n*100)+"%";
+  const done = Object.keys(st.checked||{}).length, sm=document.getElementById("summary");
+  if(sm && done===n){ sm.hidden=false; sm.innerHTML=`<h2>${fmt(total)} em ${n} (${Math.round(total/n*20*10)/10} valores em 20)</h2><p>As perguntas de preencher contam proporcionalmente aos espaços certos. Carrega em <b>Recomeçar</b> para voltar a tentar.</p>`; }
+}
+
+app.addEventListener("change", remember);
+app.addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  if(b.dataset.check) check(+b.dataset.check);
+  else if(b.dataset.show) show(+b.dataset.show);
+  else if(b.id==="checkAll"){ T[cur].qs.forEach((_,i)=>check(i)); document.getElementById("summary").scrollIntoView({behavior:"smooth",block:"center"}); }
+  else if(b.id==="showAll"){ T[cur].qs.forEach((_,i)=>show(i)); }
+  else if(b.id==="reset"){ state[cur]={}; render(); window.scrollTo({top:0}); }
+});
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
+  cur=b.dataset.t; document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-selected", x===b)); render(); window.scrollTo({top:0});
+}));
+render();
+</script>
+
+</body>
+</html>
