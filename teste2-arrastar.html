@@ -53,7 +53,8 @@ main .wrap{padding-block:24px 64px;display:flex;flex-direction:column;gap:18px}
 .tag.rep{border-color:var(--accent);color:var(--accent)}
 .status{margin-left:auto;font-size:.82rem;font-weight:600;font-variant-numeric:tabular-nums}
 .status.ok{color:var(--ok)} .status.bad{color:var(--bad)}
-.prompt{margin:0;max-width:70ch;text-wrap:pretty}
+.prompt{margin:0;max-width:70ch;text-wrap:pretty;overflow-wrap:anywhere}
+.opt span{overflow-wrap:anywhere;min-width:0}
 .prompt code,.exp code{font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
 .opts{display:flex;flex-direction:column;gap:6px}
 .opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:7px;cursor:pointer}
@@ -121,6 +122,10 @@ body.dragging{cursor:grabbing;user-select:none}
 <header class="top">
   <div class="wrap">
     <h1>Teste Treino<small>Engenharia Web · ASP.NET Core MVC</small></h1>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-t2" aria-selected="true" data-t="t2">Treino 1</button>
+      <button role="tab" id="tab-t3" aria-selected="false" data-t="t3">Treino 2</button>
+    </div>
     <div class="score"><span>Pontuação <b id="sc">0</b> / <span id="tot">13</span></span><div class="bar"><i id="scbar"></i></div></div>
   </div>
 </header>
@@ -331,7 +336,70 @@ T.t2.qs[12].a13 && buildQ13(T.t2.qs[12],"t2");
 
 
 
-const state = {t2:{}};
+
+T.t3 = { name:"Teste Treino 2", qs:[
+{type:"tf", q:"Na mensagem de erro \"The field {0} is mandatory\" definida em <code>[Required(ErrorMessage=\"...\")]</code>, o {0} é automaticamente substituído pelo valor que o utilizador tentou submeter no respetivo campo.", a:false,
+ exp:"<p>O <code>{0}</code> é substituído pelo <b>nome do campo</b> (o nome da propriedade, ou o que estiver em <code>[Display(Name=\"...\")]</code>), não pelo valor escrito pelo utilizador. Ex.: \"The field Nome is mandatory\".</p>"},
+{type:"fill", q:"Complete o código fonte com a palavra correta:",
+ code:`public [[0]] Index()
+{
+    return View();
+}`, bank:["IActionResult","ViewIndex","IndexView","Result"], ans:[["IActionResult"]],
+ exp:"<p>As ações de um controller devolvem <code>IActionResult</code> (ou <code>ActionResult</code>). <code>View()</code> devolve um <code>ViewResult</code>, que é um <code>IActionResult</code>.</p>"},
+{type:"tf", q:"A utilização do atributo <b>[DatabaseGenerated(DatabaseGeneratedOption.None)]</b> numa chave primária inteira faz com que o Entity Framework Core deixe de considerar essa propriedade como chave primária.", a:false,
+ exp:"<p>Continua a ser a chave primária. O atributo só diz que a <b>BD não gera o valor</b> (deixa de ser auto-incremento/IDENTITY): é a aplicação que tem de indicar o Id.</p>"},
+{type:"mc", q:"Cada Migration tem dois métodos importantes:", opts:["Add() and Update()","Up() and Down()","Create() and Delete()"], a:1,
+ exp:"<p><code>Up()</code> aplica as alterações à BD (é o que o <code>update-database</code> corre). <code>Down()</code> desfaz essas alterações, para voltar a uma migration anterior.</p>"},
+{type:"tf", q:"Considere o código fonte:", pre:`public class Category
+{
+    public int Id { get; set; }
+    public Boolean State { get; set; } = true;
+    public ICollection<Course> Courses { get; set; }
+}`, q2:"A propriedade <b>ICollection&lt;Course&gt; Courses</b> da classe <b>Category</b> origina uma nova coluna na tabela <b>Category</b>.", a:false,
+ exp:"<p><code>Courses</code> é uma propriedade de navegação (relação 1-para-muitos). Não cria coluna em Category; a chave estrangeira (<code>CategoryId</code>) fica na tabela <b>Course</b>, do lado \"muitos\".</p>"},
+{type:"tf", q:"No ASP.NET Core MVC, o ficheiro <b>_Layout.cshtml</b> atua como uma \"master page\" genérica, permitindo centralizar elementos comuns da interface (como menus de navegação globais) para todas as views do sistema.", a:true,
+ exp:"<p>O <code>_Layout.cshtml</code> (em <code>Views/Shared</code>) tem o HTML comum (cabeçalho, menu, rodapé) e cada view é inserida no sítio do <code>@RenderBody()</code>.</p>"},
+{type:"mc", q:"Que método da interface IFormFile é utilizado para guardar fisicamente um ficheiro submetido no disco do servidor?", opts:["CopyToAsync()","File.WriteBytes()","SaveAsAsync()","Upload()"], a:0,
+ exp:"<p><code>await ficheiro.CopyToAsync(stream)</code> copia o conteúdo para um <code>FileStream</code> aberto no caminho de destino. Os outros não existem no <code>IFormFile</code>.</p>"},
+{type:"mc", q:"Como se regista o DbContext para poder ser injetado nos controllers?", opts:[
+ "Com app.MapControllerRoute no Program.cs","No ficheiro appsettings.json, na secção ConnectionStrings.",
+ "No método OnConfiguring da classe DbContext, que fica sempre ativo","Com builder.Services.AddDbContext<Class06Context>(...) no Program.cs"], a:3,
+ exp:"<p>Regista-se no contentor de serviços com <code>builder.Services.AddDbContext&lt;...&gt;()</code>. O appsettings.json só guarda a connection string, e <code>MapControllerRoute</code> é para rotas.</p>"},
+{type:"mc", q:"O que é o Scaffolding no ASP.NET Core MVC?", opts:[
+ "Um sistema que cria automaticamente a estrutura de navegação da aplicação com base nos controllers e funcionalidades definidas no projeto.",
+ "Um sistema de geração automática de código, que cria a estrutura básica de controllers e views com base nos models de dados.",
+ "Uma funcionalidade que gera automaticamente as classes e configurações necessárias para estabelecer a ligação entre os models e views da aplicação.",
+ "Um mecanismo de segurança que gera automaticamente estruturas de autenticação e autorização com base nos models da aplicação."], a:1,
+ exp:"<p>O scaffolding gera <b>código</b>: a partir de um model cria o controller com as ações CRUD e as views correspondentes.</p>"},
+{type:"tf", q:"O comando <b>update-database</b> cria a classe de Migration correspondente às alterações detetadas no modelo e, de seguida, atualiza a base de dados.", a:false,
+ exp:"<p>Quem cria a Migration é o <code>add-migration</code>. O <code>update-database</code> só aplica as migrations pendentes.</p>"},
+{type:"tf", q:"Uma propriedade chamada <b>XXX_Id</b>, numa classe de entidade denominada <b>XXX_</b>, pode ser reconhecida pelo Entity Framework Core como chave primária sem ser necessário utilizar explicitamente a anotação <b>[Key]</b>.", a:true,
+ exp:"<p>A convenção reconhece <code>Id</code> ou <code>&lt;NomeDaClasse&gt;Id</code>. A classe chama-se <code>XXX_</code>, por isso <code>XXX_Id</code> encaixa.</p>"},
+{type:"tf", q:"Dado o código fonte:", pre:`public class Course
+{
+    public int Id { get; set; }
+    [DataType(DataType.Currency)]
+    public Decimal Cost { get; set; }
+}`, q2:"A annotation <b>[DataType(DataType.Currency)]</b> é a responsável por criar o campo <b>Cost</b> com o tipo de dados <b>money</b> na base de dados.", a:false,
+ exp:"<p><code>[DataType]</code> só muda a forma como o valor é <b>mostrado e editado</b> nas views (formato de moeda). Não muda a coluna na BD. Para isso seria <code>[Column(TypeName = \"money\")]</code>.</p>"},
+{type:"mc", q:"Para que um formulário HTML envie ficheiros corretamente para o controlador ASP.NET Core, que atributo deve ser obrigatoriamente adicionado à tag <code>&lt;form&gt;</code>?", opts:[
+ "method=\"file\"","enctype=\"multipart/form-data\"","asp-action=\"File\""], a:1,
+ exp:"<p>Sem <code>enctype=\"multipart/form-data\"</code> o conteúdo do ficheiro não é enviado.</p>"},
+{type:"tf", q:"Guardar numa entidade o nome de um ficheiro implica que o conteúdo físico desse ficheiro esteja necessariamente armazenado na base de dados.", a:false,
+ exp:"<p>A BD guarda só o nome (string); o ficheiro fica no disco, normalmente dentro de <code>wwwroot</code>.</p>"},
+{type:"fill", q:"O endpoint deve responder a <b>/Filtrar/a</b>, executar <b>Filter</b> do controller <b>Teachers</b> e aceitar apenas uma letra minúscula não acentuada.",
+ code:`app.MapControllerRoute(
+    [[0]]: "filtered",
+    [[1]]: "Filtrar/{letter?}",
+    [[2]]: new { Controller = "Teacher", Action = "[[3]]" },
+    [[4]]: new { letter = @"[[5]]" });`,
+ bank:["endpoint","defaults","[a-z]","constraints","name","filters","Filter","pattern"],
+ ans:[["name"],["pattern"],["defaults"],["Filter"],["constraints"],["[a-z]"]],
+ exp:"<p>Os argumentos são sempre <code>name</code>, <code>pattern</code>, <code>defaults</code>, <code>constraints</code>. <code>[a-z]</code> aceita exatamente uma letra minúscula sem acentos.</p>"},
+Object.assign({}, T.t2.qs[11])
+]};
+
+const state = {t2:{}, t3:{}};
 let cur = "t2";
 const app = document.getElementById("app");
 const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -342,7 +410,7 @@ function render(){
   sc.hidden=false;
   const test = T[cur];
   document.getElementById("tot").textContent = test.qs.length;
-  let h = `<p class="intro">${test.qs.length} perguntas de treino. Nas perguntas de preencher, <b>arrasta</b> cada caixa para o espaço certo no código (ou toca numa caixa e depois no espaço). Cada caixa pode ser usada várias vezes. Para tirar uma resposta, arrasta-a para fora do código ou toca no espaço duas vezes.</p>
+  let h = `<p class="intro">${test.qs.length} perguntas de treino (${test.name}). Nas perguntas de preencher, <b>arrasta</b> cada caixa para o espaço certo no código (ou toca numa caixa e depois no espaço). Cada caixa pode ser usada várias vezes. Para tirar uma resposta, arrasta-a para fora do código ou toca no espaço duas vezes.</p>
   <div class="actions"><button class="btn primary" id="checkAll">Corrigir teste</button><button class="btn" id="showAll">Mostrar todas as respostas</button><button class="btn" id="reset">Recomeçar</button></div>`;
   test.qs.forEach((q,i)=>{
     const id = `${cur}-q${i}`;
@@ -350,6 +418,7 @@ function render(){
     h += `<section class="q" id="${id}"><div class="q-head"><span class="num">Pergunta ${i+1}</span><span class="tag">${kind}</span><span class="status" id="${id}-st"></span></div>
     <p class="prompt">${q.q}</p>`;
     if(q.pre) h += `<div class="codebox"><pre>${esc(q.pre)}</pre></div>`;
+    if(q.q2) h += `<p class="prompt">${q.q2}</p>`;
     if(q.type==="mc"){
       h += `<div class="opts">` + q.opts.map((o,j)=>`<label class="opt" id="${id}-o${j}"><input type="radio" name="${id}" id="${id}-r${j}" value="${j}"><span class="l">${L[j]}.</span><span>${esc(o)}</span></label>`).join("") + `</div>`;
     } else if(q.type==="tf"){
