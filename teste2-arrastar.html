@@ -121,7 +121,6 @@ body.dragging{cursor:grabbing;user-select:none}
 <header class="top">
   <div class="wrap">
     <h1>Teste 2 · 10h–11h<small>Engenharia Web · versão de arrastar</small></h1>
-    <a class="toplink" href="testes.html">Teste 1 e resumo →</a>
     <div class="score"><span>Pontuação <b id="sc">0</b> / <span id="tot">13</span></span><div class="bar"><i id="scbar"></i></div></div>
   </div>
 </header>
@@ -130,124 +129,6 @@ body.dragging{cursor:grabbing;user-select:none}
 
 <script>
 const T = {
-t1:{ name:"Teste 1", qs:[
-{type:"mc", q:"O que é o Scaffolding no ASP.NET Core MVC?", opts:[
- "Um sistema que cria automaticamente a estrutura de navegação da aplicação com base nos controllers e funcionalidades definidas no projeto.",
- "Um sistema de geração automática de código, que cria a estrutura básica de controllers e views com base nos models de dados.",
- "Uma funcionalidade que gera automaticamente as classes e configurações necessárias para estabelecer a ligação entre os models e views da aplicação.",
- "Um mecanismo de segurança que gera automaticamente estruturas de autenticação e autorização com base nos models da aplicação."], a:1,
- exp:"<p>O scaffolding gera <b>código</b>: a partir de um model cria o controller com as ações CRUD (Index, Create, Edit, Details, Delete) e as views correspondentes.</p>"},
-{type:"mc", rep:true, q:"O que entende por <b>ModelState</b> e qual o seu papel no processo de validação do ASP.NET Core MVC?", opts:[
- "Um ficheiro temporário que guarda os Models todos do projeto",
- "Um ficheiro temporário que guarda os erros todos do projeto",
- "Uma estrutura que armazena valores de campos, com informação sobre erros de preenchimento e permite verificar o estado da validação",
- "Uma estrutura que armazena os valores submetidos nos diversos campos, mas sem informação de erros",
- "Um Dictionary que armazena valores de campos, preenchido com os dados a ser validados."], a:2,
- exp:"<p>O <code>ModelState</code> guarda os valores submetidos <b>e</b> os erros de validação de cada campo. <code>ModelState.IsValid</code> diz se passou tudo, e <code>ModelState.AddModelError(...)</code> acrescenta erros à mão.</p>"},
-{type:"tf", rep:true, q:"O comando <b>update-database</b> cria a classe de Migration correspondente às alterações detetadas no modelo e, de seguida, atualiza a base de dados.", a:false,
- exp:"<p>Quem cria a Migration é o <code>add-migration</code>. O <code>update-database</code> só aplica à base de dados as migrations que já existem e ainda não foram aplicadas.</p>"},
-{type:"tf", q:"Uma propriedade chamada <b>XXX_Id</b>, numa classe de entidade denominada <b>XXX_</b>, pode ser reconhecida pelo Entity Framework Core como chave primária sem ser necessário utilizar explicitamente a anotação <b>[Key]</b>.", a:true,
- exp:"<p>A convenção do EF Core reconhece como chave primária uma propriedade chamada <code>Id</code> ou <code>&lt;NomeDaClasse&gt;Id</code>. Como a classe é <code>XXX_</code>, o nome <code>XXX_Id</code> segue a convenção.</p>"},
-{type:"tf", q:"Uma Data Annotation pode ser utilizada para influenciar a forma como uma propriedade é mapeada para a base de dados.", a:true,
- exp:"<p>Por exemplo <code>[Key]</code>, <code>[Column(\"nome\")]</code>, <code>[MaxLength(50)]</code>, <code>[Required]</code> (coluna NOT NULL) ou <code>[NotMapped]</code> mudam o esquema gerado.</p>"},
-{type:"mc", q:"No ASP.NET Core, a injeção de dependência do DbContext nos controladores é tipicamente configurada em que local do ciclo de vida do projeto?", opts:[
- "Diretamente no construtor de cada classe pertencente à pasta Models.",
- "Dentro das diretivas de topo de cada vista Razor (.cshtml).",
- "Dentro do ficheiro appsettings.json",
- "Dentro do ficheiro Program.cs, adicionando o contexto ao contentor de serviços da aplicação (builder.Services.AddDbContext<...>)."], a:3,
- exp:"<p>O DbContext é registado em <code>Program.cs</code> com <code>builder.Services.AddDbContext&lt;...&gt;()</code>. O appsettings.json só guarda a connection string que esse registo lê.</p>"},
-{type:"mc", q:"Qual é a utilidade da propriedade <b>WebRootPath</b>?", opts:[
- "Obter o caminho absoluto no disco rígido do servidor para a pasta que contém os ficheiros de conteúdo da aplicação.",
- "Conectar a aplicação à base de dados local do SQL Server.",
- "Fazer o download automático de pacotes NuGet para o projeto.",
- "Redirecionar o utilizador para a homepage do projeto."], a:0,
- exp:"<p><code>IWebHostEnvironment.WebRootPath</code> devolve o caminho absoluto da pasta <code>wwwroot</code>. É o que se usa para gravar ficheiros enviados pelo utilizador.</p>"},
-{type:"mc", rep:true, q:"Para que um formulário HTML envie ficheiros corretamente para o controlador ASP.NET Core, que atributo deve ser obrigatoriamente adicionado à tag <code>&lt;form&gt;</code>?", opts:[
- "enctype=\"multipart/form-data\"", "method=\"file\"", "asp-action=\"File\""], a:0,
- exp:"<p>Sem <code>enctype=\"multipart/form-data\"</code> o browser envia só o nome do ficheiro e o <code>IFormFile</code> chega a <code>null</code>.</p>"},
-{type:"mc", q:"No pattern <code>\"Filter/{number?}\"</code>, o que significa o '?' a seguir a number?", opts:[
- "O parâmetro number é lido da query string", "O parâmetro number é obrigatório",
- "O parâmetro number só aceita valores numéricos", "O parâmetro number é opcional"], a:3,
- exp:"<p>O <code>?</code> torna o segmento opcional: <code>/Filter</code> e <code>/Filter/5</code> encaixam ambos. Para aceitar só números seria uma constraint, por exemplo <code>{number:int}</code>.</p>"},
-{type:"fill", rep:true, q:"O endpoint deve responder a <b>/Filtrar/a</b>, executar <b>Filter</b> do controller <b>Teachers</b> e aceitar apenas uma letra minúscula não acentuada.",
- code:`app.MapControllerRoute(
-    [[0]]: "filtered",
-    [[1]]: "Filtrar/{letter?}",
-    [[2]]: new { Controller = "Teacher", Action = "[[3]]" },
-    [[4]]: new { letter = @"[[5]]" });`,
- bank:["constraints","filters","name","[a-z]","endpoint","Filter","defaults","pattern"],
- ans:[["name"],["pattern"],["defaults"],["Filter"],["constraints"],["[a-z]"]],
- exp:"<p>Os quatro argumentos de <code>MapControllerRoute</code> são sempre <code>name</code>, <code>pattern</code>, <code>defaults</code> e <code>constraints</code>. <code>[a-z]</code> aceita exatamente um carácter de a a z, sem acentos.</p>"},
-{type:"fill", rep:true, q:"Considere uma classe de nome Carro com os atributos Id, Nome e Equipa. O valor do Id não é de preenchido aquando da criação dos carros. Complete os blocos de código de forma a que reflitam a correta estrutura referente à classe, ao formulário de criação e à ação que recebe o formulário.",
- code:`<span class="file">// Piloto.cs</span>
-public class Carro
-{
-    [[0]]
-    public int Id { get; set; }
-    [[1]]
-    public string? Nome { get; set; }
-    [[2]]
-    public string? Equipa { get; set; }
-}
-
-<span class="file">// Create.cshtml</span>
-@model PAPP1.Models.Carro
-&lt;form asp-action="Create"&gt;
-  &lt;div class="form-group"&gt;
-    &lt;label asp-for="[[3]]" class="control-label"&gt;&lt;/label&gt;
-    &lt;input asp-for="[[4]]" class="form-control" /&gt;
-    &lt;span [[5]]="[[6]]" class="text-danger"&gt;&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;div class="form-group"&gt;
-    &lt;label asp-for="[[7]]" class="control-label"&gt;&lt;/label&gt;
-    &lt;input asp-for="[[8]]" class="form-control" /&gt;
-    &lt;span [[9]]="[[10]]" class="text-danger"&gt;&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;div class="form-group"&gt;
-    &lt;input type="[[11]]" value="Create" class="btn btn-primary" /&gt;
-  &lt;/div&gt;
-&lt;/form&gt;
-
-<span class="file">// PilotosController.cs</span>
-[HttpPost]
-public ActionResult Create([[12]] dados)
-{
-    if ([[13]].IsValid)
-    {
-        // processar a informação
-        return RedirectToAction(nameof(Index));
-    }
-    else
-    {
-        return View();
-    }
-}`,
- bank:["[Required]","asp-for","FormCollection","asp-validation-for","IFormCollection","[Key]","Model","validation-for","asp-validation-message","ForeignKey","Id","Carro","create","ModelState","submit","Equipa","Nome","Collection","[Mandatory]","edit"],
- ans:[["[Key]"],["[Required]"],["[Required]"],["Nome"],["Nome"],["asp-validation-for"],["Nome"],["Equipa"],["Equipa"],["asp-validation-for"],["Equipa"],["submit"],["Carro"],["ModelState"]],
- exp:"<p><code>[Key]</code> marca o Id como chave (é gerado pela BD, por isso não aparece no formulário). Nome e Equipa levam <code>[Required]</code>. Cada grupo do formulário usa o mesmo campo no label, no input e no <code>asp-validation-for</code>. A ação recebe o próprio model (<code>Carro</code>) e testa <code>ModelState.IsValid</code>.</p>"},
-{type:"fill", rep:true, q:"Complete o código para que a aplicação reconheça <b>/Make/PracticalTest/12345</b> e <b>/Make/TheoreticalTest/12345</b>, que executam o controlador <b>WebEngineering</b> nas ações PracticalTest e TheoreticalTest, com number = 12345. Só devem ser reconhecidas strings com caracteres numéricos para o number e os métodos PracticalTest e TheoreticalTest.",
- pre:`public class WebEngineeringController : Controller
-{
-    public IActionResult PracticalTest(string number) { /* ... */ return View(); }
-    public IActionResult TheoreticalTest(string number) { /* ... */ return View(); }
-}`,
- code:`app.MapControllerRoute(
-    [[0]]: "Assessment",
-    [[1]]: "[[2]]/{test}/[[3]]",
-    [[4]]: new { [[5]] = "[[6]]" },
-    [[7]]: [[8]] { number = @"[[9]]", [[10]] = @"([[11]]|[[12]])" });
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.Run();`,
- bank:["int","{number}","Route","defaults","Save","TheoreticalTest","[0-9]","Controller","[1-9][0-9]*","string","constraints","[1-9][0-9]","PracticalTest","pattern","WebEngineering","test","name","new","Make"],
- ans:[["name"],["pattern"],["Make"],["{number}"],["defaults"],["Controller"],["WebEngineering"],["constraints"],["new"],["[1-9][0-9]*"],["test"],["PracticalTest","TheoreticalTest"],["TheoreticalTest","PracticalTest"]],
- exp:"<p><code>[1-9][0-9]*</code> é a única opção que aceita um número com vários dígitos (12345). <code>[0-9]</code> e <code>[1-9][0-9]</code> só aceitam 1 ou 2 dígitos. A constraint de <code>test</code> limita aos dois nomes de ação.</p>",
- note:"Num projeto real o segmento teria de se chamar <code>{action}</code> (não <code>{test}</code>) para o ASP.NET escolher a ação. O enunciado já traz <code>{test}</code> fixo, por isso responde-se com as opções dadas."},
-{type:"fill", rep:true, q:"Considere a classe A, que deve ter a referência para um ficheiro (nome do ficheiro) guardado na pasta /wwwroot/Documentos. Complete o código para cumprir esta gestão de dados usando a Entity Framework. Assuma que o controlador, na sua ação Index, usa uma View com um Model que recebe uma coleção de elementos A.",
- code:"", bank:[], ans:[], exp:"", a13:"t1"}
-]},
 t2:{ name:"Teste 2", qs:[
 {type:"mc", rep:true, q:"O que entende por <b>ModelState</b> e qual o seu papel no processo de validação do ASP.NET Core MVC?", opts:[
  "Uma estrutura que armazena os valores submetidos nos diversos campos, mas sem informação de erros",
@@ -354,13 +235,13 @@ app.Run();`,
 ]}
 };
 
-// Pergunta 13 (igual nos dois testes; o teste 2 mostra o construtor e tem mais opções)
+// Pergunta 13
 function buildQ13(q, v){
-  const ctor = v==="t2" ? `
+  const ctor = `
     public PAPP1Context(DbContextOptions&lt;PAPP1Context&gt; options)
         : base(options)
     { }
-` : "";
+`;
   q.code = `<span class="file">// A.cs</span>
 public class A
 {
@@ -444,142 +325,13 @@ public async [[3]]&lt;IActionResult&gt; Create([[4]] myA)
 <li><code>model</code>: a diretiva Razor é <code>@model</code>, com m minúsculo. <code>Model</code> com maiúscula é a propriedade que se usa no corpo da view.</li>
 <li><code>multipart/form-data</code>: obrigatório para enviar ficheiros.</li>
 <li><code>file</code>: <code>&lt;input type="file"&gt;</code> mostra o seletor de ficheiros.</li></ol>`;
-  q.note = v==="t1" ? null : "Igual à pergunta 13 do Teste 1: os mesmos 12 espaços com as mesmas respostas. Só muda o construtor visível e algumas opções extra.";
+  q.note = null;
 }
-T.t1.qs[12].a13 && buildQ13(T.t1.qs[12],"t1");
 T.t2.qs[12].a13 && buildQ13(T.t2.qs[12],"t2");
 
 
-const RESUMO = `
-<p class="intro">Como resolver cada tipo de exercício que saiu nos dois testes. Cada secção tem uma receita passo a passo e um exemplo resolvido; os botões levam às perguntas onde isso é usado.</p>
-<nav class="toc"><a href="#r-rotas">Rotas</a><a href="#r-form">Formulário e validação</a><a href="#r-upload">Upload de ficheiros</a><a href="#r-ef">Entity Framework</a><a href="#r-razor">Razor e URLs</a><a href="#r-dicas">Dicas para o teste</a></nav>
 
-<section class="rs" id="r-rotas">
-<h2>1. Rotas com MapControllerRoute</h2>
-<p>Os argumentos vêm sempre por esta ordem: <code>name</code>, <code>pattern</code>, <code>defaults</code>, <code>constraints</code>. O método é <code>MapControllerRoute</code>.</p>
-<h3>Receita</h3>
-<ol>
-<li><b>pattern</b>: copia o URL do enunciado. A parte que nunca muda fica escrita tal e qual (<code>Make</code>, <code>PrepareData</code>, <code>Filtrar</code>). A parte que muda vira <code>{parametro}</code>, com o <b>mesmo nome</b> do argumento do método do controller (<code>Order(string way)</code> → <code>{way}</code>).</li>
-<li><b>defaults</b>: o que não aparece no URL mas é preciso saber. Quase sempre o controller e/ou a ação: <code>new { controller = "Kafta", action = "Order" }</code>. O nome do controller vai <b>sem</b> o sufixo "Controller".</li>
-<li><b>constraints</b>: o que o parâmetro pode aceitar, com uma regex: <code>new { way = @"(a|b|c)" }</code>.</li>
-<li>Rotas específicas ficam <b>antes</b> da rota <code>default</code>.</li>
-</ol>
-<h3>Regex que aparecem nos testes</h3>
-<div class="tblbox"><table>
-<tr><th>Regex</th><th>Aceita</th></tr>
-<tr><td><code>[a-z]</code></td><td>uma letra minúscula, sem acentos</td></tr>
-<tr><td><code>[0-9]</code></td><td>um único dígito</td></tr>
-<tr><td><code>[1-9][0-9]*</code></td><td>um número com qualquer quantidade de dígitos (sem zero à esquerda)</td></tr>
-<tr><td><code>(a|b|c)</code></td><td>exatamente um dos valores da lista. <code>|</code> quer dizer "ou"; com <code>&amp;</code> está errado</td></tr>
-<tr><td><code>{x?}</code> no pattern</td><td>segmento opcional (não é regex, é sintaxe de rota)</td></tr>
-</table></div>
-<h3>Exemplo resolvido</h3>
-<div class="codebox"><pre><code>// /PrepareData/crescente → KaftaController.Order(string way)
-app.MapControllerRoute(
-    name: "Order",
-    pattern: "/PrepareData/{way}",
-    defaults: new { Controller = "Kafta", Action = "Order" },
-    constraints: new { way = @"(crescente|decrescente|progressiva|transversal)" });</code></pre></div>
-<div class="go">Usado em: <button data-go="t1:9">T1 · P10</button><button data-go="t1:11">T1 · P12</button><button data-go="t2:11">T2 · P12</button><button data-go="t1:8">T1 · P9</button><button data-go="t2:8">T2 · P9</button></div>
-</section>
-
-<section class="rs" id="r-form">
-<h2>2. Formulário Create e validação</h2>
-<h3>Na classe (model)</h3>
-<ul>
-<li><code>[Key]</code> na chave primária. Se o Id é gerado pela BD, <b>não</b> aparece no formulário.</li>
-<li><code>[Required]</code> nos campos obrigatórios. <span class="trap">[Mandatory]</span> não existe.</li>
-</ul>
-<h3>Na view, um bloco por campo</h3>
-<div class="codebox"><pre><code>&lt;label asp-for="Nome" class="control-label"&gt;&lt;/label&gt;
-&lt;input asp-for="Nome" class="form-control" /&gt;
-&lt;span asp-validation-for="Nome" class="text-danger"&gt;&lt;/span&gt;
-...
-&lt;input type="submit" value="Create" class="btn btn-primary" /&gt;</code></pre></div>
-<p>O mesmo nome de campo repete-se 3 vezes por bloco. A mensagem de erro é sempre <code>asp-validation-for</code> (<span class="trap">validation-for</span> e <span class="trap">asp-validation-message</span> não existem).</p>
-<h3>No controller</h3>
-<div class="codebox"><pre><code>[HttpPost]
-public ActionResult Create(Piloto dados)        // recebe o próprio model
-{
-    if (String.IsNullOrEmpty(dados.Nome))       // validação manual (sem [Required])
-        ModelState.AddModelError("Nome", "Campo obrigatório!");
-
-    if (ModelState.IsValid) { /* gravar */ return RedirectToAction(nameof(Index)); }
-    return View();
-}</code></pre></div>
-<p><b>ModelState</b> guarda os valores submetidos e os erros de cada campo. Usa-se sempre como <code>ModelState.IsValid</code> e <code>ModelState.AddModelError(...)</code>, nunca como <code>Model.IsValid</code>.</p>
-<div class="go">Usado em: <button data-go="t1:10">T1 · P11</button><button data-go="t2:10">T2 · P11</button><button data-go="t1:1">T1 · P2</button><button data-go="t2:0">T2 · P1</button></div>
-</section>
-
-<section class="rs" id="r-upload">
-<h2>3. Upload de ficheiros (a pergunta 13)</h2>
-<p>A ideia: a base de dados guarda <b>só o nome</b> do ficheiro (string); o ficheiro em si vai para o disco, em <code>wwwroot</code>. São precisas 4 peças:</p>
-<div class="tblbox"><table>
-<tr><th>Peça</th><th>O que pôr</th></tr>
-<tr><td>Entidade <code>A</code></td><td><code>string? Ficheiro</code>: o nome, que vai para a BD</td></tr>
-<tr><td><code>AViewModel</code></td><td><code>IFormFile? Ficheiro</code>: o ficheiro que chega do formulário</td></tr>
-<tr><td>Contexto</td><td><code>class PAPP1Context : DbContext</code> e <code>public DbSet&lt;A&gt; TodosA</code></td></tr>
-<tr><td>View</td><td><code>@model ...AViewModel</code>, <code>enctype="multipart/form-data"</code>, <code>&lt;input type="file"&gt;</code></td></tr>
-</table></div>
-<h3>Controller, pela ordem</h3>
-<div class="codebox"><pre><code>public async Task&lt;IActionResult&gt; Create(AViewModel myA)   // async → Task&lt;...&gt;
-{
-    if (ModelState.IsValid)
-    {
-        var newA = new A { ValorA = myA.ValorA,
-                           Ficheiro = Path.GetFileName(myA.Ficheiro.FileName) };
-        string caminho = Path.Combine(_webHostEnvironment.WebRootPath, newA.Ficheiro);
-        using (var stream = new FileStream(caminho, FileMode.Create))
-            await myA.Ficheiro.CopyToAsync(stream);      // grava no disco
-        _context.TodosA.Add(newA);                      // nome do DbSet + Add
-        await _context.SaveChangesAsync();              // grava na BD
-        return RedirectToAction(nameof(Index));
-    }
-    return View(myA);
-}</code></pre></div>
-<p>Opções que são armadilha: <span class="trap">IFile</span> <span class="trap">FormFile</span> <span class="trap">DbTable</span> <span class="trap">WwwRootPath</span> <span class="trap">CopyAsync</span> <span class="trap">Insert</span> <span class="trap">multipart/form-file</span> <span class="trap">application/x-www-form-urlencoded</span>. E <code>@model</code> é com <b>m minúsculo</b>; <code>Model</code> com maiúscula é o que se usa dentro da view.</p>
-<div class="go">Usado em: <button data-go="t1:12">T1 · P13</button><button data-go="t2:12">T2 · P13</button><button data-go="t1:7">T1 · P8</button><button data-go="t1:6">T1 · P7</button><button data-go="t2:7">T2 · P8</button></div>
-</section>
-
-<section class="rs" id="r-ef">
-<h2>4. Entity Framework Core</h2>
-<div class="tblbox"><table>
-<tr><th>Conceito</th><th>O que saber</th></tr>
-<tr><td>Connection string</td><td>Fica em <code>appsettings.json</code> e diz onde está a <b>base de dados</b> (não o web server).</td></tr>
-<tr><td>Registar o DbContext</td><td>Em <code>Program.cs</code>: <code>builder.Services.AddDbContext&lt;...&gt;(...)</code>. Depois é injetado no construtor do controller.</td></tr>
-<tr><td>Chave primária por convenção</td><td>Propriedade <code>Id</code> ou <code>NomeDaClasseId</code> → não precisa de <code>[Key]</code>.</td></tr>
-<tr><td>Data Annotations</td><td>Mudam o mapeamento: <code>[Key]</code>, <code>[Required]</code>, <code>[MaxLength]</code>, <code>[Column]</code>, <code>[NotMapped]</code>.</td></tr>
-<tr><td>Propriedade de navegação</td><td>Representa a ligação entre entidades: <code>public Curso Curso</code> ou <code>ICollection&lt;Aluno&gt; Alunos</code>.</td></tr>
-<tr><td><code>add-migration Nome</code></td><td><b>Cria</b> a classe de Migration com as alterações ao modelo.</td></tr>
-<tr><td><code>update-database</code></td><td><b>Aplica</b> as migrations <b>pendentes</b> à BD. Não cria migrations, e não aplica "sempre todas".</td></tr>
-<tr><td><code>Add</code> / <code>AddRange</code></td><td>Marcam um ou vários objetos para inserir, só em memória. Só vão para a BD com <code>SaveChanges()</code>.</td></tr>
-</table></div>
-<div class="go">Usado em: <button data-go="t1:2">T1 · P3</button><button data-go="t2:3">T2 · P4</button><button data-go="t1:3">T1 · P4</button><button data-go="t1:4">T1 · P5</button><button data-go="t1:5">T1 · P6</button><button data-go="t2:2">T2 · P3</button><button data-go="t2:4">T2 · P5</button><button data-go="t2:5">T2 · P6</button></div>
-</section>
-
-<section class="rs" id="r-razor">
-<h2>5. Razor, MVC e URLs</h2>
-<ul>
-<li><code>@{ ... }</code> é um bloco de código <b>C#</b> dentro da view.</li>
-<li><b>Scaffolding</b> gera código: controller com as ações CRUD e as respetivas views, a partir de um model.</li>
-<li><b>Parâmetro de rota</b> faz parte do caminho: <code>/filter/Z</code>. <b>Query string</b> vem depois do <code>?</code>: <code>/students/index2?letter=Z</code>.</li>
-<li><code>WebRootPath</code> é o caminho absoluto da pasta <code>wwwroot</code> no servidor.</li>
-</ul>
-<div class="go">Usado em: <button data-go="t2:1">T2 · P2</button><button data-go="t1:0">T1 · P1</button><button data-go="t2:9">T2 · P10</button></div>
-</section>
-
-<section class="rs" id="r-dicas">
-<h2>6. Dicas para o teste</h2>
-<ul>
-<li><b>V/F com "sempre", "necessariamente" ou "obrigatoriamente"</b> costuma ser Falso (update-database "aplica sempre todas", guardar o nome "implica necessariamente" guardar o ficheiro na BD).</li>
-<li><b>Nas lacunas</b>, começa pelas palavras que só cabem num sítio (<code>name</code>, <code>pattern</code>, <code>defaults</code>, <code>constraints</code>; <code>DbContext</code>; <code>DbSet</code>) e deixa as parecidas para o fim.</li>
-<li><b>Descarta logo o que não existe em ASP.NET Core:</b> <span class="trap">IFile</span> <span class="trap">DbTable</span> <span class="trap">CopyAsync</span> <span class="trap">WwwRootPath</span> <span class="trap">[Mandatory]</span> <span class="trap">validation-for</span> <span class="trap">ControllerRoute</span>.</li>
-<li><b>Os nomes têm de bater certo:</b> o <code>{parametro}</code> da rota com o argumento do método, e o <code>asp-for</code> com a propriedade do model.</li>
-<li>Os dois testes repetiram 5 temas (ModelState, enctype, upload, formulário Create, rotas). Vale a pena saber esses de cor.</li>
-</ul>
-</section>`;
-
-const state = {t1:{}, t2:{}};
+const state = {t2:{}};
 let cur = "t2";
 const app = document.getElementById("app");
 const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -587,7 +339,6 @@ const L = "abcdefgh";
 
 function render(){
   const sc = document.querySelector(".score");
-  if(cur==="resumo"){ sc.hidden=true; app.innerHTML = `<div class="resumo">${RESUMO}</div>`; return; }
   sc.hidden=false;
   const test = T[cur];
   document.getElementById("tot").textContent = test.qs.length;
@@ -596,7 +347,7 @@ function render(){
   test.qs.forEach((q,i)=>{
     const id = `${cur}-q${i}`;
     const kind = {mc:"Escolha múltipla", tf:"Verdadeiro / Falso", fill:"Preencher"}[q.type];
-    h += `<section class="q" id="${id}"><div class="q-head"><span class="num">Pergunta ${i+1}</span><span class="tag">${kind}</span>${q.rep?'<span class="tag rep">também no outro teste</span>':''}<span class="status" id="${id}-st"></span></div>
+    h += `<section class="q" id="${id}"><div class="q-head"><span class="num">Pergunta ${i+1}</span><span class="tag">${kind}</span><span class="status" id="${id}-st"></span></div>
     <p class="prompt">${q.q}</p>`;
     if(q.pre) h += `<div class="codebox"><pre>${esc(q.pre)}</pre></div>`;
     if(q.type==="mc"){
